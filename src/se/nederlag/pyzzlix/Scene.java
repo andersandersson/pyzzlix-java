@@ -17,19 +17,41 @@ public abstract class Scene {
     {
     	currentTime += deltaTime;
     	renderTime = currentTime;
+    	for (Sprite s : sprites)
+    	{
+    		s.update();
+    	}
     }
         
-    public void handleEvent();
+    public void handleEvent()
+    {
+    	
+    }
 
-    public void hide();
+    public void hide()
+    {
+    	
+    }
 
-    public void show();
+    public void show()
+    {
+    	
+    }
 
-    public void isDone();
+    public boolean isDone()
+    {
+    	return done;
+    }
 
-    public void isBlockingUpdates();
+    public boolean isBlockingUpdates()
+    {
+    	return updateBlocker;
+    }
     
-    public void isBlockingRendering();
+    public boolean isBlockingRendering()
+    {
+    	return renderBlocker;
+    }
     
     public abstract void tick();
     

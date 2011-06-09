@@ -1,5 +1,10 @@
 package se.nederlag.pyzzlix;
 
-public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite {
+public abstract class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite {
 	public Sprite[] subSprites;	
+	
+	public void update()
+	{
+		
+	}
 }
