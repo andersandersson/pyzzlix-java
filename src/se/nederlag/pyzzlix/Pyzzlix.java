@@ -9,26 +9,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Pyzzlix implements ApplicationListener  {
 	static final int SPRITES = 400000;
+	static final int LOGICS_PER_SEC = 20;
+	
 	Texture image;
 	Sprite[] sprites;	
 	SpriteBatch batch;
-	float timePassed = 0;
-	int frames = 0;
+
+	int fpsCounter = 0;	
+
+	float time = 0.0f;
+	float nextUpdateTime = 0.0f;
+	float lastRenderTime = 0.0f;
+	float lastFpsUpdate = 0.0f;
+	float logicLength = 1.0f / LOGICS_PER_SEC;
 	
 	public void pause() {
-		
-	
 	}
  
 	public void resume() {
-			
 	}
 	
 	public void dispose() {
-	
-			
 	}
-	
 	
 	public void create() {	
 		image = new Texture(Gdx.files.internal("data/sprite.png")); 												  
@@ -40,7 +42,7 @@ public class Pyzzlix implements ApplicationListener  {
 			sprites[i] = sprite;
 		}
  
-		batch = new SpriteBatch();		
+		batch = new SpriteBatch();
 	}
  
 	public void resize(int width, int height){
@@ -48,10 +50,39 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void render() {
+		float elapsed = Gdx.graphics.getDeltaTime();
+
+		time += elapsed; 
+
+		if(time - lastFpsUpdate >= 1.0f)
+		{
+			Gdx.app.log("SpritePerformanceTest2", "fps: " + fpsCounter);
+			fpsCounter = 0;
+			lastFpsUpdate = time;
+		}
+		
+		if(time > nextUpdateTime)
+		{
+			while(time > nextUpdateTime)
+			{
+				nextUpdateTime += logicLength;
+				
+				SceneHandler.INSTANCE.doSceneTicks();
+				Renderer.INSTANCE.render(0);
+				lastRenderTime = time;
+				fpsCounter++;
+			}
+		}
+		else
+		{
+			Renderer.INSTANCE.render(time - lastRenderTime);
+			lastRenderTime = time;
+			fpsCounter++;
+		}
+		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
  
-		float elapsed = Gdx.graphics.getDeltaTime();
-		float scale = timePassed>0.5?1-timePassed / 2:0.5f + timePassed / 2;
+		float scale = (float)(Math.sin(elapsed*Math.PI)*Math.sin(elapsed*Math.PI));
  
 		batch.begin();
 		batch.enableBlending();
@@ -61,14 +92,6 @@ public class Pyzzlix implements ApplicationListener  {
 			sprites[i].draw(batch);			
 		}
 		batch.end();			
- 
-		timePassed += elapsed;
-		frames++;
-		if(timePassed > 1.0f) {
-			Gdx.app.log("SpritePerformanceTest2", "fps: " + frames);
-			timePassed = 0;
-			frames = 0;
-		}
 	}
  
 	public boolean needsGL20 () {

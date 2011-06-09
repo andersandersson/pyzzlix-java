@@ -10,4 +10,8 @@ public enum SceneHandler {
 	public void renderScenes()
 	{
 	}
+
+	public void doSceneTicks()
+	{
+	}
 }
