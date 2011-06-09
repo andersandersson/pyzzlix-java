@@ -1,1 +1,6 @@
 .settings
+.classpath
+.project
+libs/sign.sh
+libs/keystore
+bin
