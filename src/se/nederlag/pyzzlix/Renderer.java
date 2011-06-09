@@ -1,10 +1,53 @@
 package se.nederlag.pyzzlix;
 
-public enum Renderer  {
-	INSTANCE;
+public enum Renderer implements Scene {
+	INSTANCE1, INSTANCE2, INSTANCE3;
 	
-	public void render()
-	{
+	@Override
+	public void handleEvent() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void isBlockingRendering() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void isBlockingUpdates() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void isDone() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void preload() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateTimer(float deltaTime) {
+		// TODO Auto-generated method stub
 		
 	}
 }
