@@ -30,7 +30,7 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	
-	public void create() {
+	public void create() {	
 		image = new Texture(Gdx.files.internal("data/sprite.png")); 												  
 		
 		sprites = new Sprite[SPRITES];
