@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Renderer {
 
-	static final int SPRITES = 10000;
+	static final int SPRITES = 400000;
 	static Renderer instance = null;
 	
 	Texture image;
@@ -40,7 +40,7 @@ public class Renderer {
 	{		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		 
-		float scale = 1.0f - deltatime;		
+		float scale = (float) Math.random()/4.0f + 0.75f;		
  
 		batch.begin();
 		batch.enableBlending();

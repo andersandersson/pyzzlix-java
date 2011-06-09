@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import org.lwjgl.opengl.Display;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
@@ -23,7 +25,7 @@ public class Pyzzlix implements ApplicationListener  {
 	public void dispose() {
 	}
 	
-	public void create() {	
+	public void create() {
 	}
  
 	public void resize(int width, int height){
@@ -31,9 +33,7 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void render() {
-		float elapsed = Gdx.graphics.getDeltaTime();
-
-		time += elapsed; 
+		time += Gdx.graphics.getDeltaTime(); 
 
 		if(time - lastFpsUpdate >= 1.0f)
 		{
@@ -44,22 +44,19 @@ public class Pyzzlix implements ApplicationListener  {
 		
 		if(time > nextUpdateTime)
 		{
-			while(time > nextUpdateTime)
-			{
-				nextUpdateTime += logicLength;
-				
-				SceneHandler.getInstance().doSceneTicks();
-				Renderer.getInstance().render(0);
-				lastRenderTime = time;
-				fpsCounter++;
-			}
+			nextUpdateTime += logicLength;
+			SceneHandler.getInstance().doSceneTicks();
+			
+			Renderer.getInstance().render(0);
+			lastRenderTime = time;
+			fpsCounter++;
 		}
 		else
 		{
 			Renderer.getInstance().render(time - lastRenderTime);
 			lastRenderTime = time;
 			fpsCounter++;
-		}		
+		}
 	}
  
 	public boolean needsGL20 () {
