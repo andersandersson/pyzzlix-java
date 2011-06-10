@@ -1,5 +1,8 @@
 package se.nederlag.pyzzlix;
 
+import java.util.List;
+import java.util.LinkedList;
+
 public abstract class Scene {
 	boolean renderBlocker = false;
 	boolean updateBlocker = false;
@@ -7,7 +10,7 @@ public abstract class Scene {
 	double currentTime = 0;
 	double renderTime = 0;
 	boolean done = false;
-	Sprite[] sprites;
+	List<Sprite> sprites = new LinkedList<Sprite>();	
 	
     public void preload()
     {
@@ -52,7 +55,11 @@ public abstract class Scene {
     {
     	return renderBlocker;
     }
-    
-    public abstract void tick();
+
+    public List<Sprite> getSprites() {
+		return sprites;
+	}
+
+	public abstract void tick();
     
 }

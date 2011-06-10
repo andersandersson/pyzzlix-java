@@ -1,7 +1,5 @@
 package se.nederlag.pyzzlix;
 
-import org.lwjgl.opengl.Display;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
@@ -16,6 +14,9 @@ public class Pyzzlix implements ApplicationListener  {
 	float lastFpsUpdate = 0.0f;
 	float logicLength = 1.0f / LOGICS_PER_SEC;
 	
+	public Pyzzlix() {
+	}
+	
 	public void pause() {
 	}
  
@@ -26,9 +27,10 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void create() {
+		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 	}
  
-	public void resize(int width, int height){
+	public void resize(int width, int height) {
 		//batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 	

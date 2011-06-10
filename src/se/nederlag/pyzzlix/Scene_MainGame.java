@@ -1,8 +1,15 @@
 package se.nederlag.pyzzlix;
 
-public class Scene_MainGame extends Scene {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 
-	static Scene_MainGame instance = null;
+public class Scene_MainGame extends Scene {
+	private static Scene_MainGame instance = null;
+	
+	private Scene_MainGame() {
+		Sprite sprite = new Block(10, 10, 1, 0, 10);
+		sprites.add(sprite);
+	}
 	
 	public static Scene_MainGame getInstance()
 	{
@@ -13,8 +20,6 @@ public class Scene_MainGame extends Scene {
 	
 	@Override
 	public void tick() {
-		
-		
 	}
 	
 }
