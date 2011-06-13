@@ -19,15 +19,6 @@ public class Renderer {
 	
 	private Renderer()
 	{
-		image = new Texture(Gdx.files.internal("data/sprite.png")); 												  
-		
-//		sprites = new Sprite[SPRITES];
-//		for(int i = 0; i < SPRITES; i++) {
-//			Sprite sprite = new Sprite(image);
-//			sprite.setPosition((float)Math.random() * 800, (float)Math.random() * 600);
-//			sprites[i] = sprite;
-//		}
- 
 		batch = new SpriteBatch();		
 	}
 
@@ -55,11 +46,6 @@ public class Renderer {
 		batch.enableBlending();
 
 		SceneHandler.getInstance().renderScenes();
-//		for(int i = 0; i < SPRITES; i++) {				
-//			sprites[i].setRotation(sprites[i].getRotation() + deltatime * 45);			
-//			sprites[i].setScale(scale, scale);
-//			sprites[i].draw(batch);			
-//		}
 
 		batch.end();			
 	}
