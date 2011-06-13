@@ -1,15 +1,15 @@
 package se.nederlag.pyzzlix;
 
 import java.util.List;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Animation {
 	double frameTimer = 0.0;
-	List<Double> frameLengths = new LinkedList<Double>();
-	List<TextureRegion> frames= new LinkedList<TextureRegion>();
+	List<Double> frameLengths = new ArrayList<Double>();
+	List<TextureRegion> frames= new ArrayList<TextureRegion>();
 	int frameCount = 0;
 	String mode = "loop";
 	boolean reverse = false;

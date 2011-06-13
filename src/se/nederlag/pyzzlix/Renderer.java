@@ -10,6 +10,9 @@ public class Renderer {
 	static final int SPRITES = 400000;
 	static Renderer instance = null;
 	
+	double currentTime = 0.0;
+	double deltaT = 0.0;
+	
 	Texture image;
 	Sprite[] sprites;	
 	SpriteBatch batch;
@@ -35,13 +38,18 @@ public class Renderer {
 		return instance;
 	}
 
-	public void drawSprite(Sprite sprite)
+	public void drawSprite(Sprite sprite, double currenttime)
 	{
+		Point pos = sprite.calcPos(currenttime);
+		sprite.setPosition((float)pos.getX(), (float)pos.getY());
 		sprite.draw(batch);
 	}
 	
-	public void render(float deltatime)
+	public void render(double deltatime)
 	{		
+		deltaT = deltatime;
+		currentTime += deltaT;
+		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);	 
 		batch.begin();
 		batch.enableBlending();
@@ -58,7 +66,7 @@ public class Renderer {
 
 	public void renderScene(Scene scene) {
 		for(Sprite sprite : scene.getSprites()) {
-			drawSprite(sprite);
+			drawSprite(sprite, currentTime);
 		}
 	}
 }

@@ -8,11 +8,11 @@ public class Pyzzlix implements ApplicationListener  {
 	
 	int fpsCounter = 0;	
 
-	float time = 0.0f;
-	float nextUpdateTime = 0.0f;
-	float lastRenderTime = 0.0f;
-	float lastFpsUpdate = 0.0f;
-	float logicLength = 1.0f / LOGICS_PER_SEC;
+	double time = 0.0f;
+	double nextUpdateTime = 0.0f;
+	double lastRenderTime = 0.0f;
+	double lastFpsUpdate = 0.0f;
+	double logicLength = 1.0f / LOGICS_PER_SEC;
 	
 	public Pyzzlix() {
 	}
@@ -51,16 +51,11 @@ public class Pyzzlix implements ApplicationListener  {
 			SceneHandler.getInstance().updateTimers(logicLength);
 			SceneHandler.getInstance().doSceneTicks();
 			
-			Renderer.getInstance().render(0);
-			lastRenderTime = time;
-			fpsCounter++;
 		}
-		else
-		{
-			Renderer.getInstance().render(time - lastRenderTime);
-			lastRenderTime = time;
-			fpsCounter++;
-		}
+
+		Renderer.getInstance().render(time - lastRenderTime);
+		lastRenderTime = time;
+		fpsCounter++;
 	}
  
 	public boolean needsGL20 () {

@@ -11,9 +11,11 @@ public class Block extends Sprite {
 	private int offsetY;
 	private int type;
 	
+	private static Texture texture = new Texture(Gdx.files.internal("data/blocks.png")); 
+	
 	public Block(int boardx, int boardy, int type, int offsetx, int offsety)
 	{
-		super(new Texture(Gdx.files.internal("data/blocks.png")));
+		super(texture);
 		
 		this.boardX = boardx;
 		this.boardY = boardy;
@@ -21,7 +23,8 @@ public class Block extends Sprite {
 		this.offsetX = offsetx;
 		this.offsetY = offsety;
 		
-		this.setAnimation(new Animation(this, 16, 16, 0, 0, 16, 5*16, 0, 0.05, "pingpongloop", false));
-		this.setSize(16, 16);
+		this.setAnimation(new Animation(this, 16, 16, type*16, 0, 16, 8*16, 0, 0.02, "pingpongloop", false));
+		this.setSize(32, 32);
+		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
 	}
 }
