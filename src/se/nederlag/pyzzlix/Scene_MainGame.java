@@ -16,13 +16,13 @@ public class Scene_MainGame extends Scene {
 				
 				move_right = new SpriteCallback() {
 					public void callback(Sprite sprite, double currenttime) {
-						sprite.moveTo(new Point((Double)getArg(1)+100,(Double)getArg(2)+100), currenttime, 2.0, (SpriteCallback) getArg(0));
+						sprite.moveTo(new Point((Double)getArg(1)+100,(Double)getArg(2)+100), currenttime, 4.0, (SpriteCallback) getArg(0));
 					}
 				};
 				
 				move_left = new SpriteCallback() {
 					public void callback(Sprite sprite, double currenttime) {
-						sprite.moveTo(new Point((Double)getArg(1)+500,(Double)getArg(2)+500), currenttime, 2.0, (SpriteCallback) getArg(0));
+						sprite.moveTo(new Point((Double)getArg(1)+500,(Double)getArg(2)+500), currenttime, 4.0, (SpriteCallback) getArg(0));
 					}
 				};
 				
