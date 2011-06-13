@@ -41,7 +41,7 @@ public class Renderer {
 	public void drawSprite(Sprite sprite, double currenttime)
 	{
 		Point pos = sprite.calcPos(currenttime);
-		sprite.setPosition((float)pos.getX(), (float)pos.getY());
+		sprite.setPosition((float)pos.x, (float)pos.y);
 		sprite.draw(batch);
 	}
 	

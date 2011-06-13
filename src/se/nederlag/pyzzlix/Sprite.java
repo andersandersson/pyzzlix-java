@@ -84,7 +84,7 @@ public abstract class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 		else
 		{
 			double factorT = (_pos_reftime - currenttime) / (_pos_reftime - _pos_lasttime);
-			return new Point(_pos_ref.getX() - (_pos_ref.getX() - pos.getX()) * factorT, _pos_ref.getY() - (_pos_ref.getY() - pos.getY()) * factorT);
+			return new Point(_pos_ref.x - (_pos_ref.x - pos.x) * factorT, _pos_ref.y - (_pos_ref.y - pos.y) * factorT);
 		}
 	}
 

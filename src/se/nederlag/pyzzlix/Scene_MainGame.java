@@ -1,8 +1,5 @@
 package se.nederlag.pyzzlix;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 public class Scene_MainGame extends Scene {
 	private static Scene_MainGame instance = null;
 	
