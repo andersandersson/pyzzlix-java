@@ -44,7 +44,7 @@ public class Pyzzlix implements ApplicationListener  {
 			lastFpsUpdate = time;
 		}
 		
-		if(time > nextUpdateTime)
+		if(time >= nextUpdateTime + logicLength)
 		{
 			nextUpdateTime += logicLength;
 			
