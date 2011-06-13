@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 
 public class SceneHandler {
 	private Stack<Scene> sceneStack;
+	private double currentTime;
 	
 	static SceneHandler instance = null;
 	
@@ -31,6 +32,26 @@ public class SceneHandler {
 	}
 	
 	public void updateTimers(double deltatime) {		
+		currentTime += deltatime;
+		boolean blocked = false;
+		
+		for(Scene scene : sceneStack)
+		{
+			if(!blocked)
+			{
+				scene.updateTimer(deltatime);
+				scene.blockedUpdate = false;
+			}
+			else 
+			{
+				scene.blockedUpdate = true;
+			}
+			
+			if(scene.isBlockingUpdates())
+			{
+				blocked = true;
+			}
+		}
 	}
 	
 	public void renderScenes() {
@@ -40,7 +61,7 @@ public class SceneHandler {
 		{
 			scenes.addLast(scene);
 			
-			if(scene.isBlockingUpdates())
+			if(scene.isBlockingRendering())
 				break;
 		}
 		

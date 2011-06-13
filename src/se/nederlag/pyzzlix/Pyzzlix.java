@@ -47,6 +47,8 @@ public class Pyzzlix implements ApplicationListener  {
 		if(time > nextUpdateTime)
 		{
 			nextUpdateTime += logicLength;
+			
+			SceneHandler.getInstance().updateTimers(logicLength);
 			SceneHandler.getInstance().doSceneTicks();
 			
 			Renderer.getInstance().render(0);

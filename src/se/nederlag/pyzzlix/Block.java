@@ -2,6 +2,7 @@ package se.nederlag.pyzzlix;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Block extends Sprite {
 	private int boardX;
@@ -12,13 +13,15 @@ public class Block extends Sprite {
 	
 	public Block(int boardx, int boardy, int type, int offsetx, int offsety)
 	{
+		super(new Texture(Gdx.files.internal("data/blocks.png")));
+		
 		this.boardX = boardx;
 		this.boardY = boardy;
 		this.type = type;
 		this.offsetX = offsetx;
 		this.offsetY = offsety;
 		
-		Texture image = new Texture(Gdx.files.internal("data/sprite.png"));
-		this.setTexture(image);
+		this.setAnimation(new Animation(this, 16, 16, 0, 0, 16, 5*16, 0, 0.05, "pingpongloop", false));
+		this.setSize(16, 16);
 	}
 }

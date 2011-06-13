@@ -20,9 +20,10 @@ public abstract class Scene {
     {
     	currentTime += deltaTime;
     	renderTime = currentTime;
+    	
     	for (Sprite s : sprites)
     	{
-    		s.update();
+    		s.update(currentTime);
     	}
     }
         

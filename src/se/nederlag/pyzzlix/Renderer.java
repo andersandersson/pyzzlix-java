@@ -37,7 +37,7 @@ public class Renderer {
 
 	public void drawSprite(Sprite sprite)
 	{
-		sprite.getImage().draw(batch);
+		sprite.draw(batch);
 	}
 	
 	public void render(float deltatime)
