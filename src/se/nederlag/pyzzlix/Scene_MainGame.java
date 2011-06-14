@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import com.badlogic.gdx.graphics.Color;
+
 public class Scene_MainGame extends Scene {
 	private static Scene_MainGame instance = null;
 	
@@ -14,12 +16,16 @@ public class Scene_MainGame extends Scene {
 				move_right = new SpriteCallback() {
 					public void callback(Sprite sprite, double currenttime) {
 						sprite.moveTo(new Point((Double)getArg(1)+100,(Double)getArg(2)+100), currenttime, 4.0, (SpriteCallback) getArg(0));
+						sprite.fadeTo(new Color(1, 0, 0, 1), currenttime, 4.0, null);
+						sprite.rotateTo(360.0, currenttime, 4.0, null);
 					}
 				};
 				
 				move_left = new SpriteCallback() {
 					public void callback(Sprite sprite, double currenttime) {
 						sprite.moveTo(new Point((Double)getArg(1)+500,(Double)getArg(2)+500), currenttime, 4.0, (SpriteCallback) getArg(0));
+						sprite.fadeTo(new Color(0, 1, 0, 1), currenttime, 4.0, null);
+						sprite.rotateTo(0.0, currenttime, 4.0, null);
 					}
 				};
 				

@@ -1,6 +1,7 @@
 package se.nederlag.pyzzlix;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,7 +33,12 @@ public class Renderer {
 	public void drawSprite(Sprite sprite, double currenttime)
 	{
 		Point pos = sprite.calcPos(currenttime);
+		Color col = sprite.calcCol(currenttime);
+		
 		sprite.setPosition((float)pos.x, (float)pos.y);
+		sprite.setColor(col);
+		Gdx.app.log("ROTATION", "" + (float)sprite.calcRot(currenttime));
+		sprite.setRotation((float)sprite.calcRot(currenttime));
 		sprite.draw(batch);
 	}
 	

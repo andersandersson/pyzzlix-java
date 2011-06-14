@@ -26,5 +26,6 @@ public class Block extends Sprite {
 		this.setAnimation(new Animation(this, 16, 16, type*16, 0, 16, 1*16, 0, 0.02, "pingpongloop", false));
 		this.setSize(32, 32);
 		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
+		this.setOrigin(16, 16);
 	}
 }

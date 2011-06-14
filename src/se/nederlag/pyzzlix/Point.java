@@ -1,13 +1,16 @@
 package se.nederlag.pyzzlix;
 
-public class Point {
-	public double x;
-	public double y;
-	
-	public Point() {
-		this.x = 0.0;
-		this.y = 0.0;
-	}
+/**
+ * Data class for 2D points. 
+ * 
+ * Made as an immutable as a minor test.
+ * 
+ * @author anders
+ *
+ */
+public final class Point {
+	public final double x;
+	public final double y;
 	
 	public Point(double x, double y) {
 		this.x = x;
