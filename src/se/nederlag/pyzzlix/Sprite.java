@@ -187,6 +187,8 @@ public abstract class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 		currentTime = currenttime;
 		
 		updatePos(currentTime);
+		updateCol(currentTime);
+		updateRot(currentTime);
 		
 		if(currentAnimation != null) 
 		{

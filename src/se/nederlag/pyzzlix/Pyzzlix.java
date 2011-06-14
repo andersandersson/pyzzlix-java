@@ -4,7 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
 public class Pyzzlix implements ApplicationListener  {
-	static final int LOGICS_PER_SEC = 2;
+	static final int LOGICS_PER_SEC = 20;
 	
 	int fpsCounter = 0;	
 

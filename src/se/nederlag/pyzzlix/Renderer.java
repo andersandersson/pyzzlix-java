@@ -34,11 +34,11 @@ public class Renderer {
 	{
 		Point pos = sprite.calcPos(currenttime);
 		Color col = sprite.calcCol(currenttime);
+		float rot = (float)sprite.calcRot(currenttime);
 		
 		sprite.setPosition((float)pos.x, (float)pos.y);
 		sprite.setColor(col);
-		Gdx.app.log("ROTATION", "" + (float)sprite.calcRot(currenttime));
-		sprite.setRotation((float)sprite.calcRot(currenttime));
+		sprite.setRotation(rot);
 		sprite.draw(batch);
 	}
 	
