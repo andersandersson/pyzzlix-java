@@ -6,7 +6,7 @@ public class Scene_MainGame extends Scene {
 	private static Scene_MainGame instance = null;
 	
 	private Scene_MainGame() {
-		Sprite sprite = new Sprite();
+/*		Sprite sprite = new Sprite();
 
 		SpriteCallback pingpongrot;
 		SpriteCallback pingpongrot_back;
@@ -59,7 +59,11 @@ public class Scene_MainGame extends Scene {
 		sprites.add(sprite);
 
 		Sprite last_sprite = sprite;
-
+*/
+		Font font = new Font("data/font_normal.png", 8, 8);
+		Text text = new Text(100, 100, font, "ANDERS");
+		sprites.add(text);
+		/*
 		for(int i = 1; i<11; i++)
 		{
 			sprite = new Block(0,0,i%7,0,0);
@@ -70,7 +74,7 @@ public class Scene_MainGame extends Scene {
 			//pingpongrot.callback(sprite, 0.0);
 			last_sprite.addSubSprite(sprite);
 			//last_sprite = sprite;
-		}	
+		}	*/
 	}
 	
 	public static Scene_MainGame getInstance()

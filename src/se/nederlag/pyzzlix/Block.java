@@ -36,10 +36,10 @@ public class Block extends Sprite {
 		this.normalAnimation = new Animation(this, 16, 16, type*16, 0, 16, 16, 0.0, 0.2, "normal", false);
 		
 		this.setAnimation(blinkAnimation);
-		this.setSize(32, 32);
+		this.setSize(16, 16);
 		
-		this.width = 32;
-		this.height = 32;
+		this.width = 16;
+		this.height = 16;
 		
 		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
 		this.setCenter(new Point(16, 16));

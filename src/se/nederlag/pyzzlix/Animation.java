@@ -28,19 +28,10 @@ public class Animation {
 		
 		this.reverse = reverse;
 		this.sprite = sprite;
-		
-		int num_frames_w = srcw / width;
-		int num_frames_h = srch / height;				
+		this.frames = Resources.loadImageSheet(sprite.getTexture(), width, height, srcx, srcy, srcw, srch);
 
-		for(int y = 0; y < num_frames_h; y++) 
-		{
-			for(int x = 0; x < num_frames_w; x++) 
-			{
-				TextureRegion region = new TextureRegion(sprite.getTexture(), x*width+srcx, y*height+srcy, width, height);
-				//TextureRegion region = new TextureRegion(sprite.getTexture())
-				this.frames.add(region);
-				this.frameLengths.add(framelength);
-			}
+		for(int i=0; i<frames.size(); i++) {
+			this.frameLengths.add(framelength);
 		}
 		
 		reset(currenttime);
