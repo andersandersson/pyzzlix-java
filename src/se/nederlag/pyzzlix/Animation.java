@@ -31,12 +31,13 @@ public class Animation {
 		
 		int num_frames_w = srcw / width;
 		int num_frames_h = srch / height;				
-		
+
 		for(int y = 0; y < num_frames_h; y++) 
 		{
 			for(int x = 0; x < num_frames_w; x++) 
 			{
-				TextureRegion region = new TextureRegion(sprite, x*width+srcx, y*height+srcy, width, height);
+				TextureRegion region = new TextureRegion(sprite.getTexture(), x*width+srcx, y*height+srcy, width, height);
+				//TextureRegion region = new TextureRegion(sprite.getTexture())
 				this.frames.add(region);
 				this.frameLengths.add(framelength);
 			}
@@ -89,7 +90,7 @@ public class Animation {
 						else
 						{
 							frameCount = 0;
-							frame = frameCount - 1; 
+							frame = 0; 
 						}
 					}
 					else if(mode == "pingpongloop")
@@ -99,8 +100,8 @@ public class Animation {
 					}
 					else
 					{
-						frameCount = 0;
 						frame = frameCount - 1;
+						frameCount = 0;
 					}
 				}
 				else if(frame < 0)

@@ -48,27 +48,28 @@ public class Scene_MainGame extends Scene {
 		pingpongrot.setArgs(pingpongrot_back);
 		pingpongrot_back.setArgs(pingpongrot);
 		
-		sprite = new Block(0,0,0,0,0);
+		//sprite = new Block(0,0,0,0,0);
+		sprite = new Sprite();
 		sprite.setPos(new Point(200, 100));
-		sprite.setScale(new Point(5, 5));
+		sprite.setScale(new Point(1, 1));
 		sprite.setCenter(new Point(16, 16));
-		pingpongrot.callback(sprite, 0.0);
-		movecallback.callback(sprite, 0.0);
+		//pingpongrot.callback(sprite, 0.0);
+		//movecallback.callback(sprite, 0.0);
 
 		sprites.add(sprite);
 
 		Sprite last_sprite = sprite;
 
-		for(int i = 0; i<10; i++)
+		for(int i = 1; i<11; i++)
 		{
-			sprite = new Block(0,0,0,0,0);
-			sprite.setPos(new Point(16, 16));
-			sprite.setScale(new Point(0.8, 0.8));
+			sprite = new Block(0,0,i%7,0,0);
+			sprite.setPos(new Point(i*32, 16));
+			//sprite.setScale(new Point(0.8, 0.8));
 			sprite.setCenter(new Point(16, 16));
-			sprite.setRot(10.0);
-			pingpongrot.callback(sprite, 0.0);
+			//sprite.setRot(10.0);
+			//pingpongrot.callback(sprite, 0.0);
 			last_sprite.addSubSprite(sprite);
-			last_sprite = sprite;
+			//last_sprite = sprite;
 		}	
 	}
 	

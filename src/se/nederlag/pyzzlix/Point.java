@@ -3,8 +3,6 @@ package se.nederlag.pyzzlix;
 /**
  * Data class for 2D points. 
  * 
- * Made as an immutable as a minor test.
- * 
  * @author anders
  *
  */
