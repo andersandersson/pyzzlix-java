@@ -5,8 +5,8 @@ public class EventKeyState extends Event {
 		UP, DOWN;
 	}
 
-	public State state;
-	public int key;
+	public final State state;
+	public final int key;
 	
 	public EventKeyState(State state, int key) {
 		this.state = state;

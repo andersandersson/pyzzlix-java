@@ -13,8 +13,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventKeyState;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 
 public class Scene_MainGame extends Scene {
@@ -224,7 +226,34 @@ public class Scene_MainGame extends Scene {
 
 	@Override
 	public boolean handleEvent(Event event) {
-		Gdx.app.log("EVENT ", ""+event);
+		if(event.getClass() == EventKeyState.class) {
+			EventKeyState keyevent = (EventKeyState) event;
+						
+			if(keyevent.state == EventKeyState.State.DOWN) {
+				
+				if(this.state == State.RUNNING) {
+					switch(keyevent.key) {
+						case Input.Keys.UP:
+							Gdx.app.log("MAIN", "Pressed UP");
+							break;
+						case Input.Keys.DOWN:
+							Gdx.app.log("MAIN", "Pressed DOWN");
+							break;
+						case Input.Keys.LEFT:
+							Gdx.app.log("MAIN", "Pressed LEFT");
+							break;
+						case Input.Keys.RIGHT:
+							Gdx.app.log("MAIN", "Pressed RIGHT");
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			
+			return true;
+		}
+		
 		return false;
 	}
 }
