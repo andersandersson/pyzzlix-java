@@ -32,6 +32,10 @@ public class Renderer {
 		return instance;
 	}
 
+	public void resize(int width, int height) {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+	}
+	
 	public void drawSprite(Sprite sprite, double currenttime, Point last_pos, Color last_col, Float last_rot, Point last_scale, Point last_origin)
 	{
 		Point pos = sprite.calcPos(currenttime);

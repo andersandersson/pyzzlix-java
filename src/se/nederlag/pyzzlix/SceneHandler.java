@@ -4,6 +4,8 @@ import java.util.Stack;
 import java.util.Deque;
 import java.util.ArrayDeque;
 
+import se.nederlag.pyzzlix.events.Event;
+
 public class SceneHandler {
 	private Stack<Scene> sceneStack;
 	private double currentTime;
@@ -30,7 +32,13 @@ public class SceneHandler {
 		scene.hide();
 	}
 
-	public void handleEvent() {		
+	public void handleEvent(Event event) {		
+		for(Scene scene : sceneStack)
+		{
+			if(scene.handleEvent(event)) {
+				break;
+			}
+		}
 	}
 	
 	public void updateTimers(double deltatime) {		

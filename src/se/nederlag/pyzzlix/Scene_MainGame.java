@@ -12,6 +12,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import se.nederlag.pyzzlix.events.Event;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 public class Scene_MainGame extends Scene {
@@ -219,4 +222,9 @@ public class Scene_MainGame extends Scene {
 		}
 	}
 
+	@Override
+	public boolean handleEvent(Event event) {
+		Gdx.app.log("EVENT ", ""+event);
+		return false;
+	}
 }
