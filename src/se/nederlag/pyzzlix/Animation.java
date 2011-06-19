@@ -7,34 +7,47 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Animation {
+	public enum Mode {
+		LOOP, PINGPONG, PINGPONGLOOP, NORMAL;
+	}
+	
 	double frameTimer = 0.0;
 	List<Double> frameLengths = new ArrayList<Double>();
 	List<TextureRegion> frames= new ArrayList<TextureRegion>();
 	int frameCount = 0;
-	String mode = "loop";
+	Animation.Mode mode = Mode.NORMAL;
 	boolean reverse = false;
 	int direction = 1;
 	int frame;
 	Sprite sprite;
 	
-	public Animation(Sprite sprite, int width, int height, int srcx, int srcy, int srcw, int srch, double currenttime, double framelength, String mode, boolean reverse)
-	{
-		if(mode == "loop" || mode == "pingpong" || mode == "pingpongloop" || mode == "normal")
-		{
-			this.mode = mode;
-		} else {
-			this.mode = "normal";
-		}
-		
+	private void init(Sprite sprite, int width, int height, List<TextureRegion> frames, double currenttime, double framelength, Animation.Mode mode, boolean reverse) {
+		this.mode = mode;		
 		this.reverse = reverse;
 		this.sprite = sprite;
-		this.frames = Resources.loadImageSheet(sprite.getTexture(), width, height, srcx, srcy, srcw, srch);
+		this.frames = frames;
 
+		this.sprite.setSize(width, height);
+		
 		for(int i=0; i<frames.size(); i++) {
 			this.frameLengths.add(framelength);
 		}
 		
 		reset(currenttime);
+	}
+	
+	public Animation(Sprite sprite, int width, int height, double currenttime, double framelength, Animation.Mode mode, boolean reverse)
+	{
+		List<TextureRegion> frames = Resources.loadImageSheet(sprite.getTexture(), width, height);
+		
+		this.init(sprite, width, height, frames, currenttime, framelength, mode, reverse);
+	}
+
+	public Animation(Sprite sprite, int width, int height, int srcx, int srcy, int srcw, int srch, double currenttime, double framelength, Animation.Mode mode, boolean reverse)
+	{
+		List<TextureRegion> frames = Resources.loadImageSheet(sprite.getTexture(), width, height, srcx, srcy, srcw, srch); 
+
+		this.init(sprite, width, height, frames, currenttime, framelength, mode, reverse);
 	}
 	
 	public void reset(double currenttime)
@@ -67,11 +80,11 @@ public class Animation {
 				
 				if(frame >= frameCount)
 				{
-					if(mode == "loop")
+					if(mode == Mode.LOOP)
 					{
 						frame = 0;
 					} 
-					else if(mode == "pingpong")
+					else if(mode == Mode.PINGPONG)
 					{
 						if(!reverse)
 						{
@@ -84,7 +97,7 @@ public class Animation {
 							frame = 0; 
 						}
 					}
-					else if(mode == "pingpongloop")
+					else if(mode == Mode.PINGPONGLOOP)
 					{
 						frame = frameCount - 1;
 						direction = -1;
@@ -97,11 +110,11 @@ public class Animation {
 				}
 				else if(frame < 0)
 				{
-					if(mode == "loop")
+					if(mode == Mode.LOOP)
 					{
 						frame = frameCount - 1;
 					} 
-					else if(mode == "pingpong")
+					else if(mode == Mode.PINGPONG)
 					{
 						if(!reverse)
 						{
@@ -114,7 +127,7 @@ public class Animation {
 							direction = 1;
 						}
 					}
-					else if(mode == "pingpongloop")
+					else if(mode == Mode.PINGPONGLOOP)
 					{
 						frame = 0;
 						direction = 1;

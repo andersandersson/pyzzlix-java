@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.Animation.Mode;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,9 +33,9 @@ public class Block extends Sprite {
 		this.offsetY = offsety;
 		this.type = type;
 		
-		this.blinkAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, "pingpongloop", false);
-		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, "pingpong", false);
-		this.normalAnimation = new Animation(this, 16, 16, type*16, 0, 16, 16, 0.0, 0.2, "normal", false);
+		this.blinkAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONGLOOP, false);
+		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONG, false);
+		this.normalAnimation = new Animation(this, 16, 16, type*16, 0, 16, 16, 0.0, 0.2, Animation.Mode.NORMAL, false);
 		
 		this.setAnimation(blinkAnimation);
 		this.setSize(16, 16);

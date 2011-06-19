@@ -63,4 +63,8 @@ public class Text extends Sprite {
              drawposy += this.font.getHeight();	
         }
 	}
+	
+	public String toString() {
+		return this.text;
+	}
 }
