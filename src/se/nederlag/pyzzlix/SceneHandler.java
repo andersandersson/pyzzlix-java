@@ -22,10 +22,12 @@ public class SceneHandler {
 	
 	public void pushScene(Scene scene) {
 		sceneStack.push(scene);
+		scene.show();
 	}
 
 	public void removeScene(Scene scene) {
 		sceneStack.remove(scene);
+		scene.hide();
 	}
 
 	public void handleEvent() {		

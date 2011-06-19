@@ -1,5 +1,6 @@
 package se.nederlag.pyzzlix;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -18,11 +19,13 @@ public class Board extends Sprite {
 	private Sprite glow;
 	private Marker marker;
 	private boolean blocksFalling;
+	private boolean gameOver;
 	
 	private Color glowColor;
 	private double glowDuration;
 	
 	private List<List<Block>> grid;
+	private List<Block> lastRotated;
 	
 	public static double triangleArea(Point a, Point b, Point c) {
 		return (b.getX() - a.getX()) * (c.getY() - a.getY()) - (c.getX() - a.getX())*(b.getY() - a.getY());
@@ -45,8 +48,11 @@ public class Board extends Sprite {
 	public Board(Scene scene, int width, int height) {
 		this.scene = scene;
 		this.width = width;
-		this.height = height;
+		this.height = 2*height;
 		this.glowColor = new Color(0,0,0,0);
+		this.grid = new ArrayList<List<Block>>();
+		this.lastRotated = new LinkedList<Block>();
+		this.reset();
 		
 		this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")));
 		this.background.setScale(new Point(160.0, 208.0));
@@ -73,10 +79,16 @@ public class Board extends Sprite {
 		this.addSubSprite(this.border);
 		this.addSubSprite(this.glow);
 		this.addSubSprite(this.marker);
-		
-		this.grid = new ArrayList<List<Block>>();
 	}
 	
+	public int getBoardWidth() {
+		return this.width;
+	}
+
+	public int getBoardHeight() {
+		return this.height/2;
+	}
+
 	public void pulseBorder(Color col1, Color col2, double duration) {
 		this.glowDuration = duration;
 		
@@ -118,23 +130,86 @@ public class Board extends Sprite {
 	}
 	
 	public void reset() {
+		int width = this.grid.size();
+		for(int x=0; x<width; x++) {
+			if(this.grid.get(x) != null) {
+				int height = this.grid.get(x).size();
+				for(int y=0; y<height; y++) {
+					this.clear(x, y);
+				}
+			}
+		}
 		
+		this.grid.clear();
+		this.gameOver = false;
+		this.lastRotated.clear();
+		
+		for(int x=0; x<this.width; x++) {
+			ArrayList<Block> list = new ArrayList<Block>(); 
+			this.grid.add(list);
+			
+			for(int y=0; y<this.height; y++) {
+				list.add(null);
+			}
+		}		
 	}
 	
 	public boolean full() {
+		for(List<Block> list : this.grid) {
+			if(list != null) {
+				for(Block block : list) {
+					if(block == null) {
+						return false;
+					}
+				}
+			} else {
+				throw new IllegalStateException("Board is not initialized");
+			}
+		}
+		
 		return true;
 	}
 	
 	public boolean inactive() {
-		return false;
+		for(List<Block> list : this.grid) {
+			if(list != null) {
+				for(Block block : list) {
+					if(block != null) {
+						if(block.hasStatus(Block.Status.IN_CIRCLE) || block.hasStatus(Block.Status.MOVING) || block.getComboCounter() > 0) {
+							return false;
+						}
+					}
+				}
+			} else {
+				throw new IllegalStateException("Board is not initialized");
+			}
+		}
+		
+		return true;
 	}
 	
 	public void add(int x, int y, Block block) {
+		this.grid.get(x).set(y, block);
 		
+		if(y >= this.height/2) {
+			this.blocks.addSubSprite(block);
+		} else {
+			block.addStatus(Block.Status.OFFSCREEN);
+		}
 	}
 	
 	public void clear(int x, int y) {
+		Block block = this.grid.get(x).get(y);
 		
+		if(block != null && this.blocks.getSubSprites().contains(block)) {
+			this.blocks.removeSubSprite(block);
+		}
+		
+		this.grid.get(x).set(y, null);
+	}
+	
+	public Block getBlockAt(int x, int y) {
+		return this.grid.get(x).get(y);
 	}
 	
 	public void updateGameOver() {

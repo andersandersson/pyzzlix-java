@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import java.util.EnumSet;
+
 import se.nederlag.pyzzlix.Animation.Mode;
 
 import com.badlogic.gdx.Gdx;
@@ -8,6 +10,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Block extends Sprite {
+	public enum Status {
+		MOVING, IN_CIRCLE, OFFSCREEN, WEIGHTLESS;
+	}
+		
 	private int boardX;
 	private int boardY;
 	private int offsetX;
@@ -15,6 +21,8 @@ public class Block extends Sprite {
 	private int type;
 	private int width;
 	private int height;
+	private EnumSet<Status> status;
+	private int comboCounter;
 	
 	private Animation blinkAnimation;
 	private Animation pulseAnimation;
@@ -32,21 +40,43 @@ public class Block extends Sprite {
 		this.offsetX = offsetx;
 		this.offsetY = offsety;
 		this.type = type;
+		this.status = EnumSet.noneOf(Status.class);
+		this.comboCounter = 0;
 		
 		this.blinkAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONGLOOP, false);
 		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONG, false);
 		this.normalAnimation = new Animation(this, 16, 16, type*16, 0, 16, 16, 0.0, 0.2, Animation.Mode.NORMAL, false);
 		
-		this.setAnimation(blinkAnimation);
+		this.setAnimation(normalAnimation);
 		this.setSize(16, 16);
 		
 		this.width = 16;
 		this.height = 16;
 		
-		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
-		this.setCenter(new Point(16, 16));
+		this.setPos(new Point(offsetX+boardX*16, offsetY+boardY*16));
+		this.setCenter(new Point(8, 8));
 	}
 	
+	public boolean addStatus(Status status) {
+		return this.status.add(status);
+	}
+	
+	public boolean hasStatus(Status status) {
+		return this.status.contains(status);
+	}
+	
+	public int getComboCounter() {
+		return this.comboCounter;
+	}
+	
+	public void incrementComboCounter() {
+		this.comboCounter += 1;
+	}
+
+	public void resetComboCounter() {
+		this.comboCounter = 0;
+	}
+
 	public void doPulse() {
 		this.setAnimation(pulseAnimation);
 	}
@@ -78,5 +108,9 @@ public class Block extends Sprite {
         this.scaleTo(new Point(1.0, 1.0), currentTime, 0.15, null);
         this.setRot(180.0);
         this.rotateTo(0, currentTime, 0.3, null);
+	}
+
+	public int getType() {
+		return this.type;
 	}
 }

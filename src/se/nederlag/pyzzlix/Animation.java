@@ -73,7 +73,7 @@ public class Animation {
 	{
 		if(frameCount > 0)
 		{
-			while(frameTimer + frameLengths.get(frame) <= currenttime)
+			while(frameCount > 0 && frameTimer + frameLengths.get(frame) <= currenttime)
 			{
 				frameTimer += frameLengths.get(frame);
 				frame += direction;
