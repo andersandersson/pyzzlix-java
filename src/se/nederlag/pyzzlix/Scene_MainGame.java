@@ -234,16 +234,24 @@ public class Scene_MainGame extends Scene {
 				if(this.state == State.RUNNING) {
 					switch(keyevent.key) {
 						case Input.Keys.UP:
-							Gdx.app.log("MAIN", "Pressed UP");
+							if(this.board.getMarker().getBoardY() > this.board.getBoardHeight()) {
+								this.board.getMarker().move(0, -1, this.currentTime);
+							}
 							break;
 						case Input.Keys.DOWN:
-							Gdx.app.log("MAIN", "Pressed DOWN");
+							if(this.board.getMarker().getBoardY() < this.board.getBoardHeight()*2-2) {
+								this.board.getMarker().move(0, 1, this.currentTime);
+							}
 							break;
 						case Input.Keys.LEFT:
-							Gdx.app.log("MAIN", "Pressed LEFT");
+							if(this.board.getMarker().getBoardX() > 0) {
+								this.board.getMarker().move(-1, 0, this.currentTime);
+							}
 							break;
 						case Input.Keys.RIGHT:
-							Gdx.app.log("MAIN", "Pressed RIGHT");
+							if(this.board.getMarker().getBoardX() < this.board.getBoardWidth()-2) {
+								this.board.getMarker().move(1, 0, this.currentTime);
+							}
 							break;
 						default:
 							break;

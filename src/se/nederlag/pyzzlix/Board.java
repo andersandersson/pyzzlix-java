@@ -88,6 +88,10 @@ public class Board extends Sprite {
 	public int getBoardHeight() {
 		return this.height/2;
 	}
+	
+	public Marker getMarker() {
+		return this.marker;
+	}
 
 	public void pulseBorder(Color col1, Color col2, double duration) {
 		this.glowDuration = duration;

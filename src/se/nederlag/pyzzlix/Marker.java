@@ -38,6 +38,14 @@ public class Marker extends Sprite {
 		this.moveToBoardCoord(boardX+dx, boardY+dy, currentTime);
 	}
 	
+	public int getBoardX() {
+		return this.boardX;
+	}
+	
+	public int getBoardY() {
+		return this.boardY;
+	}
+	
 	public void turn() {
 	}
 
