@@ -155,7 +155,7 @@ public class Scene_MainGame extends Scene {
 	public void addRandom(int x, int y) {
 		int type;
 		
-		if(y < this.board.getBoardHeight() - 1) {
+		if(y < this.board.getBoardHeight()*2 - 1) {
 			type = this.getRandomBlockType();
 			
 			while(this.board.getBlockAt(x, y+1) != null && this.board.getBlockAt(x, y+1).getType() == type) {
@@ -202,7 +202,16 @@ public class Scene_MainGame extends Scene {
 				if(this.initCounter > 0) {
 					this.fillZigZag();
 				} else {
+					int boardWidth = this.board.getBoardWidth();
+					int boardHeight = this.board.getBoardHeight();
 					
+					for(int x=boardWidth-1; x>=0; x--) {
+						for(int y=boardHeight-1; y>=0; y--) {
+							if(this.board.getBlockAt(x, y) == null) {
+								this.addRandom(x, y);
+							}
+						}						
+					}
 				}
 			}
 			
