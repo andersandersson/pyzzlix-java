@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
+	protected double currentTime = 0.0;
+
 	private List<Sprite> subSprites = new LinkedList<Sprite>();
 	private Animation currentAnimation = null;
-
-	private double currentTime = 0.0;
 
 	private Point center = new Point(0,0);
 	
@@ -213,7 +213,7 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 
 	public void addSubSprite(Sprite sprite) {
 		if(sprite == this) {
-			throw new IllegalArgumentException("Cannot add self to subsprites");
+			throw new IllegalArgumentException("Cannot add  to subsprites");
 		}
 		
 		subSprites.add(sprite);
@@ -335,4 +335,21 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 	public Point getCenter() {
 		return this.center; 
 	}
+		   
+    public void clearColCallbacks() {
+    	this._col_callbacks.clear();
+    }
+        
+    public void clearScaleCallbacks() {
+    	this._scale_callbacks.clear();
+    }
+        
+    public void clearPosCallbacks() {
+    	this._pos_callbacks.clear();
+    }
+
+    public void clearRotCallbacks() {
+    	this._rot_callbacks.clear();
+    }
+        
 }

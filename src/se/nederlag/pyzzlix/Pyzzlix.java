@@ -1,7 +1,11 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventHandler;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 public class Pyzzlix implements ApplicationListener  {
 	static final int LOGICS_PER_SEC = 20;
@@ -13,6 +17,8 @@ public class Pyzzlix implements ApplicationListener  {
 	double lastRenderTime = 0.0f;
 	double lastFpsUpdate = 0.0f;
 	double logicLength = 1.0f / LOGICS_PER_SEC;
+	
+	InputHandler inputHandler;
 	
 	public Pyzzlix() {
 	}
@@ -27,11 +33,13 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void create() {
+		inputHandler = new InputHandler();
+		Gdx.input.setInputProcessor(inputHandler);
 		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 	}
  
-	public void resize(int width, int height) {
-		//batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+	public void resize(int width, int height) {		
+		Renderer.getInstance().resize(width, height);
 	}
 	
 	public void render() {
@@ -47,6 +55,11 @@ public class Pyzzlix implements ApplicationListener  {
 		if(time >= nextUpdateTime + logicLength)
 		{
 			nextUpdateTime += logicLength;
+
+			while(EventHandler.getInstance().peek() != null) {
+				Event event = EventHandler.getInstance().poll();
+				SceneHandler.getInstance().handleEvent(event);
+			}
 			
 			SceneHandler.getInstance().updateTimers(logicLength);
 			SceneHandler.getInstance().doSceneTicks();

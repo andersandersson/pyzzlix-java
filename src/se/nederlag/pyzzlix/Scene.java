@@ -3,6 +3,8 @@ package se.nederlag.pyzzlix;
 import java.util.List;
 import java.util.LinkedList;
 
+import se.nederlag.pyzzlix.events.Event;
+
 public abstract class Scene {
 	boolean renderBlocker = false;
 	boolean updateBlocker = false;
@@ -61,6 +63,10 @@ public abstract class Scene {
 		return sprites;
 	}
 
+	public boolean handleEvent(Event event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	public abstract void tick();
-    
 }
