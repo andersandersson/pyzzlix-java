@@ -33,7 +33,7 @@ public class Renderer {
 	}
 
 	public void resize(int width, int height) {
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		batch.getProjectionMatrix().setToOrtho2D(0, 240, 320, -240);
 	}
 	
 	public void drawSprite(Sprite sprite, double currenttime, Point last_pos, Color last_col, Float last_rot, Point last_scale, Point last_origin)
@@ -58,21 +58,20 @@ public class Renderer {
 		new_pos = new_pos.add(last_pos);
 		
 		pos = new_pos.sub(origin);
-
+		
 		col.set(last_col.r*col.r, last_col.g*col.g, last_col.b*col.b, last_col.a*col.a);
 		scale = scale.mul(last_scale);
 		rot += last_rot;
 
-		// Flip y-coordinates
-		pos.setY(Gdx.graphics.getHeight() - pos.getY() - sprite.getHeight());
-		origin = new Point(origin.getX(), sprite.getHeight() - origin.getY());
+		// Flip y-coordinates and compensate for origin
+		pos.setY(pos.getY() + sprite.getHeight() - 2*origin.getY());
 		
 		if(sprite.getTexture() != null) {
 			sprite.setOrigin((float)origin.getX(), (float)origin.getY());
 			sprite.setPosition((float)pos.getX(), (float)pos.getY());
 			sprite.setColor(col);
 			sprite.setRotation(rot);
-			sprite.setScale((float)scale.getX(), (float)scale.getY());			
+			sprite.setScale((float)scale.getX(), -(float)scale.getY());			
 			sprite.draw(batch);
 		}
 		
@@ -100,7 +99,7 @@ public class Renderer {
 
 	public void renderScene(Scene scene) {
 		for(Sprite sprite : scene.getSprites()) {
-			drawSprite(sprite, currentTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(800/320,600/240), new Point(0,0));
+			drawSprite(sprite, currentTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(1,1), new Point(0,0));
 		}
 	}
 }

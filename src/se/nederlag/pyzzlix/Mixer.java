@@ -62,7 +62,7 @@ public class Mixer
 		}
 
 		public void pause() {
-			this.music.play();
+			this.music.pause();
 		}
 
 		public void stop() {
@@ -194,7 +194,7 @@ public class Mixer
 	
     public void playMusic(Music music, double volume, double fadeinTime, boolean looping)
     {
-    	if (fadeinTime >= 0.0)
+    	if (fadeinTime > 0.0)
     	{
     		music.setVolume(0.0f);
     		this.volumeChanges.add(new VolumeChange(music, 
@@ -220,7 +220,7 @@ public class Mixer
     
     public void setMusicVolume(Music music, double volume, double fadeTime)
     {
-    	if (fadeTime >= 0.0)
+    	if (fadeTime > 0.0)
     	{
     		this.volumeChanges.add(new VolumeChange(music, 
     												music.getVolume(), 
@@ -238,7 +238,12 @@ public class Mixer
 	public void stopMusic(Music music)
 	{
 		music.stop();
-	}       
+	}
+	
+	public void pauseMusic(Music music)
+	{
+		music.pause();
+	}      
 	
 	public void stopSound(Sound sound)
 	{
