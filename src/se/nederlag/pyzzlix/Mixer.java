@@ -209,7 +209,8 @@ public class Mixer
     	}
     
     	music.setLooping(looping);
-    	this.musicToPlay.add(music);
+    	//this.musicToPlay.add(music);
+    	music.play();
     }
         
     public void playSound(Sound sound, double volume)
