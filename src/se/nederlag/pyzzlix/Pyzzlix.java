@@ -54,6 +54,7 @@ public class Pyzzlix implements ApplicationListener  {
 		}
 
 		Renderer.getInstance().render(time - lastRenderTime);
+		Mixer.getInstance().update(time - lastRenderTime);
 		lastRenderTime = time;
 		fpsCounter++;
 	}
