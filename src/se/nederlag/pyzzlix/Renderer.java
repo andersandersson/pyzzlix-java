@@ -100,7 +100,7 @@ public class Renderer {
 
 	public void renderScene(Scene scene) {
 		for(Sprite sprite : scene.getSprites()) {
-			drawSprite(sprite, currentTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(2,2), new Point(0,0));
+			drawSprite(sprite, currentTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(800/320,600/240), new Point(0,0));
 		}
 	}
 }

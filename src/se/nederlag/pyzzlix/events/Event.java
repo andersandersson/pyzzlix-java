@@ -2,7 +2,7 @@ package se.nederlag.pyzzlix.events;
 
 public class Event {
 	public enum Type {
-		KEYBOARD, GAME_OVER;
+		KEYBOARD, MOUSE, GAME_OVER;
 	};
 	
 	public final Type type;

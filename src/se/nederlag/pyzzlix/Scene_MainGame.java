@@ -14,10 +14,12 @@ import java.util.TreeSet;
 
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
+import se.nederlag.pyzzlix.events.EventMouseMove;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 
 public class Scene_MainGame extends Scene {
 	public enum State {
@@ -47,7 +49,7 @@ public class Scene_MainGame extends Scene {
 	private Random randomGenerator;
 
 	private Sprite blocks;
-	
+
 	private Scene_MainGame() {
 		this.board = new Board(this, 10, 13);
 		this.board.setPos(new Point(24, -300));
@@ -79,8 +81,9 @@ public class Scene_MainGame extends Scene {
 		
 		this.randomGenerator = new Random(System.nanoTime());
 		
-		sprites.add(this.blocks);
-		sprites.add(board);
+		this.sprites.add(this.blocks);
+		this.sprites.add(this.board);
+		
 	}
 	
 	public static Scene_MainGame getInstance()
