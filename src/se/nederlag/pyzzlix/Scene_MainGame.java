@@ -226,7 +226,7 @@ public class Scene_MainGame extends Scene {
 
 	@Override
 	public boolean handleEvent(Event event) {
-		if(event.getClass() == EventKeyState.class) {
+		if(event.type == Event.Type.KEYBOARD) {
 			EventKeyState keyevent = (EventKeyState) event;
 						
 			if(keyevent.state == EventKeyState.State.DOWN) {
@@ -251,6 +251,20 @@ public class Scene_MainGame extends Scene {
 						case Input.Keys.RIGHT:
 							if(this.board.getMarker().getBoardX() < this.board.getBoardWidth()-2) {
 								this.board.getMarker().move(1, 0, this.currentTime);
+							}
+							break;
+						case Input.Keys.Z:
+							if(this.board.rotate(this.board.getMarker().getBoardX(), this.board.getMarker().getBoardY(), -1, 2)) {
+								this.board.getMarker().turn();
+							} else {
+								this.board.getMarker().fail();
+							}
+							break;
+						case Input.Keys.X:
+							if(this.board.rotate(this.board.getMarker().getBoardX(), this.board.getMarker().getBoardY(), 1, 2)) {
+								this.board.getMarker().turn();
+							} else {
+								this.board.getMarker().fail();
 							}
 							break;
 						default:

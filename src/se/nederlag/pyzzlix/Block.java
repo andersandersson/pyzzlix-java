@@ -65,6 +65,10 @@ public class Block extends Sprite {
 		return this.status.contains(status);
 	}
 	
+	public boolean removeStatus(Status status) {
+		return this.status.remove(status);
+	}
+	
 	public int getComboCounter() {
 		return this.comboCounter;
 	}

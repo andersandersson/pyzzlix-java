@@ -1,8 +1,12 @@
 package se.nederlag.pyzzlix;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+
+import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -25,7 +29,7 @@ public class Board extends Sprite {
 	private double glowDuration;
 	
 	private List<List<Block>> grid;
-	private List<Block> lastRotated;
+	private List<Pair<Integer,Integer>> lastRotated;
 	
 	public static double triangleArea(Point a, Point b, Point c) {
 		return (b.getX() - a.getX()) * (c.getY() - a.getY()) - (c.getX() - a.getX())*(b.getY() - a.getY());
@@ -51,7 +55,7 @@ public class Board extends Sprite {
 		this.height = 2*height;
 		this.glowColor = new Color(0,0,0,0);
 		this.grid = new ArrayList<List<Block>>();
-		this.lastRotated = new LinkedList<Block>();
+		this.lastRotated = new LinkedList<Pair<Integer,Integer>>();
 		this.reset();
 		
 		this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")));
@@ -217,7 +221,17 @@ public class Board extends Sprite {
 	}
 	
 	public void updateGameOver() {
+		for(List<Block> list : this.grid) {
+			if(list != null) {
+				for(Block block : list) {
+					if(block == null) {
+						return;
+					}
+				}
+			}
+		}
 		
+		EventHandler.getInstance().post(new Event(Event.Type.GAME_OVER));
 	}
 	
 	public List<Block> handleCircle(Pair<Integer,Integer> points) {
@@ -229,11 +243,92 @@ public class Board extends Sprite {
 	}
 	
 	public boolean rotate(int x, int y, int direction, int radius) {
-		return false;
+		if(this.gameOver) {
+			return false;
+		}
+		
+		if(x > this.width-radius || x < 0) {
+			return false;
+		}
+
+		if(y > this.height-radius || y < 0) {
+			return false;
+		}
+		
+		List<Integer> xs = new LinkedList<Integer>(); 
+		
+		for(int i=0; i<radius; i++) { xs.add(i); }
+		for(int i=0; i<radius-1; i++) { xs.add(radius-1); }
+		for(int i=radius-2; i>=0; i--) { xs.add(i); }
+		for(int i=0; i<radius-1; i++) { xs.add(0); }
+		
+		List<Integer> ys = new LinkedList<Integer>(xs);
+		
+		if(direction == 1) {
+			Collections.reverse(ys);
+		} else {
+			Collections.reverse(xs);
+		}
+		
+		List<Pair<Integer,Integer>> points = new LinkedList<Pair<Integer,Integer>>();
+		
+		int imax=xs.size();
+		for(int i=0; i<imax; i++) {
+			points.add(new Pair<Integer,Integer>(xs.get(i), ys.get(i)));
+		}
+		
+		Block tile = null;
+		Block next_tile = null;
+		
+		for(Pair<Integer,Integer> point : points) {
+			int xx = point.left+x;
+			int yy = point.right+y;
+
+			next_tile = this.grid.get(xx).get(yy);
+			
+			if(next_tile == null) {
+				return false;
+			}
+			
+			if(next_tile != null && (next_tile.hasStatus(Block.Status.IN_CIRCLE) || next_tile.hasStatus(Block.Status.IN_CIRCLE) || next_tile.hasStatus(Block.Status.OFFSCREEN))) {
+				return false;
+			}
+		}
+		
+		tile = null;
+		this.lastRotated.clear();
+		
+		for(Pair<Integer,Integer> point : points) {
+			int xx = point.left+x;
+			int yy = point.right+y;
+			
+			this.lastRotated.add(new Pair<Integer,Integer>(xx, yy));
+			
+			next_tile = this.grid.get(xx).get(yy);
+			this.grid.get(xx).set(yy, tile); 
+			
+			if(tile != null) {
+				this.moveBlock(tile, xx, yy);
+			}
+			
+			tile = next_tile;
+		}
+		
+		return true;
 	}
 	
 	public void moveBlock(Block block, int x, int y) {
+		block.moveToBoardCoord(x, y, this.currentTime);
 		
+		if(y < this.height/2) {
+			block.addStatus(Block.Status.OFFSCREEN);
+		} else {
+			if(!this.blocks.getSubSprites().contains(block)) {
+				this.blocks.addSubSprite(block);
+			}
+			
+			block.removeStatus(Block.Status.OFFSCREEN);
+		}
 	}
 	
 	public void updateBoard() {

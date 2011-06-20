@@ -9,6 +9,7 @@ public class EventKeyState extends Event {
 	public final int key;
 	
 	public EventKeyState(State state, int key) {
+		super(Event.Type.KEYBOARD);
 		this.state = state;
 		this.key = key;
 	}
