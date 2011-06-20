@@ -2,6 +2,8 @@ package se.nederlag.pyzzlix;
 
 import se.nederlag.pyzzlix.events.EventHandler;
 import se.nederlag.pyzzlix.events.EventKeyState;
+import se.nederlag.pyzzlix.events.EventMouseMove;
+
 import com.badlogic.gdx.InputProcessor;
 
 public class InputHandler implements InputProcessor {
@@ -46,8 +48,10 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
+		EventMouseMove event = new EventMouseMove(x, y);
+		EventHandler.getInstance().post(event);
+		
+		return true;
 	}
 
 	@Override

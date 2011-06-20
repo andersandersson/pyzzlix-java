@@ -35,7 +35,9 @@ public class Pyzzlix implements ApplicationListener  {
 	public void create() {
 		inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
+		SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
+		
 	}
  
 	public void resize(int width, int height) {		
@@ -67,6 +69,7 @@ public class Pyzzlix implements ApplicationListener  {
 		}
 
 		Renderer.getInstance().render(time - lastRenderTime);
+		Mixer.getInstance().update(time - lastRenderTime);
 		lastRenderTime = time;
 		fpsCounter++;
 	}

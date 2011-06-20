@@ -31,7 +31,8 @@ public class Marker extends Sprite {
 	public void moveToBoardCoord(int boardx, int boardy, double currentTime) {
 		this.boardX = boardx;
 		this.boardY = boardy;
-		this.moveTo(new Point(boardX * scaleX + offsetX, boardY * scaleY + offsetY), currentTime, 0.15, null);
+		//this.moveTo(new Point(boardX * scaleX + offsetX, boardY * scaleY + offsetY), currentTime, 0.15, null);
+		this.setPos(new Point(boardX * scaleX + offsetX, boardY * scaleY + offsetY));
 	}
 
 	public void move(int dx, int dy, double currentTime) {
