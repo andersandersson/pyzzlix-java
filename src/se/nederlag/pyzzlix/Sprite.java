@@ -11,6 +11,8 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 	protected double currentTime = 0.0;
 
 	private List<Sprite> subSprites = new LinkedList<Sprite>();
+	private List<Sprite> subSpritesToAdd = new LinkedList<Sprite>();
+	private List<Sprite> subSpritesToRemove = new LinkedList<Sprite>();
 	private Animation currentAnimation = null;
 
 	private Point center = new Point(0,0);
@@ -216,15 +218,15 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 			throw new IllegalArgumentException("Cannot add  to subsprites");
 		}
 		
-		subSprites.add(sprite);
+		subSpritesToAdd.add(sprite);
 	}
 
 	public void removeSubSprite(Sprite sprite) {
-		subSprites.remove(sprite);
+		subSpritesToRemove.add(sprite);
 	}
 
 	public void clearSubSprites() {
-		subSprites.clear();
+		subSpritesToRemove.addAll(subSprites);
 	}
 
 	public void setAnimation(Animation animation)
@@ -250,6 +252,17 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 		{
 			sprite.update(currenttime);
 		}
+		
+		for(Sprite sprite : subSpritesToRemove) {
+			subSprites.remove(sprite);
+		}
+
+		for(Sprite sprite : subSpritesToAdd) {
+			subSprites.add(sprite);
+		}
+		
+		subSpritesToRemove.clear();
+		subSpritesToAdd.clear();
 	}
 	
 	public void moveTo(Point pos, double currenttime, double duration, SpriteCallback callback)

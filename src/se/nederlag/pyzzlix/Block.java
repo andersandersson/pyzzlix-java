@@ -13,7 +13,7 @@ public class Block extends Sprite {
 	public enum Status {
 		MOVING, IN_CIRCLE, OFFSCREEN, WEIGHTLESS;
 	}
-		
+
 	private int boardX;
 	private int boardY;
 	private int offsetX;
@@ -23,6 +23,7 @@ public class Block extends Sprite {
 	private int height;
 	private EnumSet<Status> status;
 	private int comboCounter;
+	private int gravityDelay;
 	
 	private Animation blinkAnimation;
 	private Animation pulseAnimation;
@@ -42,6 +43,7 @@ public class Block extends Sprite {
 		this.type = type;
 		this.status = EnumSet.noneOf(Status.class);
 		this.comboCounter = 0;
+		this.gravityDelay = 0;
 		
 		this.blinkAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONGLOOP, false);
 		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONG, false);
@@ -69,6 +71,10 @@ public class Block extends Sprite {
 		return this.status.remove(status);
 	}
 	
+	public void setComboCounter(int comboCounter) {
+		this.comboCounter = comboCounter;
+	}
+	
 	public int getComboCounter() {
 		return this.comboCounter;
 	}
@@ -79,6 +85,18 @@ public class Block extends Sprite {
 
 	public void resetComboCounter() {
 		this.comboCounter = 0;
+	}
+
+	public int getGravityDelay() {
+		return this.gravityDelay;
+	}
+	
+	public void decrementGravityDelay() {
+		this.gravityDelay -= 1;
+	}
+
+	public void setGravityDelay(int gravityDelay) {
+		this.gravityDelay = gravityDelay;
 	}
 
 	public void doPulse() {
@@ -116,5 +134,13 @@ public class Block extends Sprite {
 
 	public int getType() {
 		return this.type;
+	}
+
+	public int getBoardX() {
+		return this.boardX;
+	}
+
+	public int getBoardY() {
+		return this.boardY;
 	}
 }

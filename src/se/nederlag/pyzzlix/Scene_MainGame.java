@@ -2,6 +2,7 @@ package se.nederlag.pyzzlix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventCircleFound;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
 import com.badlogic.gdx.Gdx;
@@ -179,6 +181,63 @@ public class Scene_MainGame extends Scene {
 		block.animatePopup(this.currentTime);
 	}
 	
+	public void removeBlocks(List<Block> blocks) {
+		List<Block> scale_blocks = new LinkedList<Block>(blocks);
+		
+		double delay = 0.7 / blocks.size();
+		
+		if(delay > 0.08) {
+			delay = 0.08;
+		}
+		
+		SpriteCallback block_scale_done = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				List<Block> scale_blocks = (List<Block>) getArg(0);
+				List<Block> blocks = (List<Block>) getArg(1);
+				double delay = (Double) getArg(2);
+				
+				if(scale_blocks.size() > 0) {
+					Block next_block = scale_blocks.get(0);
+					scale_blocks.remove(next_block);
+					next_block.fadeTo(new Color(0.0f,0.0f,0.0f,0.0f), currenttime, delay, this);
+					next_block.rotateTo(720.0, currenttime, delay, null);
+					next_block.scaleTo(new Point(4.0,4.0), currenttime, delay, null);
+				} else {
+					for(Block block : blocks) {
+						Scene_MainGame.getInstance().board.clear(block.getBoardX(), block.getBoardY());
+					}
+				}
+			}
+		};
+		SpriteCallback block_wait_done = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				sprite.scaleTo(new Point(1.0, 1.0), currenttime, 0.5, (SpriteCallback) getArg(0));
+			}
+		};
+		SpriteCallback block_wait_before_blink = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				List<Block> blocks = (List<Block>) getArg(0);
+				
+				int imax = blocks.size();
+				for(int i=0; i<imax-1; i++) {
+					Block block = blocks.get(i);
+					block.fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), currenttime, 0.1, null);
+					block.doBlink();
+				}
+
+				Block block = blocks.get(imax-1);
+				block.fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), currenttime, 0.1, (SpriteCallback) getArg(1));
+				block.doBlink();
+			}
+		};
+		
+		block_scale_done.setArgs(scale_blocks, blocks, delay);
+		block_wait_done.setArgs(block_scale_done);
+		block_wait_before_blink.setArgs(blocks, block_wait_done);
+		
+		blocks.get(blocks.size()-1).fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), this.currentTime, 0.1, block_wait_before_blink);
+	}
+
 	public List<Integer> getUsableBlocks() {
 		List<Integer> usableBlocks = new LinkedList<Integer>();
 		int maxLevel = 0;
@@ -198,6 +257,10 @@ public class Scene_MainGame extends Scene {
 		List<Integer> usableBlocks = this.getUsableBlocks();
 		int type = usableBlocks.get(this.randomGenerator.nextInt(usableBlocks.size()));
 		return type;
+	}
+
+	public void addCircleScore(List<Block> blocks, boolean falling) {
+		
 	}
 	
 	@Override
@@ -226,6 +289,19 @@ public class Scene_MainGame extends Scene {
 
 	@Override
 	public boolean handleEvent(Event event) {
+		if(event.type == Event.Type.CIRCLE_FOUND) {
+			EventCircleFound circleevent = (EventCircleFound) event;
+			
+			if(circleevent.fallBlocks.size() > 0) {
+				this.addCircleScore(circleevent.fallBlocks, true);
+				this.removeBlocks(circleevent.fallBlocks);
+			}
+
+			if(circleevent.rotationBlocks.size() > 0) {
+				this.addCircleScore(circleevent.fallBlocks, false);
+				this.removeBlocks(circleevent.rotationBlocks);
+			}
+		}
 		if(event.type == Event.Type.KEYBOARD) {
 			EventKeyState keyevent = (EventKeyState) event;
 						
