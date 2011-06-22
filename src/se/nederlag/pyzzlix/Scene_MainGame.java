@@ -13,6 +13,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import se.nederlag.pyzzlix.audio.MusicInputStreamMixer;
+import se.nederlag.pyzzlix.audio.OggMusicInputStream;
+import se.nederlag.pyzzlix.audio.OpenALMusicStream;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventCircleFound;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -20,6 +23,7 @@ import se.nederlag.pyzzlix.events.EventMouseMove;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.backends.openal.OpenALAudio;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -101,6 +105,25 @@ public class Scene_MainGame extends Scene {
 		this.sprites.add(this.levelboard);
 		this.sprites.add(this.hourglass);
 		this.sprites.add(this.board);
+
+		
+		OggMusicInputStream input1 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg"));
+		OggMusicInputStream input2 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg"));
+		OggMusicInputStream input3 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg"));
+		OggMusicInputStream input4 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
+		OggMusicInputStream input5 = new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg"));
+
+		MusicInputStreamMixer mixer = new MusicInputStreamMixer(5, input1.getChannels(), input1.getSampleRate());
+		mixer.setStream(0, input1);
+		mixer.setStream(1, input2);
+		mixer.setStream(2, input3);
+		mixer.setStream(3, input4);
+		mixer.setStream(4, input5);
+		input3.setVolume(0.3f);
+		
+		OpenALMusicStream music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
+		music.setLooping(true);
+		music.play();
 		
 	}
 	
