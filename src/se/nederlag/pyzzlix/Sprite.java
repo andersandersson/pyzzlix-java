@@ -216,17 +216,26 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 
 	public void addSubSprite(Sprite sprite) {
 		if(sprite == this) {
-			throw new IllegalArgumentException("Cannot add  to subsprites");
+			throw new IllegalArgumentException("Cannot add to subsprites");
+		}
+
+		if(subSpritesToRemove.contains(sprite)) {
+			subSpritesToRemove.remove(sprite);
 		}
 		
 		subSpritesToAdd.add(sprite);
 	}
 
 	public void removeSubSprite(Sprite sprite) {
+		if(subSpritesToAdd.contains(sprite)) {
+			subSpritesToAdd.remove(sprite);
+		}
+
 		subSpritesToRemove.add(sprite);
 	}
 
 	public void clearSubSprites() {
+		subSpritesToAdd.clear();
 		subSpritesToRemove.addAll(subSprites);
 	}
 
