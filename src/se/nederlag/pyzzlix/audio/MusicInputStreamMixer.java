@@ -71,17 +71,15 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		for(int i=0; i<length; i += 2*this.channels) {
 			for(int j=0; j<this.channels; j += 1) {
 				if (bigEndian) {
-					l_val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000FF);
-					r_val = ((int)dst[i+2*j] << 8)|(int)(dst[i+2*j+1]&0x000000FF);
+					l_val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000000000000000000FF);
+					r_val = ((int)dst[i+2*j] << 8)|(int)(dst[i+2*j+1]&0x000000000000000000000FF);
 				} else {
-					l_val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000FF);
-					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000FF);
+					l_val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000000000000000000FF);
+					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000000000000000000FF);
 				}
 
 				l_val = l_val + 32768;
 				r_val = r_val + 32768;
-				//val = ((l_val+r_val) - (l_val*r_val)/(1 << 16)); 
-				//val = l_val + r_val - (l_val*r_val) / (1 << 16);
 				
 				if(l_val < 32768 && r_val < 32768) {
 					val = (l_val*r_val)/32768;
@@ -91,7 +89,6 @@ public class MusicInputStreamMixer implements MusicInputStream {
 				
 				val = val - 32768;
 				
-				//Gdx.app.log("AUDIO", ""+val);
 				if (val > 32767) {
 					val = 32767;
 				}
