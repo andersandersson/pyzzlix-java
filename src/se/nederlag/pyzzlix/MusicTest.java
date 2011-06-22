@@ -15,8 +15,13 @@ package se.nederlag.pyzzlix;
  * limitations under the License.
  ******************************************************************************/
 
+import se.nederlag.pyzzlix.audio.MusicInputStreamMixer;
+import se.nederlag.pyzzlix.audio.OggMusicInputStream;
+import se.nederlag.pyzzlix.audio.OpenALMusicStream;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.backends.openal.OpenALAudio;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,7 +35,7 @@ public class MusicTest extends GdxTest {
                 return false;
         }
 
-        static final int NUM_STREAMS = 5; 
+        static final int NUM_STREAMS = 1; 
         Music[] music = new Music[NUM_STREAMS];
         TextureRegion buttons;
         SpriteBatch batch;
@@ -40,10 +45,27 @@ public class MusicTest extends GdxTest {
         
         @Override public void create() {
                 for(int i = 0; i < music.length; i++) {
-                        music[i] = Gdx.audio.newMusic(Gdx.files.internal("data/music1_lead3.ogg"));
+                		OggMusicInputStream input1 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg"));
+                		OggMusicInputStream input2 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg"));
+                		OggMusicInputStream input3 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg"));
+                		OggMusicInputStream input4 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
+                		OggMusicInputStream input5 = new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg"));
+
+                		MusicInputStreamMixer mixer = new MusicInputStreamMixer(5, input1.getChannels(), input1.getSampleRate());
+                		mixer.setStream(0, input1);
+                		mixer.setStream(1, input2);
+                		mixer.setStream(2, input3);
+                		mixer.setStream(3, input4);
+                		mixer.setStream(4, input5);
+                		music[i] = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
+                		music[i].setLooping(true);
+
+                        //music[i] = Gdx.audio.newMusic(Gdx.files.internal("data/music1_lead3.ogg"));
 //                      music = Gdx.audio.newMusic(Gdx.files.internal("data/sell_buy_item.wav"));       
 //                      music[i] = Gdx.audio.newMusic(Gdx.files.internal("data/threeofaperfectpair.mp3"));
                 }
+                //OpenALMusicStream music
+            	OggMusicInputStream input = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
                 buttons = new TextureRegion(new Texture(Gdx.files.internal("data/blocks.png")), 0, 0, 64, 64);
                 batch = new SpriteBatch();
                 font = new BitmapFont();
@@ -60,7 +82,7 @@ public class MusicTest extends GdxTest {
                 //batch.draw(buttons, 64, 0);
                 //batch.draw(buttons, 128, 0);
                 batch.draw(buttons, x, 128);
-                font.draw(batch, "\"Three of a perfect pair: " +  music[0].getPosition(), 10, Gdx.graphics.getHeight() - 20);
+                //font.draw(batch, "\"Three of a perfect pair: " +  music[0].getPosition(), 10, Gdx.graphics.getHeight() - 20);
                 batch.end();                    
                 
                 if(Gdx.input.justTouched()) {

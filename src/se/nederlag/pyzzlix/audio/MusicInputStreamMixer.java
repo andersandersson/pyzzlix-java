@@ -1,0 +1,113 @@
+package se.nederlag.pyzzlix.audio;
+
+import com.badlogic.gdx.audio.analysis.*;
+import java.nio.ByteOrder;
+
+import com.badlogic.gdx.Gdx;
+
+public class MusicInputStreamMixer implements MusicInputStream {
+	private MusicInputStream[] input;
+	private final int lines;
+	private final int channels;
+	private final int sampleRate;
+	
+	static private final int bufferSize = 4096 * 10;
+	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
+
+	private byte[] buffer;
+	
+	public MusicInputStreamMixer(int lines, int channels, int sampleRate) {
+		this.input = new MusicInputStream[lines];
+		this.channels = channels;
+		this.sampleRate = sampleRate;
+		this.lines = lines;
+		this.buffer = new byte[bufferSize];
+	}
+	
+	public void setStream(int idx, MusicInputStream stream) {
+		this.input[idx] = stream;
+	}
+	
+	public int getChannels() {
+		return this.channels;
+	}
+
+	public int getSampleRate() {
+		return this.sampleRate;
+	}
+
+	public int read(byte[] buffer) {
+		boolean first = true;
+		int length = 0;
+		
+		for(int i=0; i<this.lines; i++) {
+			if(this.input[i] != null) {
+				if(first) {
+					length = this.input[i].read(buffer);
+					first = false;
+				}  else {
+					length = this.input[i].read(this.buffer);
+					this.mixBuffers(this.buffer, buffer);
+				}
+			}
+		}
+		
+		return length;
+	}
+
+	public void reset() {
+		for(int i=0; i<this.lines; i++) {
+			if(this.input[i] != null) {
+				this.input[i].reset();
+			}
+		}
+	}
+	
+	private void mixBuffers(byte[] src, byte[] dst) {
+		int length = src.length;
+		int l_val, r_val, val;
+		double a, b, z;
+		
+		for(int i=0; i<length; i += 2*this.channels) {
+			for(int j=0; j<this.channels; j += 1) {
+				if (bigEndian) {
+					l_val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000FF);
+					r_val = ((int)dst[i+2*j] << 8)|(int)(dst[i+2*j+1]&0x000000FF);
+				} else {
+					l_val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000FF);
+					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000FF);
+				}
+
+				l_val = l_val + 32768;
+				r_val = r_val + 32768;
+				//val = ((l_val+r_val) - (l_val*r_val)/(1 << 16)); 
+				//val = l_val + r_val - (l_val*r_val) / (1 << 16);
+				
+				if(l_val < 32768 && r_val < 32768) {
+					val = (l_val*r_val)/32768;
+				} else {
+					val = 2*(l_val+r_val) - (l_val*r_val)/32768 - 65536;
+				}
+				
+				val = val - 32768;
+				
+				//Gdx.app.log("AUDIO", ""+val);
+				if (val > 32767) {
+					val = 32767;
+				}
+				if (val < -32768) {
+					val = -32768;
+				}
+				
+				if (bigEndian) {
+					dst[i+2*j+1] = (byte)(val >>> 8);
+					dst[i+2*j] = (byte)(val);
+				} else {
+					dst[i+2*j] = (byte)(val);
+					dst[i+2*j+1] = (byte)(val >>> 8);
+				}
+			}
+		}
+	}
+}
+
