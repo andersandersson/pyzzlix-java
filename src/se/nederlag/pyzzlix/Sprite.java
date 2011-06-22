@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 	protected double currentTime = 0.0;
+	protected double lastTime = 0.0;
 
 	private List<Sprite> subSprites = new LinkedList<Sprite>();
 	private List<Sprite> subSpritesToAdd = new LinkedList<Sprite>();
@@ -236,33 +237,34 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 	
 	public void update(double currenttime)
 	{
-		currentTime = currenttime;
+		lastTime = this.currentTime;
+		this.currentTime = currenttime;
 		
-		updatePos(currentTime);
-		updateCol(currentTime);
-		updateRot(currentTime);
-		updateScale(currentTime);
+		updatePos(this.currentTime);
+		updateCol(this.currentTime);
+		updateRot(this.currentTime);
+		updateScale(this.currentTime);
 		
-		if(currentAnimation != null) 
+		if(this.currentAnimation != null) 
 		{
-			currentAnimation.updateFrame(currenttime);
+			this.currentAnimation.updateFrame(currenttime);
 		}
 		
-		for(Sprite sprite : subSprites)
+		for(Sprite sprite : this.subSprites)
 		{
 			sprite.update(currenttime);
 		}
 		
-		for(Sprite sprite : subSpritesToRemove) {
-			subSprites.remove(sprite);
+		for(Sprite sprite : this.subSpritesToRemove) {
+			this.subSprites.remove(sprite);
 		}
 
-		for(Sprite sprite : subSpritesToAdd) {
-			subSprites.add(sprite);
+		for(Sprite sprite : this.subSpritesToAdd) {
+			this.subSprites.add(sprite);
 		}
 		
-		subSpritesToRemove.clear();
-		subSpritesToAdd.clear();
+		this.subSpritesToRemove.clear();
+		this.subSpritesToAdd.clear();
 	}
 	
 	public void moveTo(Point pos, double currenttime, double duration, SpriteCallback callback)

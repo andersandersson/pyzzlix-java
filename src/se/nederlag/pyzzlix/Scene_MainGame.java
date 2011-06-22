@@ -33,6 +33,9 @@ public class Scene_MainGame extends Scene {
 	private State state;
 	private boolean partsInPlace;
 	private Board board;
+	private Hourglass hourglass; 
+	private Levelboard levelboard;
+	private Scoreboard scoreboard; 
 
 	private SortedMap<Integer,Set<Integer>> levelBlocks;
 	private List<Integer> activeBlocks;
@@ -55,6 +58,16 @@ public class Scene_MainGame extends Scene {
 	private Scene_MainGame() {
 		this.board = new Board(this, 10, 13);
 		this.board.setPos(new Point(24, -300));
+		
+		this.scoreboard = new Scoreboard();
+		this.scoreboard.setPos(new Point(408.0, 80.0));
+
+		this.levelboard = new Levelboard();
+		this.levelboard.setPos(new Point(408.0, 80.0));
+
+		this.hourglass = new Hourglass();
+		this.hourglass.setPos(new Point(408.0, 136.0));
+		
 		this.state = State.IDLE;
 		this.partsInPlace = false;
 		this.blocks = new Sprite();
@@ -84,6 +97,9 @@ public class Scene_MainGame extends Scene {
 		this.randomGenerator = new Random(System.nanoTime());
 		
 		this.sprites.add(this.blocks);
+		this.sprites.add(this.scoreboard);
+		this.sprites.add(this.levelboard);
+		this.sprites.add(this.hourglass);
 		this.sprites.add(this.board);
 		
 	}
@@ -134,6 +150,9 @@ public class Scene_MainGame extends Scene {
 	public void moveInParts() {
 		this.partsInPlace = true;
 		this.board.moveTo(new Point(24,0), this.currentTime, 0.5, null);
+		this.scoreboard.moveTo(new Point(208, 8), this.currentTime, 0.5, null);
+		this.levelboard.moveTo(new Point(208, 80), this.currentTime, 0.5, null);
+		this.hourglass.moveTo(new Point(208, 136), this.currentTime, 0.5, null);
 	}
 	
 	public void setLevel(int level) {
