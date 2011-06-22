@@ -57,6 +57,7 @@ public class MusicTest extends GdxTest {
                 		mixer.setStream(2, input3);
                 		mixer.setStream(3, input4);
                 		mixer.setStream(4, input5);
+                		input3.setVolume(0.3f);
                 		music[i] = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
                 		music[i].setLooping(true);
 

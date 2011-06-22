@@ -7,10 +7,12 @@ import com.badlogic.gdx.files.FileHandle;
 public class OggMusicInputStream implements MusicInputStream {
 	private OggInputStream input;
 	private FileHandle file;
+	private float volume;
 	
 	public OggMusicInputStream(FileHandle file) {
 		this.file = file;
 		this.input = new OggInputStream(file.read());
+		this.volume = 1.0f;
 	}
 	
 	@Override
@@ -32,5 +34,13 @@ public class OggMusicInputStream implements MusicInputStream {
 	public void reset() {
 		Gdx.app.log("AUDIO", "Reset music stream");
 		this.input = new OggInputStream(file.read());
+	}
+	
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
+	public float getVolume() {
+		return this.volume;
 	}
 }

@@ -10,6 +10,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	private final int lines;
 	private final int channels;
 	private final int sampleRate;
+	private float volume;
 	
 	static private final int bufferSize = 4096 * 10;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
@@ -22,6 +23,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		this.sampleRate = sampleRate;
 		this.lines = lines;
 		this.buffer = new byte[bufferSize];
+		this.volume = 1.0f;
 	}
 	
 	public void setStream(int idx, MusicInputStream stream) {
@@ -47,7 +49,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 					first = false;
 				}  else {
 					length = this.input[i].read(this.buffer);
-					this.mixBuffers(this.buffer, buffer);
+					this.mixBuffers(this.buffer, buffer, this.input[i].getVolume());
 				}
 			}
 		}
@@ -63,10 +65,9 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		}
 	}
 	
-	private void mixBuffers(byte[] src, byte[] dst) {
+	private void mixBuffers(byte[] src, byte[] dst, float volume) {
 		int length = src.length;
 		int l_val, r_val, val;
-		double a, b, z;
 		
 		for(int i=0; i<length; i += 2*this.channels) {
 			for(int j=0; j<this.channels; j += 1) {
@@ -88,6 +89,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 				}
 				
 				val = val - 32768;
+				val = (int)(val*volume);
 				
 				if (val > 32767) {
 					val = 32767;
@@ -105,6 +107,16 @@ public class MusicInputStreamMixer implements MusicInputStream {
 				}
 			}
 		}
+	}
+
+	@Override
+	public float getVolume() {
+		return this.volume;
+	}
+
+	@Override
+	public void setVolume(float volume) {
+		this.volume = volume;
 	}
 }
 
