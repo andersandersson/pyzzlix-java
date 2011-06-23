@@ -109,17 +109,24 @@ public class Scene_MainGame extends Scene {
 		
 		OggMusicInputStream input1 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg"));
 		OggMusicInputStream input2 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg"));
-		OggMusicInputStream input3 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg"));
-		OggMusicInputStream input4 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
-		OggMusicInputStream input5 = new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg"));
+		OggMusicInputStream input3 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead.ogg"));
+		OggMusicInputStream input4 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg"));
+		OggMusicInputStream input5 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
+		OggMusicInputStream input6 = new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg"));
+		OggMusicInputStream input7 = new OggMusicInputStream(Gdx.files.internal("data/music1_hh.ogg"));
+		OggMusicInputStream input8 = new OggMusicInputStream(Gdx.files.internal("data/music1_chord.ogg"));
 
-		MusicInputStreamMixer mixer = new MusicInputStreamMixer(5, input1.getChannels(), input1.getSampleRate());
+		MusicInputStreamMixer mixer = new MusicInputStreamMixer(8, input1.getChannels(), input1.getSampleRate());
 		mixer.setStream(0, input1);
 		mixer.setStream(1, input2);
 		mixer.setStream(2, input3);
 		mixer.setStream(3, input4);
 		mixer.setStream(4, input5);
-		input3.setVolume(0.3f);
+		mixer.setStream(5, input6);
+		mixer.setStream(6, input7);
+		mixer.setStream(7, input8);
+		input3.setVolume(1);
+		input4.setVolume(1);
 		
 		OpenALMusicStream music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
