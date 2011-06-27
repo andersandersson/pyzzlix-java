@@ -41,9 +41,7 @@ public class Text extends Sprite {
         int drawposx = 0;
         int drawposy = 0;
         
-        Gdx.app.log("TEXT", "Init");
         for(String text : splittext) {
-        	Gdx.app.log("TEXT", "Fixing "+text);
              char[] chars = text.toCharArray();             
              int length = chars.length;
              int width = this.font.getWidth() * length;             

@@ -49,7 +49,7 @@ public class Levelboard extends Sprite {
    
         this.scorebg = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
         this.scorebg.setPos(new Point(8, 8));
-        this.scorebg.setScale(new Point(72, 32));
+        this.scorebg.setScale(new Point(72, -32));
         this.scorebg.setCol(new Color(0, 0, 0, 0.5f));
 
 		this.border = new Sprite(new Texture(Gdx.files.internal("data/windowframes.png")), 208, 80, 88, 48);

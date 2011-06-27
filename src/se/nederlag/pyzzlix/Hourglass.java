@@ -30,7 +30,7 @@ public class Hourglass extends Sprite {
 	
 	private int max;
 	private int value;
-	private int pause;
+	private double pause;
 	private int halted;
 	
 	public Hourglass() {
@@ -47,7 +47,7 @@ public class Hourglass extends Sprite {
 		this.halted = 0;
 		
         this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.background.setScale(new Point(72, 80));
+        this.background.setScale(new Point(72, -80));
         this.background.setPos(new Point(8, 8));
         this.background.setCol(new Color(0, 0, 0, 0.3f));
         
@@ -55,7 +55,7 @@ public class Hourglass extends Sprite {
 		this.border.setPos(new Point(0, 0));
         
         this.pausebg = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.pausebg.setScale(new Point(72, 80));
+        this.pausebg.setScale(new Point(72, -80));
         this.pausebg.setPos(new Point(8, 8));
         this.pausebg.setCol(new Color(0, 0, 0, 0));
 
@@ -183,7 +183,7 @@ public class Hourglass extends Sprite {
         }
             
         if(this.pause > 0) {
-            this.pausetext.setText(""+this.pause);
+            this.pausetext.setText(String.format("%.1f", this.pause));
         }
     }
 

@@ -2,7 +2,9 @@ package se.nederlag.pyzzlix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import se.nederlag.pyzzlix.audio.MusicInputStream;
 import se.nederlag.pyzzlix.audio.MusicInputStreamMixer;
 import se.nederlag.pyzzlix.audio.OggMusicInputStream;
 import se.nederlag.pyzzlix.audio.OpenALMusicStream;
@@ -59,6 +62,12 @@ public class Scene_MainGame extends Scene {
 	private int comboResetCounter;
 	private Random randomGenerator;
 
+	private OpenALMusicStream music;
+	private List<MusicInputStream> musics;
+	private SortedMap<Integer,Set<Integer>> levelMusic;
+	private Set<Integer> allMusic;
+	
+	
 	private Sprite blocks;
 	private Font font;
 	
@@ -87,6 +96,14 @@ public class Scene_MainGame extends Scene {
 		this.doLevelUpCounter = 0;
 		this.comboCounter = 0;
 		this.comboResetCounter = 0;
+		this.blockCount = 0;
+		this.score = 0;
+		this.initCounter = 0;
+		this.initX = 0;
+		this.initY = 0;
+		this.initXDir = 0;
+		this.initYDir = 0;
+		this.level = 1;
 
 		this.levelBlocks = new TreeMap<Integer,Set<Integer>>();
 		this.levelBlocks.put(1, new TreeSet<Integer>());
@@ -123,31 +140,55 @@ public class Scene_MainGame extends Scene {
 		this.addSprite(this.layerEffects);
 
 		
-		OggMusicInputStream input1 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg"));
-		OggMusicInputStream input2 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg"));
-		OggMusicInputStream input3 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead.ogg"));
-		OggMusicInputStream input4 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg"));
-		OggMusicInputStream input5 = new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg"));
-		OggMusicInputStream input6 = new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg"));
-		OggMusicInputStream input7 = new OggMusicInputStream(Gdx.files.internal("data/music1_hh.ogg"));
-		OggMusicInputStream input8 = new OggMusicInputStream(Gdx.files.internal("data/music1_chord.ogg"));
+		this.levelMusic = new TreeMap<Integer,Set<Integer>>();
+		this.levelMusic.put(1, new TreeSet<Integer>());
+		this.levelMusic.get(1).addAll(Arrays.asList(new Integer[]{ 1,2 }));
 
-		MusicInputStreamMixer mixer = new MusicInputStreamMixer(8, input1.getChannels(), input1.getSampleRate());
-		mixer.setStream(0, input1);
-		mixer.setStream(1, input2);
-		mixer.setStream(2, input3);
-		mixer.setStream(3, input4);
-		mixer.setStream(4, input5);
-		mixer.setStream(5, input6);
-		mixer.setStream(6, input7);
-		mixer.setStream(7, input8);
-		input3.setVolume(1);
-		input4.setVolume(1);
+		this.levelMusic.put(3, new TreeSet<Integer>());
+		this.levelMusic.get(3).addAll(Arrays.asList(new Integer[]{ 0,1,2 }));
+
+		this.levelMusic.put(6, new TreeSet<Integer>());
+		this.levelMusic.get(6).addAll(Arrays.asList(new Integer[]{ 0,1,2,3 }));
+
+		this.levelMusic.put(9, new TreeSet<Integer>());
+		this.levelMusic.get(9).addAll(Arrays.asList(new Integer[]{ 1,2,3,5 }));
+
+		this.levelMusic.put(12, new TreeSet<Integer>());
+		this.levelMusic.get(12).addAll(Arrays.asList(new Integer[]{ 1,2,3,4,5 }));
+
+		this.levelMusic.put(15, new TreeSet<Integer>());
+		this.levelMusic.get(15).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5 }));
+
+		this.levelMusic.put(17, new TreeSet<Integer>());
+		this.levelMusic.get(17).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6 }));
+
+		this.levelMusic.put(19, new TreeSet<Integer>());
+		this.levelMusic.get(19).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,7 }));
+
+		this.musics = new ArrayList<MusicInputStream>();
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_chord.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_hh.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg")));
+		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg")));
+
+		this.allMusic = new TreeSet<Integer>();
+		this.allMusic.addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6,7 }));
 		
-		OpenALMusicStream music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
+		MusicInputStreamMixer mixer = new MusicInputStreamMixer(8, this.musics.get(0).getChannels(), this.musics.get(0).getSampleRate());
+
+		for(int i=0; i<8; i++) {
+			mixer.setStream(i, this.musics.get(i));
+			this.musics.get(i).setVolume(0.0f);
+		}
+		
+		this.music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
+		playMusicForLevel();
 		music.play();
-		
 	}
 	
 	public static Scene_MainGame getInstance()
@@ -226,6 +267,27 @@ public class Scene_MainGame extends Scene {
 	}
 
 	public void playMusicForLevel() {
+		Set<Integer> close = new TreeSet<Integer>(this.allMusic);
+		Set<Integer> to_play = new TreeSet<Integer>();
+		int max_level = 0;
+		
+		for(Map.Entry<Integer,Set<Integer>> entry : this.levelMusic.entrySet()) {
+			if(this.level >= entry.getKey() && entry.getKey() >= max_level) {
+				max_level = entry.getKey();
+				to_play = entry.getValue();
+			}
+		}
+		
+		for(int i : to_play) {
+			if(close.contains(i)) {
+				close.remove(i);
+				this.musics.get(i).setVolume(1.0f);
+			}
+		}
+
+		for(int i : close) {
+			this.musics.get(i).setVolume(0.0f);
+		}
 	}
 
 	public void fillZigZag() {
@@ -250,7 +312,13 @@ public class Scene_MainGame extends Scene {
 		}
 	}
 	
-	public void refillUpperHalfBoard() {		
+	public void refillUpperHalfBoard() {
+		for(int x = 0; x < this.board.getBoardWidth(); x++) {
+			for(int y = 0; y < this.board.getBoardHeight(); y++) {
+				this.board.clear(x, y);
+				this.addRandom(x, y);
+			}
+		}
 	}
 	
 	@Override
@@ -440,11 +508,31 @@ public class Scene_MainGame extends Scene {
 	}
 
 	public List<Block> sortBlocksZigZag(List<Block> blocks) {
+		final int start_y = blocks.get(0).getBoardY();
+		
+		Collections.sort(blocks, new Comparator<Block>() {
+			public int compare(Block o1, Block o2) {
+				if(o1.getBoardY() != o2.getBoardY()) {
+					return o2.getBoardY() - o1.getBoardY();
+				}
+
+				if(o1.getBoardX() != o2.getBoardX()) {
+					if( (o1.getBoardY() - start_y) % 2 == 0) {
+						return o2.getBoardX() - o1.getBoardX();
+					} else {
+						return o1.getBoardX() - o2.getBoardX();
+					}
+				}
+				
+				return 0;
+			}
+		});
 		return blocks;
 	}
 	
 	public void removeBlocks(List<Block> blocks) {
 		List<Block> scale_blocks = new LinkedList<Block>(blocks);
+		scale_blocks = this.sortBlocksZigZag(scale_blocks);
 		
 		this.hourglass.addPause(blocks.size()*Config.PAUSE_TIME_PER_BLOCK);
 		this.hourglass.halt();
@@ -549,6 +637,8 @@ public class Scene_MainGame extends Scene {
 		this.blockCount = 0;
 		this.hourglass.scaleValue(0.8);
 		this.refillUpperHalfBoard();
+		
+		this.playMusicForLevel();
 	}
 	
 	@Override

@@ -46,6 +46,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 			if(this.input[i] != null) {
 				if(first) {
 					length = this.input[i].read(buffer);
+					this.setBufferVolume(buffer, this.input[i].getVolume());
 					first = false;
 				}  else {
 					length = this.input[i].read(this.buffer);
@@ -65,6 +66,37 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		}
 	}
 	
+	private void setBufferVolume(byte[] src, float volume) {
+		int length = src.length;
+		int val;
+		
+		for(int i=0; i<length; i += 2*this.channels) {
+			for(int j=0; j<this.channels; j += 1) {
+				if (bigEndian) {
+					val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000000000000000000FF);
+				} else {
+					val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000000000000000000FF);
+				}
+
+				val = (int)(val * volume);
+				
+				if (val > 32767) {
+					val = 32767;
+				}
+				if (val < -32768) {
+					val = -32768;
+				}
+				
+				if (bigEndian) {
+					src[i+2*j+1] = (byte)(val >>> 8);
+					src[i+2*j] = (byte)(val);
+				} else {
+					src[i+2*j] = (byte)(val);
+					src[i+2*j+1] = (byte)(val >>> 8);
+				}
+			}
+		}	}
+	
 	private void mixBuffers(byte[] src, byte[] dst, float volume) {
 		int length = src.length;
 		int l_val, r_val, val;
@@ -79,6 +111,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000000000000000000FF);
 				}
 
+				l_val = (int)(l_val * volume);
 				l_val = l_val + 32768;
 				r_val = r_val + 32768;
 				
@@ -89,7 +122,6 @@ public class MusicInputStreamMixer implements MusicInputStream {
 				}
 				
 				val = val - 32768;
-				val = (int)(val*volume);
 				
 				if (val > 32767) {
 					val = 32767;

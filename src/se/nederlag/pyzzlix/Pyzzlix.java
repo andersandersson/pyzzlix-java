@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import java.util.Locale;
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventHandler;
 
@@ -33,6 +35,7 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void create() {
+		Locale.setDefault(Locale.US);
 		inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
 		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
