@@ -1,5 +1,8 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventHandler;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +24,9 @@ public class Levelboard extends Sprite {
 	private int blockposy;
 	private Block block;
 
+	private int currentblocks;
+	private int goalblocks;
+
 	private int level;
 	
 	private boolean newLevelEventSent;
@@ -35,6 +41,9 @@ public class Levelboard extends Sprite {
         this.blockposx = 20;
         this.blockposy = 30;
         this.block = null;
+
+        this.currentblocks = 0;
+        this.goalblocks = 0;
 
         this.blockcounttext = new Text(this.blockposx + 8, this.blockposy - 4, this.font, ":99/99");
    
@@ -64,4 +73,131 @@ public class Levelboard extends Sprite {
 
         this.completed = false;        
 	}
+
+    public void doBlink() {
+        SpriteCallback fade_to_done;;
+        SpriteCallback fade_from_done;;
+        
+        fade_to_done = new SpriteCallback() {
+        	public void callback(Sprite sprite, double currenttime) {
+        		Color color = (Color) getArg(0);
+        		double duration = (Double) getArg(1);
+        		SpriteCallback fade_from_done = (SpriteCallback) getArg(2);
+        		sprite.fadeTo(color, currentTime, duration, fade_from_done);
+        	}
+        };
+
+        fade_from_done = new SpriteCallback() {
+        	public void callback(Sprite sprite, double currenttime) {
+        		Color color = (Color) getArg(0);
+        		double duration = (Double) getArg(1);
+        		SpriteCallback fade_to_done = (SpriteCallback) getArg(2);
+        		sprite.fadeTo(color, currentTime, duration, fade_to_done);
+        	}
+        };
+
+        fade_to_done.setArgs(new Color(1.0f,1.0f,1.0f,1.0f), 0.05, fade_from_done);
+        fade_from_done.setArgs(new Color(0.0f,0.0f,0.0f,1.0f), 0.05, fade_to_done);
+        fade_from_done.callback(null, this.currentTime);
+    }    	
+
+    public void updateLevelboard(int currentblocks) {
+        if (this.currentblocks != currentblocks) {
+            this.block.doPulse();   
+
+            if (!this.completed) {
+                this.currentblocks = currentblocks;
+
+                if (this.currentblocks >= this.goalblocks) {
+                    this.currentblocks = this.goalblocks;
+                    this.completed = true;
+                    this.doBlink();
+
+                    if(!this.newLevelEventSent) {
+                        this.newLevelEventSent = true;
+                        EventHandler.getInstance().post(new Event(Event.Type.LEVEL_UP));
+                    }
+                }
+                
+                this.blockcounttext.setText(":" + this.currentblocks +"/" + this.goalblocks);
+            }
+        }
+    }
+           
+        
+    public void setNewLevel(int level, int block, int goalblocks) {
+        this.level = level;
+        this.newLevelEventSent = false;
+    
+        this.leveltext.setText("LEVEL " + this.level);   
+        
+        this.goalblocks = goalblocks;
+        this.currentblocks = 0;
+            
+        this.completed = false;
+        this.blockcounttext.clearColCallbacks();
+        this.blockcounttext.setCol(new Color(1.0f,1.0f,1.0f,1.0f)); 
+        this.blockcounttext.setText(":" + this.currentblocks +"/" + this.goalblocks);
+        
+        Block oldblock = this.block;
+        this.block = new Block(0, 0, block, 0, 0);
+        this.block.setPos(new Point(this.blockposx, this.blockposy));
+        this.block.setCol(new Color(1.0f, 1.0f, 1.0f, 0.0f));
+        this.block.fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), this.currentTime, 0.3, null);
+        this.addSubSprite(this.block);
+        
+        if(oldblock != null) { 
+            SpriteCallback removeOldblock = new SpriteCallback() {
+            	public void callback(Sprite sprite, double currenttime) {
+            		Levelboard levelboard = (Levelboard) getArg(0);
+            		levelboard.removeSubSprite(sprite);
+            	}
+            };
+            
+            oldblock.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.0f), this.currentTime, 0.3, removeOldblock);
+        }
+    }
+             
+
+    public void pulseBorder(Color col1, Color col2, double duration) { 
+        this._glow_duration = duration;
+
+        SpriteCallback fade_to_done;;
+        SpriteCallback fade_from_done;;
+        
+        fade_to_done = new SpriteCallback() {
+        	public void callback(Sprite sprite, double currenttime) {
+        		Levelboard levelboard = (Levelboard) getArg(0);
+        		levelboard._glow_color = (Color) getArg(1);
+        		double duration = (Double) getArg(2);
+        		SpriteCallback fade_from_done = (SpriteCallback) getArg(3);
+        		levelboard.glow.fadeTo(levelboard._glow_color, currentTime, duration, fade_from_done);
+        	}
+        };
+
+        fade_from_done = new SpriteCallback() {
+        	public void callback(Sprite sprite, double currenttime) {
+        		Levelboard levelboard = (Levelboard) getArg(0);
+        		levelboard._glow_color = (Color) getArg(1);
+        		double duration = (Double) getArg(2);
+        		SpriteCallback fade_to_done = (SpriteCallback) getArg(3);
+        		levelboard.glow.fadeTo(levelboard._glow_color, currentTime, duration, fade_to_done);
+        	}
+        };
+
+        fade_to_done.setArgs(this, col1, duration, fade_from_done);
+        fade_from_done.setArgs(this, col2, duration, fade_to_done);
+        
+        this.glow.clearColCallbacks();
+        fade_from_done.callback(null, this.currentTime);
+    }
+
+        
+    public void stopPulseBorder() {
+	    Color from_col = new Color(this._glow_color);
+	    from_col.a = 0.0f;
+
+	    this.glow.clearColCallbacks();
+	    this.glow.fadeTo(from_col, this.currentTime, this._glow_duration, null);
+    }
 }

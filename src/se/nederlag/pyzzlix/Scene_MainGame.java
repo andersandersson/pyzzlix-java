@@ -163,6 +163,7 @@ public class Scene_MainGame extends Scene {
 		this.setLevel(1);
 		this.blocks.clearSubSprites();
 		this.board.stopPulseBorder();
+		this.levelboard.stopPulseBorder();
 
 		this.blockCount = 0;
 		this.score = 0;
