@@ -131,6 +131,14 @@ public class Hourglass extends Sprite {
 	    this.glow.fadeTo(from_col, this.currentTime, this._glow_duration, null);
 	}
 
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+	public int getMax() {
+		return this.max;
+	}
+
 	public int getValue() {
 		return this.value;
 	}
@@ -141,6 +149,10 @@ public class Hourglass extends Sprite {
 	        if(this.value > this.max) {
 	            this.value = this.max;
 	        }
+	}
+
+	public void addValue(int value) {
+        this.setValue(this.value + value);
 	}
 
     public void reset(int maxValue) {
@@ -215,7 +227,7 @@ public class Hourglass extends Sprite {
     public void update(double currentTime) {
 	    super.update(currentTime);
 
-        if(this.state == State.GAMEOVER) {
+	    if(this.state == State.GAMEOVER) {
             return;
         }
 

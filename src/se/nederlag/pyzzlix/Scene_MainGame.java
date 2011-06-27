@@ -47,6 +47,8 @@ public class Scene_MainGame extends Scene {
 	private int blocksToLevel;
 	private int activeBlock;
 	private int blockCount;
+	private boolean doLevelUp;
+	private int doLevelUpCounter;
 	private int score;
 	private int initX;
 	private int initY;
@@ -58,9 +60,14 @@ public class Scene_MainGame extends Scene {
 	private Random randomGenerator;
 
 	private Sprite blocks;
+	private Font font;
+	
+	private Sprite layerEffects;
 
 	private Scene_MainGame() {
-		this.board = new Board(this, 10, 13);
+		this.font = new Font("data/font_fat.png", 8, 8);
+
+		this.board = new Board(this, Config.BOARD_WIDTH, Config.BOARD_HEIGHT);
 		this.board.setPos(new Point(24, -300));
 		
 		this.scoreboard = new Scoreboard();
@@ -75,7 +82,12 @@ public class Scene_MainGame extends Scene {
 		this.state = State.IDLE;
 		this.partsInPlace = false;
 		this.blocks = new Sprite();
-		
+
+		this.doLevelUp = false;
+		this.doLevelUpCounter = 0;
+		this.comboCounter = 0;
+		this.comboResetCounter = 0;
+
 		this.levelBlocks = new TreeMap<Integer,Set<Integer>>();
 		this.levelBlocks.put(1, new TreeSet<Integer>());
 		this.levelBlocks.put(4, new TreeSet<Integer>());
@@ -100,11 +112,15 @@ public class Scene_MainGame extends Scene {
 		
 		this.randomGenerator = new Random(System.nanoTime());
 		
-		this.sprites.add(this.blocks);
-		this.sprites.add(this.scoreboard);
-		this.sprites.add(this.levelboard);
-		this.sprites.add(this.hourglass);
-		this.sprites.add(this.board);
+		this.layerEffects = new Sprite();
+		
+		this.addSprite(this.scoreboard);
+		this.addSprite(this.levelboard);
+		this.addSprite(this.hourglass);
+		this.addSprite(this.board);
+		this.addSprite(this.blocks);
+
+		this.addSprite(this.layerEffects);
 
 		
 		OggMusicInputStream input1 = new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg"));
@@ -141,12 +157,6 @@ public class Scene_MainGame extends Scene {
 		return instance;
 	}
 	
-	@Override 
-	public void show() {
-		this.resetGame();
-		this.startGame();
-	}
-	
 	public void startGame() {
 		this.state = State.RUNNING;
 		
@@ -159,12 +169,40 @@ public class Scene_MainGame extends Scene {
 		this.state = State.IDLE;
 	}
 	
+	@Override 
+	public void show() {
+		this.resetGame();
+		this.startGame();
+	}
+	
+
+	public void moveInParts() {
+		this.partsInPlace = true;
+		this.board.moveTo(new Point(24,0), this.currentTime, 0.5, null);
+		this.scoreboard.moveTo(new Point(208, 8), this.currentTime, 0.5, null);
+		this.levelboard.moveTo(new Point(208, 80), this.currentTime, 0.5, null);
+		this.hourglass.moveTo(new Point(208, 136), this.currentTime, 0.5, null);
+	}
+	
+	public void moveOutParts() {
+	}
+	
+	public void showSplash() {		
+	}
+	
+	public void hide() {		
+	}
+	
 	public void resetGame() {
 		this.setLevel(1);
 		this.blocks.clearSubSprites();
+		
 		this.board.stopPulseBorder();
 		this.levelboard.stopPulseBorder();
-
+		this.scoreboard.stopPulseBorder();
+		this.hourglass.stopPulseBorder();
+		
+		this.hourglass.reset(Config.HOURGLASS_DEFAULT);
 		this.blockCount = 0;
 		this.score = 0;
 		this.board.reset();
@@ -176,18 +214,18 @@ public class Scene_MainGame extends Scene {
 		this.comboCounter = 0;
 		this.comboResetCounter = 0;
 		this.state = State.IDLE;
+		
+		this.scoreboard.setHighscore(0);
+		this.playMusicForLevel();
 	}
 	
-	public void moveInParts() {
-		this.partsInPlace = true;
-		this.board.moveTo(new Point(24,0), this.currentTime, 0.5, null);
-		this.scoreboard.moveTo(new Point(208, 8), this.currentTime, 0.5, null);
-		this.levelboard.moveTo(new Point(208, 80), this.currentTime, 0.5, null);
-		this.hourglass.moveTo(new Point(208, 136), this.currentTime, 0.5, null);
+	public void showGameOver() {
 	}
 	
-	public void setLevel(int level) {
-		this.level = level;
+	public void showEnterHighscore() {
+	}
+
+	public void playMusicForLevel() {
 	}
 
 	public void fillZigZag() {
@@ -212,6 +250,58 @@ public class Scene_MainGame extends Scene {
 		}
 	}
 	
+	public void refillUpperHalfBoard() {		
+	}
+	
+	@Override
+	public void tick() {
+		if(this.state == State.RUNNING) {
+			if(!this.board.full()) {
+				if(this.initCounter > 0) {
+					this.fillZigZag();
+				} else {
+					int boardWidth = this.board.getBoardWidth();
+					int boardHeight = this.board.getBoardHeight();
+					
+					for(int x=boardWidth-1; x>=0; x--) {
+						for(int y=boardHeight-1; y>=0; y--) {
+							if(this.board.getBlockAt(x, y) == null) {
+								this.addRandom(x, y);
+							}
+						}						
+					}
+				}
+			}
+			
+			this.scoreboard.updateScoreboard(this.score);
+			this.board.updateBoard();
+			
+			if(this.comboCounter > 0) {
+				if(this.board.inactive()) {
+					this.comboResetCounter += 1;
+				} else {
+					this.comboResetCounter = 0;
+				}
+				
+				if(this.comboResetCounter > 3) {
+					this.comboCounter = 0;
+				}
+			}
+
+			if(this.doLevelUp) {
+				if(this.board.inactive()) {
+					this.doLevelUpCounter += 1;
+				} else {
+					this.doLevelUpCounter = 0;
+				}
+				
+				if(this.doLevelUpCounter > 3) {
+					this.newLevel();
+				}
+			}
+		}
+	}
+
 	public void addRandom(int x, int y) {
 		int type;
 		
@@ -234,8 +324,130 @@ public class Scene_MainGame extends Scene {
 		block.animatePopup(this.currentTime);
 	}
 	
+	public void addBlockScore(Block block) {
+        this.score += (this.level * Config.POINTS_PER_LEVEL_FOR_BLOCK_SCORE);
+
+        if(block.getType() == this.activeBlock) {
+            Block tmp_block = new Block(0, 0, block.getType(), 0, 0);
+            int x = (int) (block.calcPos(0).getX() + this.board.calcPos(0).getX() + this.board.getBlocks().calcPos(0).getX());
+            int y = (int) (block.calcPos(0).getY() + this.board.calcPos(0).getY() + this.board.getBlocks().calcPos(0).getY());
+
+            tmp_block.setPos(new Point(x, y));
+            
+            this.layerEffects.addSubSprite(tmp_block);
+
+            SpriteCallback remove_tmp_block = new SpriteCallback() {
+				@Override
+				public void callback(Sprite sprite, double currenttime) {
+	            	Scene_MainGame maingame = (Scene_MainGame) getArg(0);
+	            	maingame.blockCount += 1;
+	            	maingame.layerEffects.removeSubSprite(sprite);
+	            	maingame.levelboard.updateLevelboard(maingame.blockCount);
+				}
+            };
+
+            remove_tmp_block.setArgs(this);
+            
+            tmp_block.moveTo(new Point(228, 110), this.currentTime, 0.5, remove_tmp_block);
+            tmp_block.rotateTo(720.0, this.currentTime, 0.5, null);
+            tmp_block.setCol(new Color(1.0f, 1.0f, 1.0f, 0.8f));
+            tmp_block.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.5f), this.currentTime, 0.5, null);
+        }
+ 	}
+	
+	public void addCircleScore(List<Block> blocks, boolean falling) {		
+		int num_blocks = blocks.size();
+	    int score = 0;
+	    int cs = 0;
+
+	    if(falling) {
+	    	cs = this.comboCounter;
+	        
+	    	if (cs > 10) {
+	    		cs = 10;
+	    	}
+	        
+	    	//Mixer().playSound(self.combosound, volume=0.7)
+	        this.comboCounter += 1;
+	    }
+	     
+	    //Mixer().playSound(self.circlesound, volume=0.5)
+
+	    double factor = this.comboCounter+1;
+	        
+	    int text_x = 0;
+	    int text_y = 0;
+	    int text_count = blocks.size();
+
+	    if(num_blocks >= Config.MIN_BLOCKS_FOR_CIRCLE_SCORE || falling) {
+	        score = num_blocks*Config.POINTS_PER_LEVEL_FOR_CIRCLE_SCORE*this.level;
+
+	        if(factor > 0) {
+	                score *= factor;
+	        }
+	            
+	        this.score += score;
+	    }
+	    
+	    double perc = (double)num_blocks*Config.PERCENTAGE_TIME_GIVEN_PER_BLOCK;
+	        
+	    this.hourglass.addValue((int)Math.floor(perc*this.hourglass.getMax()));
+	    //self.background.boost(floor(num_blocks/4))
+	       
+	    if(score < 1) {
+	    	return;
+	    }
+
+        for(Block block : blocks) {
+            text_x += block.calcPos(0).getX();
+            text_y += block.calcPos(0).getY();
+        }
+
+        text_x = (int) (text_x/text_count + this.board.calcPos(0).getX());// - this.font.width/2*len(str(len(blocks)))
+        text_y = (int) (text_y/text_count + this.board.calcPos(0).getY());// - this.font.height/2
+        
+        Text text;
+        if(factor >= 2.0) {
+            text = new Text(text_x + 8, text_y + 8, this.font, String.valueOf((int)score/factor) + String.format("X%d", (int)factor));
+        } else {
+            text = new Text(text_x + 8, text_y + 8, this.font, String.valueOf((int)score));
+        }
+
+        text.setAnchor(Text.Anchor.CENTER);
+        
+        SpriteCallback text_fade_done = new SpriteCallback() {
+			@Override
+			public void callback(Sprite sprite, double currenttime) {
+				Sprite layer = (Sprite) getArg(0);
+				layer.removeSubSprite(sprite);
+			}
+        };
+        
+        SpriteCallback text_scale_done = new SpriteCallback() {
+			@Override
+			public void callback(Sprite sprite, double currenttime) {
+				SpriteCallback text_fade_done = (SpriteCallback) getArg(0);
+				sprite.fadeTo(new Color(0, 0, 0, 0), currenttime, 0.3, text_fade_done);
+			}
+        };
+        
+        text_fade_done.setArgs(this.layerEffects);
+        text_scale_done.setArgs(text_fade_done);
+        
+        text.setCenter(new Point(0, 4));    
+        text.scaleTo(new Point(2, 2), this.currentTime, 0.7, text_scale_done);
+        this.layerEffects.addSubSprite(text);
+	}
+
+	public List<Block> sortBlocksZigZag(List<Block> blocks) {
+		return blocks;
+	}
+	
 	public void removeBlocks(List<Block> blocks) {
 		List<Block> scale_blocks = new LinkedList<Block>(blocks);
+		
+		this.hourglass.addPause(blocks.size()*Config.PAUSE_TIME_PER_BLOCK);
+		this.hourglass.halt();
 		
 		double delay = 0.7 / blocks.size();
 		
@@ -248,10 +460,12 @@ public class Scene_MainGame extends Scene {
 				List<Block> scale_blocks = (List<Block>) getArg(0);
 				List<Block> blocks = (List<Block>) getArg(1);
 				double delay = (Double) getArg(2);
+				Scene_MainGame maingame = (Scene_MainGame) getArg(3);
 				
 				if(scale_blocks.size() > 0) {
 					Block next_block = scale_blocks.get(0);
 					scale_blocks.remove(next_block);
+					maingame.addBlockScore(next_block);
 					next_block.fadeTo(new Color(0.0f,0.0f,0.0f,0.0f), currenttime, delay, this);
 					next_block.rotateTo(720.0, currenttime, delay, null);
 					next_block.scaleTo(new Point(4.0,4.0), currenttime, delay, null);
@@ -259,6 +473,7 @@ public class Scene_MainGame extends Scene {
 					for(Block block : blocks) {
 						Scene_MainGame.getInstance().board.clear(block.getBoardX(), block.getBoardY());
 					}
+					maingame.hourglass.unhalt();
 				}
 			}
 		};
@@ -284,7 +499,7 @@ public class Scene_MainGame extends Scene {
 			}
 		};
 		
-		block_scale_done.setArgs(scale_blocks, blocks, delay);
+		block_scale_done.setArgs(scale_blocks, blocks, delay, this);
 		block_wait_done.setArgs(block_scale_done);
 		block_wait_before_blink.setArgs(blocks, block_wait_done);
 		
@@ -312,34 +527,30 @@ public class Scene_MainGame extends Scene {
 		return type;
 	}
 
-	public void addCircleScore(List<Block> blocks, boolean falling) {
-		
+	public int getBlocksToLevel() {
+		return 20;
 	}
 	
-	@Override
-	public void tick() {
-		if(this.state == State.RUNNING) {
-			if(!this.board.full()) {
-				if(this.initCounter > 0) {
-					this.fillZigZag();
-				} else {
-					int boardWidth = this.board.getBoardWidth();
-					int boardHeight = this.board.getBoardHeight();
-					
-					for(int x=boardWidth-1; x>=0; x--) {
-						for(int y=boardHeight-1; y>=0; y--) {
-							if(this.board.getBlockAt(x, y) == null) {
-								this.addRandom(x, y);
-							}
-						}						
-					}
-				}
-			}
-			
-			this.board.updateBoard();
-		}
+	public int getActiveBlock() {
+		int idx = (this.level-1) % this.activeBlocks.size();
+	    return this.activeBlocks.get(idx);
+	}
+	
+	public void setLevel(int level) {
+		this.level = level;
+		this.blocksToLevel = this.getBlocksToLevel();
+		this.activeBlock = this.getActiveBlock();
+        this.doLevelUp = false;
+        this.levelboard.setNewLevel(this.level, this.activeBlock, this.blocksToLevel);
 	}
 
+	public void newLevel() {
+		this.setLevel(this.level+1);
+		this.blockCount = 0;
+		this.hourglass.scaleValue(0.8);
+		this.refillUpperHalfBoard();
+	}
+	
 	@Override
 	public boolean handleEvent(Event event) {
 		if(event.type == Event.Type.CIRCLE_FOUND) {
@@ -351,10 +562,19 @@ public class Scene_MainGame extends Scene {
 			}
 
 			if(circleevent.rotationBlocks.size() > 0) {
-				this.addCircleScore(circleevent.fallBlocks, false);
+				this.addCircleScore(circleevent.rotationBlocks, false);
 				this.removeBlocks(circleevent.rotationBlocks);
 			}
 		}
+		
+		if(event.type == Event.Type.GAME_OVER) {
+			this.showGameOver();
+		}
+		
+		if(event.type == Event.Type.LEVEL_UP) {
+			this.doLevelUp = true;
+		}
+
 		if(event.type == Event.Type.KEYBOARD) {
 			EventKeyState keyevent = (EventKeyState) event;
 						

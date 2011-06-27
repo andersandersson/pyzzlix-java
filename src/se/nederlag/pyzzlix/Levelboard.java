@@ -98,7 +98,7 @@ public class Levelboard extends Sprite {
 
         fade_to_done.setArgs(new Color(1.0f,1.0f,1.0f,1.0f), 0.05, fade_from_done);
         fade_from_done.setArgs(new Color(0.0f,0.0f,0.0f,1.0f), 0.05, fade_to_done);
-        fade_from_done.callback(null, this.currentTime);
+        fade_from_done.callback(this.block, this.currentTime);
     }    	
 
     public void updateLevelboard(int currentblocks) {
@@ -154,6 +154,7 @@ public class Levelboard extends Sprite {
             	}
             };
             
+            removeOldblock.setArgs(this);
             oldblock.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.0f), this.currentTime, 0.3, removeOldblock);
         }
     }

@@ -6,13 +6,16 @@ import java.util.LinkedList;
 import se.nederlag.pyzzlix.events.Event;
 
 public abstract class Scene {
-	boolean renderBlocker = false;
-	boolean updateBlocker = false;
-	boolean blockedUpdate = false;
-	double currentTime = 0;
-	double renderTime = 0;
-	boolean done = false;
-	List<Sprite> sprites = new LinkedList<Sprite>();	
+	protected boolean renderBlocker = false;
+	protected boolean updateBlocker = false;
+	protected boolean blockedUpdate = false;
+	protected double currentTime = 0;
+	protected double renderTime = 0;
+	protected boolean done = false;
+	
+	private List<Sprite> sprites = new LinkedList<Sprite>();	
+	private List<Sprite> spritesToAdd = new LinkedList<Sprite>();
+	private List<Sprite> spritesToRemove = new LinkedList<Sprite>();
 	
     public void preload()
     {
@@ -20,16 +23,44 @@ public abstract class Scene {
        
     public void updateTimer(double deltaTime)
     {
-    	currentTime += deltaTime;
-    	renderTime = currentTime;
+    	this.currentTime += deltaTime;
+    	this.renderTime = this.currentTime;
     	
-    	for (Sprite s : sprites)
+    	for (Sprite sprite : this.sprites)
     	{
-    		s.update(currentTime);
+    		sprite.update(currentTime);
     	}
+		
+    	for(Sprite sprite : this.spritesToRemove) {
+			this.sprites.remove(sprite);
+		}
+
+		for(Sprite sprite : this.spritesToAdd) {
+			this.sprites.add(sprite);
+		}    
+
+		this.spritesToRemove.clear();
+		this.spritesToAdd.clear();
     }
         
-    public void handleEvent()
+	public void addSprite(Sprite sprite) {
+		if(this.spritesToRemove.contains(sprite)) {
+			this.spritesToRemove.remove(sprite);
+		}
+		
+		this.spritesToAdd.add(sprite);
+	}
+	
+	public void removeSprite(Sprite sprite) {
+		if(this.spritesToAdd.contains(sprite)) {
+			this.spritesToAdd.remove(sprite);
+		}
+
+		this.spritesToRemove.add(sprite);
+	}
+	
+
+	public void handleEvent()
     {
     	
     }
