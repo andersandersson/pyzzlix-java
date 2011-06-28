@@ -4,3 +4,4 @@
 libs/sign.sh
 libs/keystore
 bin
+*~

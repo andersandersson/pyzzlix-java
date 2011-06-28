@@ -1,0 +1,110 @@
+<project name="Pyzzlix" default="build" basedir=".">
+  <description>
+    Action puzzle game inspired by Tetris.
+  </description>
+  <property environment="env"/>
+  <property name="debuglevel" value="source,lines,vars"/>
+  <property name="target" value="1.6"/>
+  <property name="source" value="1.6"/>
+  <property name="version" value="1.0" />
+
+  <property name="build.dir" location="build" />
+  <property name="data.dir" location="data" />
+  <property name="src.dir" location="src" />
+  <property name="gdx.dir" location="/home/anders/Dev/eclipse/libgdx/target" />
+  <property name="bin.dir" location="${build.dir}/bin" />
+  <property name="jar.dir" location="${build.dir}/jar" />
+  <property name="dist.applet.dir" location="dist-applet" />
+  <property name="dist.applet.html.file" location="web/applet.html" />
+  <property name="dist.desktop.dir" location="." />
+  <property name="jar.desktop.file" location="${jar.dir}/pyzzlix-desktop-${version}.jar" />
+  <property name="jar.applet.file" location="${jar.dir}/pyzzlix-applet-${version}.jar" />
+  <property name="manifest.desktop.file" location="${jar.dir}/MANIFEST-DESKTOP.MF" />
+  <property name="manifest.applet.file" location="${jar.dir}/MANIFEST-APPLET.MF" />
+  <property name="main.desktop.class" value="se.nederlag.pyzzlix.PyzzlixDesktop" />
+  <property name="main.applet.class" value="se.nederlag.pyzzlix.PyzzlixApplet" />
+
+  <path id="external.jars">
+    <fileset dir="${gdx.dir}" includes="**/*.jar"/>
+  </path>
+
+  <path id="project.classpath">
+    <pathelement location="${src.dir}"/>
+    <path refid="external.jars" />
+  </path>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${bin.dir}"/>
+    <mkdir dir="${jar.dir}"/>
+    <mkdir dir="${dist.applet.dir}"/>
+    <mkdir dir="${dist.desktop.dir}"/>
+    <copy todir="${bin.dir}/data">
+      <fileset dir="${data.dir}">
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="cleanall" depends="clean"/>
+
+  <target name="build" depends="init">
+    <javac debug="true"
+           debuglevel="${debuglevel}"
+           destdir="${bin.dir}"
+           source="${source}"
+           target="${target}"
+           classpathref="project.classpath"
+           excludes="**/MusicTest.java">
+      <src path="${src.dir}" />
+    </javac>
+  </target>
+
+  <target name="build-desktop-jar" depends="build">
+    <delete file="${jar.desktop.file}" />
+    <delete file="${manifest.desktop.file}" />
+
+    <manifest file="${manifest.desktop.file}" >
+      <attribute name="built-by" value="${user.name}" />
+      <attribute name="Main-Class" value="${main.desktop.class}" />
+    </manifest>
+
+    <jar destfile="${jar.desktop.file}"
+         basedir="${bin.dir}"
+         manifest="${manifest.desktop.file}">
+      <zipgroupfileset dir="${gdx.dir}" includes="**/*.jar" />
+    </jar>
+  </target>
+
+  <target name="build-applet-jar" depends="build">
+    <delete file="${jar.applet.file}" />
+    <delete file="${manifest.applet.file}" />
+
+    <manifest file="${manifest.applet.file}" >
+      <attribute name="built-by" value="${user.name}" />
+      <attribute name="Main-Class" value="${main.applet.class}" />
+    </manifest>
+
+    <jar destfile="${jar.applet.file}"
+         basedir="${bin.dir}"
+         manifest="${manifest.applet.file}">
+    </jar>
+  </target>
+
+  <target name="build-jar" depends="build-desktop-jar, build-applet-jar">
+  </target>
+
+  <target name="dist-applet" depends="build-applet-jar">
+    <copy todir="${dist.applet.dir}" file="${jar.applet.file}" />
+    <copy todir="${dist.applet.dir}" file="${dist.applet.html.file}" />
+    <copy todir="${dist.applet.dir}">
+      <fileset dir="${gdx.dir}">
+        <include name="**/*.jar" />
+        <exclude name="**/*sources.jar" />
+      </fileset>
+    </copy>
+  </target>
+</project>
