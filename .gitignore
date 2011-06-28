@@ -5,3 +5,5 @@ libs/sign.sh
 libs/keystore
 bin
 *~
+build
+dist-applet
