@@ -1,4 +1,4 @@
-<project name="Pyzzlix" default="build" basedir=".">
+<project name="Pyzzlix" default="dist-desktop" basedir=".">
   <description>
     Action puzzle game inspired by Tetris.
   </description>
@@ -59,7 +59,7 @@
   <target name="cleanall" depends="clean"/>
 
   <target name="build" depends="init">
-    <javac debug="true"
+    <javac debug="on"
            debuglevel="${debuglevel}"
            destdir="${bin.dir}"
            source="${source}"
@@ -102,6 +102,10 @@
   </target>
 
   <target name="build-jar" depends="build-desktop-jar, build-applet-jar">
+  </target>
+
+  <target name="dist-desktop" depends="build-desktop-jar">
+    <copy todir="${dist.desktop.dir}" file="${jar.desktop.file}" />
   </target>
 
   <target name="dist-applet" depends="build-applet-jar">
