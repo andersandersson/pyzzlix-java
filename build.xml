@@ -10,7 +10,8 @@
   <property name="version" value="1.0" />
   <property name="key.pass" value="123456" />
   <property name="keys.dir" value="keys" />
-  <property name="key.file" value="" />
+  <property name="key.file" value="key-dev" />
+  <property name="key.alias" value="pyzzlixkey" />
 
   <property name="build.dir" location="build" />
   <property name="data.dir" location="data" />
@@ -52,6 +53,7 @@
 
   <target name="clean">
     <delete dir="${build.dir}" />
+    <delete dir="${dist.applet.dir}" />
   </target>
 
   <target name="cleanall" depends="clean"/>
@@ -107,8 +109,10 @@
     <copy todir="${dist.applet.dir}" file="${dist.applet.html.file}" />
     <copy todir="${dist.applet.dir}">
       <fileset dir="${gdx.dir}">
-        <include name="**/*.jar" />
-        <exclude name="**/*sources.jar" />
+        <include name="**/gdx.jar" />
+        <include name="**/gdx-backend-lwjgl.jar" />
+        <include name="**/gdx-natives.jar" />
+        <include name="**/gdx-backend-lwjgl-natives.jar" />
       </fileset>
     </copy>
     <copy todir="${dist.applet.dir}">
@@ -116,5 +120,12 @@
         <include name="**/lwjgl_util_applet.jar" />
       </fileset>
     </copy>
+    <signjar alias="${key.alias}"
+             storepass="${key.pass}"
+             keystore="${keys.dir}/${key.file}">
+      <fileset dir="${dist.applet.dir}">
+        <include name="**/*.jar" />
+      </fileset>
+    </signjar>
   </target>
 </project>
