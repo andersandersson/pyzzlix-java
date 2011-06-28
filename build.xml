@@ -6,12 +6,17 @@
   <property name="debuglevel" value="source,lines,vars"/>
   <property name="target" value="1.6"/>
   <property name="source" value="1.6"/>
+
   <property name="version" value="1.0" />
+  <property name="key.pass" value="123456" />
+  <property name="keys.dir" value="keys" />
+  <property name="key.file" value="" />
 
   <property name="build.dir" location="build" />
   <property name="data.dir" location="data" />
   <property name="src.dir" location="src" />
-  <property name="gdx.dir" location="/home/anders/Dev/eclipse/libgdx/target" />
+  <property name="gdx.dir" location="/home/anders/Dev/libs/libgdx-0.91" />
+  <property name="lwjgl.dir" location="/home/anders/Dev/libs/lwjgl-2.7.1/jar" />
   <property name="bin.dir" location="${build.dir}/bin" />
   <property name="jar.dir" location="${build.dir}/jar" />
   <property name="dist.applet.dir" location="dist-applet" />
@@ -104,6 +109,11 @@
       <fileset dir="${gdx.dir}">
         <include name="**/*.jar" />
         <exclude name="**/*sources.jar" />
+      </fileset>
+    </copy>
+    <copy todir="${dist.applet.dir}">
+      <fileset dir="${lwjgl.dir}">
+        <include name="**/lwjgl_util_applet.jar" />
       </fileset>
     </copy>
   </target>
