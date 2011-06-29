@@ -32,7 +32,6 @@ public class OggMusicInputStream implements MusicInputStream {
 
 	@Override
 	public void reset() {
-		Gdx.app.log("AUDIO", "Reset music stream");
 		this.input = new OggInputStream(file.read());
 	}
 	

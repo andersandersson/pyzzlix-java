@@ -2,6 +2,7 @@ package se.nederlag.pyzzlix.audio;
 
 import com.badlogic.gdx.audio.analysis.*;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
 
@@ -12,7 +13,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	private final int sampleRate;
 	private float volume;
 	
-	static private final int bufferSize = 4096 * 10;
+	static private final int bufferSize = 4096;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
 	private byte[] buffer;
@@ -39,19 +40,13 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	}
 
 	public int read(byte[] buffer) {
-		boolean first = true;
 		int length = 0;
-		
+		Arrays.fill(buffer, (byte) 0);
+
 		for(int i=0; i<this.lines; i++) {
 			if(this.input[i] != null) {
-				if(first) {
-					length = this.input[i].read(buffer);
-					this.setBufferVolume(buffer, this.input[i].getVolume());
-					first = false;
-				}  else {
-					length = this.input[i].read(this.buffer);
-					this.mixBuffers(this.buffer, buffer, this.input[i].getVolume());
-				}
+				length = this.input[i].read(this.buffer);
+				this.mixBuffers(this.buffer, buffer, this.input[i].getVolume());
 			}
 		}
 		
@@ -59,11 +54,14 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	}
 
 	public void reset() {
+		long t = System.nanoTime();
 		for(int i=0; i<this.lines; i++) {
 			if(this.input[i] != null) {
 				this.input[i].reset();
 			}
 		}
+		t = System.nanoTime() - t;
+		Gdx.app.log("SOUND ", "Reset time: "+(double)(t*1e-9));
 	}
 	
 	private void setBufferVolume(byte[] src, float volume) {
@@ -112,6 +110,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 				}
 
 				l_val = (int)(l_val * volume);
+				
 				l_val = l_val + 32768;
 				r_val = r_val + 32768;
 				

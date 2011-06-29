@@ -672,6 +672,31 @@ public class Scene_MainGame extends Scene {
 				
 				if(this.state == State.RUNNING) {
 					switch(keyevent.key) {
+					    case Input.Keys.NUM_1:
+					    	this.musics.get(0).setVolume(1.0f - this.musics.get(0).getVolume());
+					    	break;
+					    case Input.Keys.NUM_2:
+					    	this.musics.get(1).setVolume(1.0f - this.musics.get(1).getVolume());
+					    	break;
+					    case Input.Keys.NUM_3:
+					    	this.musics.get(2).setVolume(1.0f - this.musics.get(2).getVolume());
+					    	break;
+					    case Input.Keys.NUM_4:
+					    	this.musics.get(3).setVolume(1.0f - this.musics.get(3).getVolume());
+					    	break;
+					    case Input.Keys.NUM_5:
+					    	this.musics.get(4).setVolume(1.0f - this.musics.get(4).getVolume());
+					    	break;
+					    case Input.Keys.NUM_6:
+					    	this.musics.get(5).setVolume(1.0f - this.musics.get(5).getVolume());
+					    	break;
+					    case Input.Keys.NUM_7:
+					    	this.musics.get(6).setVolume(1.0f - this.musics.get(6).getVolume());
+					    	break;
+					    case Input.Keys.NUM_8:
+					    	this.musics.get(7).setVolume(1.0f - this.musics.get(7).getVolume());
+					    	break;
+					    	
 						case Input.Keys.UP:
 							if(this.board.getMarker().getBoardY() > this.board.getBoardHeight()) {
 								this.board.getMarker().move(0, -1, this.currentTime);
