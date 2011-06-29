@@ -9,3 +9,4 @@ build
 dist-applet
 keys/key-release
 pyzzlix*.jar
+/build.properties
