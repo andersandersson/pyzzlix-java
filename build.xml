@@ -3,32 +3,8 @@
     Action puzzle game inspired by Tetris.
   </description>
   <property environment="env"/>
-  <property name="debuglevel" value="source,lines,vars"/>
-  <property name="target" value="1.6"/>
-  <property name="source" value="1.6"/>
-
-  <property name="version" value="1.0" />
-  <property name="key.pass" value="123456" />
-  <property name="keys.dir" value="keys" />
-  <property name="key.file" value="key-dev" />
-  <property name="key.alias" value="pyzzlixkey" />
-
-  <property name="build.dir" location="build" />
-  <property name="data.dir" location="data" />
-  <property name="src.dir" location="src" />
-  <property name="gdx.dir" location="/home/anders/Dev/libs/libgdx-0.91" />
-  <property name="lwjgl.dir" location="/home/anders/Dev/libs/lwjgl-2.7.1/jar" />
-  <property name="bin.dir" location="${build.dir}/bin" />
-  <property name="jar.dir" location="${build.dir}/jar" />
-  <property name="dist.applet.dir" location="dist-applet" />
-  <property name="dist.applet.html.file" location="web/applet.html" />
-  <property name="dist.desktop.dir" location="." />
-  <property name="jar.desktop.file" location="${jar.dir}/pyzzlix-desktop-${version}.jar" />
-  <property name="jar.applet.file" location="${jar.dir}/pyzzlix-applet-${version}.jar" />
-  <property name="manifest.desktop.file" location="${jar.dir}/MANIFEST-DESKTOP.MF" />
-  <property name="manifest.applet.file" location="${jar.dir}/MANIFEST-APPLET.MF" />
-  <property name="main.desktop.class" value="se.nederlag.pyzzlix.PyzzlixDesktop" />
-  <property name="main.applet.class" value="se.nederlag.pyzzlix.PyzzlixApplet" />
+  <property file="build.properties" />
+  <property file="default.properties" />
 
   <path id="external.jars">
     <fileset dir="${gdx.dir}" includes="**/*.jar"/>
