@@ -35,7 +35,7 @@
   </path>
 
   <path id="project.classpath">
-    <pathelement location="${src.dir}"/>
+    <pathelement location="${bin.dir}"/>
     <path refid="external.jars" />
   </path>
 
@@ -58,8 +58,16 @@
 
   <target name="cleanall" depends="clean"/>
 
+  <target name="run" depends="build">
+    <java classname="se.nederlag.pyzzlix.PyzzlixDesktop"
+          classpathref="project.classpath"
+          fork="true"
+          spawn="true" />
+  </target>
+
   <target name="build" depends="init">
     <javac debug="on"
+    	   includeantruntime="false"
            debuglevel="${debuglevel}"
            destdir="${bin.dir}"
            source="${source}"
