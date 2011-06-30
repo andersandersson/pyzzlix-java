@@ -1,5 +1,6 @@
 package se.nederlag.pyzzlix;
 
+import java.util.LinkedList;
 import java.util.Stack;
 import java.util.Deque;
 import java.util.ArrayDeque;
@@ -7,13 +8,17 @@ import java.util.ArrayDeque;
 import se.nederlag.pyzzlix.events.Event;
 
 public class SceneHandler {
-	private Stack<Scene> sceneStack;
+	private LinkedList<Scene> sceneStack;
+	private LinkedList<Scene> scenesToAdd;
+	private LinkedList<Scene> scenesToRemove;
 	private double currentTime;
 	
 	static SceneHandler instance = null;
 	
 	private SceneHandler() {
-		sceneStack = new Stack<Scene>();
+		sceneStack = new LinkedList<Scene>();
+		scenesToAdd = new LinkedList<Scene>();
+		scenesToRemove = new LinkedList<Scene>();
 	}
 	
 	public static SceneHandler getInstance() {
@@ -23,12 +28,20 @@ public class SceneHandler {
 	}
 	
 	public void pushScene(Scene scene) {
-		sceneStack.push(scene);
+		if(this.scenesToRemove.contains(scene)) {
+			this.scenesToRemove.remove(scene);
+		}
+		
+		this.scenesToAdd.add(scene);
 		scene.show();
 	}
 
 	public void removeScene(Scene scene) {
-		sceneStack.remove(scene);
+		if(this.scenesToAdd.contains(scene)) {
+			this.scenesToAdd.remove(scene);
+		}
+		
+		this.scenesToRemove.add(scene);
 		scene.hide();
 	}
 
@@ -62,6 +75,17 @@ public class SceneHandler {
 				blocked = true;
 			}
 		}
+
+		for(Scene scene : this.scenesToRemove) {
+			this.sceneStack.remove(scene);
+		}
+
+		for(Scene scene : this.scenesToAdd) {
+			this.sceneStack.addFirst(scene);
+		}
+		
+		this.scenesToRemove.clear();
+		this.scenesToAdd.clear();
 	}
 	
 	public void renderScenes() {
@@ -69,7 +93,7 @@ public class SceneHandler {
 		
 		for(Scene scene : sceneStack)
 		{
-			scenes.addLast(scene);
+			scenes.addFirst(scene);
 			
 			if(scene.isBlockingRendering())
 				break;
@@ -89,5 +113,16 @@ public class SceneHandler {
 			if(scene.isBlockingUpdates())
 				break;
 		}
+
+		for(Scene scene : this.scenesToRemove) {
+			this.sceneStack.remove(scene);
+		}
+
+		for(Scene scene : this.scenesToAdd) {
+			this.sceneStack.addFirst(scene);
+		}
+		
+		this.scenesToRemove.clear();
+		this.scenesToAdd.clear();
 	}
 }

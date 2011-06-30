@@ -261,6 +261,16 @@ public class Scene_MainGame extends Scene {
 	}
 	
 	public void showGameOver() {
+        SpriteCallback fade_done = new SpriteCallback() {
+			@Override
+			public void callback(Sprite sprite, double currenttime) {
+				Scene_GameOver gameover = Scene_GameOver.getInstance();
+				gameover.display(0,0);
+			}
+        };
+
+        this.state = State.GAMEOVER;
+		this.board.fadeTo(new Color(0.8f, 0, 0, 1.0f), this.currentTime, 0.2, fade_done);
 	}
 	
 	public void showEnterHighscore() {
@@ -672,6 +682,9 @@ public class Scene_MainGame extends Scene {
 				
 				if(this.state == State.RUNNING) {
 					switch(keyevent.key) {
+						case Input.Keys.G:
+							this.showGameOver();
+							break;
 					    case Input.Keys.NUM_1:
 					    	this.musics.get(0).setVolume(1.0f - this.musics.get(0).getVolume());
 					    	break;

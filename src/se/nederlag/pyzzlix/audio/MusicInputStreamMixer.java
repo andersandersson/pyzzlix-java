@@ -13,7 +13,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	private final int sampleRate;
 	private float volume;
 	
-	static private final int bufferSize = 4096;
+	static private final int bufferSize = 4096*5;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
 	private byte[] buffer;

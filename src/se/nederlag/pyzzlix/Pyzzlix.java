@@ -41,7 +41,6 @@ public class Pyzzlix implements ApplicationListener  {
 		Gdx.graphics.setVSync(true);
 		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
-		
 	}
  
 	public void resize(int width, int height) {		
