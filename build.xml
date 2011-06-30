@@ -48,8 +48,7 @@
            destdir="${bin.dir}"
            source="${source}"
            target="${target}"
-           classpathref="project.classpath"
-           excludes="**/MusicTest.java">
+           classpathref="project.classpath">
       <src path="${src.dir}" />
     </javac>
   </target>
