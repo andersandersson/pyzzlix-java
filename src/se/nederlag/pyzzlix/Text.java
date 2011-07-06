@@ -10,14 +10,26 @@ public class Text extends Sprite {
 	private Font font;
 	private String text;
 	private Anchor anchor;
+	private int x;
+	private int y;
 	
 	public Text(int x, int y, Font font, String text) {
 		this.font = font;
 		this.text = "";
+		this.x = x;
+		this.y = y;
 		this.setPos(new Point(x, y));
 		this.setScale(new Point(1.0, 1.0));
 		this.anchor = Anchor.LEFT;
 		this.setText(text);
+	}
+	
+	@Override
+	public Text clone() {
+		Text text = new Text(this.x, this.y, this.font, this.text);
+		text.setAnchor(this.anchor);
+		
+		return text;
 	}
 	
 	public void setAnchor(Anchor anchor) {

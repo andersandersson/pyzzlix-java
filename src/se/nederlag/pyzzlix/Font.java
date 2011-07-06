@@ -13,8 +13,10 @@ public class Font {
 	private List<TextureRegion> glyphs;
 	
 	public Sprite sprite;
+	private String fontfile;
 	
 	public Font(String fontfile, int width, int height) {
+		this.fontfile = fontfile;
 		this.width = width;
 		this.height = height;
 		

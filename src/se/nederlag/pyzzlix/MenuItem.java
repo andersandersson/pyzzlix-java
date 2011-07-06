@@ -7,7 +7,7 @@ public class MenuItem extends Text {
 		NORMAL, BLINKING;
 	};
 	
-	private MenuCallback callfunc;
+	private Callback callfunc;
 	
 	public int timer;
 	public int blinkcount;
@@ -19,13 +19,13 @@ public class MenuItem extends Text {
 	public Color unfocusColor;
 
 	
-	public MenuItem(int x, int y, Font font, String label, MenuCallback callfunc, Text.Anchor anchor) {
+	public MenuItem(int x, int y, Font font, String label, Callback callfunc, Text.Anchor anchor) {
 		super(x, y, font, label);
 		
 		this.callfunc = callfunc;
 		this.setAnchor(anchor);
-		;
-	    this.timer = 0;
+
+		this.timer = 0;
 	    this.blinkcount = 0;
 	    this.state = State.NORMAL;
 

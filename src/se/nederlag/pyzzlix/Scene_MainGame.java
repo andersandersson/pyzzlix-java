@@ -261,21 +261,45 @@ public class Scene_MainGame extends Scene {
 	}
 	
 	public void showGameOver() {
+		Callback gameoverReplay = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainGame maingame = (Scene_MainGame) args[0];
+				
+				maingame.resetGame();
+				maingame.startGame();
+				maingame.board.fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), maingame.currentTime, 0.1, null);
+				
+				return null;
+			}		
+		};
+		
+		Callback gameoverExit = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainGame maingame = (Scene_MainGame) args[0];			
+				
+				SceneHandler.getInstance().removeScene(maingame);
+				maingame.board.setCol(new Color(1.0f, 1.0f, 1.0f, 1.0f));
+				
+				return null;
+			}		
+		};
+		
         SpriteCallback fade_done = new SpriteCallback() {
 			@Override
 			public void callback(Sprite sprite, double currenttime) {
 				Scene_GameOver gameover = Scene_GameOver.getInstance();
-				gameover.display(0,0);
+				Scene_MainGame maingame = (Scene_MainGame) getArg(2);
+				
+				gameover.display(maingame.level, maingame.score,(Callback)getArg(0),(Callback)getArg(1));
 			}
         };
+        
+        fade_done.setArgs(gameoverReplay, gameoverExit, this);
 
         this.state = State.GAMEOVER;
 		this.board.fadeTo(new Color(0.8f, 0, 0, 1.0f), this.currentTime, 0.2, fade_done);
 	}
 	
-	public void showEnterHighscore() {
-	}
-
 	public void playMusicForLevel() {
 		Set<Integer> close = new TreeSet<Integer>(this.allMusic);
 		Set<Integer> to_play = new TreeSet<Integer>();
