@@ -42,7 +42,8 @@ public class Scene_MainGame extends Scene {
 	private Board board;
 	private Hourglass hourglass; 
 	private Levelboard levelboard;
-	private Scoreboard scoreboard; 
+	private Scoreboard scoreboard;
+	private Background background;
 
 	private SortedMap<Integer,Set<Integer>> levelBlocks;
 	private List<Integer> activeBlocks;
@@ -88,6 +89,8 @@ public class Scene_MainGame extends Scene {
 		this.hourglass = new Hourglass();
 		this.hourglass.setPos(new Point(408.0, 136.0));
 		
+		this.background = new Background();
+		
 		this.state = State.IDLE;
 		this.partsInPlace = false;
 		this.blocks = new Sprite();
@@ -131,11 +134,12 @@ public class Scene_MainGame extends Scene {
 		
 		this.layerEffects = new Sprite();
 		
-		this.addSprite(this.scoreboard);
-		this.addSprite(this.levelboard);
-		this.addSprite(this.hourglass);
-		this.addSprite(this.board);
-		this.addSprite(this.blocks);
+		this.addSprite(this.background);
+		//this.addSprite(this.scoreboard);
+		//this.addSprite(this.levelboard);
+		//this.addSprite(this.hourglass);
+		//this.addSprite(this.board);
+		//this.addSprite(this.blocks);
 
 		this.addSprite(this.layerEffects);
 
@@ -664,6 +668,7 @@ public class Scene_MainGame extends Scene {
 		this.activeBlock = this.getActiveBlock();
         this.doLevelUp = false;
         this.levelboard.setNewLevel(this.level, this.activeBlock, this.blocksToLevel);
+        this.background.setTheme(this.activeBlock);
 	}
 
 	public void newLevel() {
