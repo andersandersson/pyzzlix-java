@@ -135,11 +135,11 @@ public class Scene_MainGame extends Scene {
 		this.layerEffects = new Sprite();
 		
 		this.addSprite(this.background);
-		//this.addSprite(this.scoreboard);
-		//this.addSprite(this.levelboard);
-		//this.addSprite(this.hourglass);
-		//this.addSprite(this.board);
-		//this.addSprite(this.blocks);
+		this.addSprite(this.scoreboard);
+		this.addSprite(this.levelboard);
+		this.addSprite(this.hourglass);
+		this.addSprite(this.board);
+		this.addSprite(this.blocks);
 
 		this.addSprite(this.layerEffects);
 
@@ -192,7 +192,7 @@ public class Scene_MainGame extends Scene {
 		this.music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
 		playMusicForLevel();
-		music.play();
+		//music.play();
 	}
 	
 	public static Scene_MainGame getInstance()
@@ -498,7 +498,8 @@ public class Scene_MainGame extends Scene {
 	    double perc = (double)num_blocks*Config.PERCENTAGE_TIME_GIVEN_PER_BLOCK;
 	        
 	    this.hourglass.addValue((int)Math.floor(perc*this.hourglass.getMax()));
-	    //self.background.boost(floor(num_blocks/4))
+	    
+	    this.background.boost((int)(num_blocks/4));
 	       
 	    if(score < 1) {
 	    	return;
@@ -671,12 +672,51 @@ public class Scene_MainGame extends Scene {
         this.background.setTheme(this.activeBlock);
 	}
 
-	public void newLevel() {
+	public void newLevel() 
+	{
+		this.background.flash(0.6);
 		this.setLevel(this.level+1);
 		this.blockCount = 0;
+		
 		this.hourglass.scaleValue(0.8);
 		this.refillUpperHalfBoard();
 		
+		SpriteCallback text_fade_done = new SpriteCallback() 
+		{
+			public void callback(Sprite sprite, double currenttime) 
+			{
+				((Scene)getArg(0)).removeSprite(sprite);
+			}
+		};
+		text_fade_done.setArgs(this);
+		
+		SpriteCallback text_scale_down_done = new SpriteCallback() 
+		{
+			public void callback(Sprite sprite, double currenttime) 
+			{
+				sprite.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.0f), currenttime, 2.0, ((SpriteCallback)getArg(0)));
+			}
+		};
+		text_scale_down_done.setArgs(text_fade_done);
+		 
+		SpriteCallback text_scale_up_done = new SpriteCallback() 
+		{
+			public void callback(Sprite sprite, double currenttime) 
+			{
+			sprite.scaleTo(new Point(4.0, 4.0), currentTime, 0.2, ((SpriteCallback)getArg(0)));
+			}
+		};	
+		text_scale_up_done.setArgs(text_scale_down_done);
+	
+		Text text = new Text(160, 90, this.font, "LEVEL: " + this.level);
+		text.setAnchor(Text.Anchor.CENTER);
+		text.setCenter(new Point(0.0, 4.0));
+	 
+		text.setCol(new Color(1.0f, 1.0f, 1.0f, 0.0f));
+		text.fadeTo(new Color(1.0f, 1.0f, 1.0f, 1.0f), this.currentTime, 0.05, null);
+	 	text.scaleTo(new Point(5.0, 5.0), this.currentTime, 0.05, text_scale_up_done);
+	 	this.addSprite(text);
+		 
 		this.playMusicForLevel();
 	}
 	
@@ -773,6 +813,12 @@ public class Scene_MainGame extends Scene {
 								this.board.getMarker().fail();
 							}
 							break;
+					    case Input.Keys.ENTER:
+					    	this.newLevel();
+					    	break;		
+					    case Input.Keys.SPACE:
+					    	this.background.boost(1);
+					    	break; 	
 						default:
 							break;
 					}

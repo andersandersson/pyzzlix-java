@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 	protected double currentTime = 0.0;
 	protected double lastTime = 0.0;
+	
+	private boolean softBlend = false;
 
 	private List<Sprite> subSprites = new LinkedList<Sprite>();
 	private List<Sprite> subSpritesToAdd = new LinkedList<Sprite>();
@@ -79,6 +81,16 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	public void setSoftBlending(boolean set)
+	{
+		this.softBlend = set;
+	}
+	public boolean getSoftBlending()
+	{
+		return this.softBlend;
+	}
+	
 	public Point calcPos(double currenttime)
 	{
 		if(_pos_reftime <= currenttime) {
@@ -241,6 +253,7 @@ public class Sprite extends com.badlogic.gdx.graphics.g2d.Sprite{
 
 	public void setAnimation(Animation animation)
 	{
+        animation.reset(this.currentTime);
 		currentAnimation = animation;
 	}
 	

@@ -43,6 +43,10 @@ public class Point {
 		return new Point(x*othr.x, y*othr.y);
 	}
 	
+	public Point mul(double d) {
+		return new Point(this.x*d, this.y*d);
+	}
+	
 	public String toString() {
 		return this.x + ", " + this.y;
 	}

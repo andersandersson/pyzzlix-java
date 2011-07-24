@@ -73,6 +73,9 @@ public class Animation {
 	{
 		if(frameCount > 0)
 		{
+			if(mode == Mode.PINGPONG)
+				System.out.print("frame: " + frame + ", framecount: " + frameCount + "\n");
+			
 			while(frameCount > 0 && frameTimer + frameLengths.get(frame) <= currenttime)
 			{
 				frameTimer += frameLengths.get(frame);
@@ -93,7 +96,7 @@ public class Animation {
 						}
 						else
 						{
-							frameCount = 0;
+							frameCount = frameCount - 1;
 							frame = 0; 
 						}
 					}

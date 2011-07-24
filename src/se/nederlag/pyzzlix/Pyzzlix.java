@@ -8,9 +8,11 @@ import se.nederlag.pyzzlix.events.EventHandler;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 public class Pyzzlix implements ApplicationListener  {
-	static final int LOGICS_PER_SEC = 20;
+	static final int LOGICS_PER_SEC = 30;
 	
 	int fpsCounter = 0;	
 
@@ -22,6 +24,8 @@ public class Pyzzlix implements ApplicationListener  {
 	
 	InputHandler inputHandler;
 	
+	//private FrameBuffer fbo;
+	
 	public Pyzzlix() {
 	}
 	
@@ -32,17 +36,20 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void dispose() {
+		//this.fbo.dispose();
 	}
 	
 	public void create() {
 		Locale.setDefault(Locale.US);
 		inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
-		Gdx.graphics.setVSync(true);
+		//Gdx.graphics.setVSync(true);
 		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
 		//Scene_Highscore.getInstance().display(true, null, null);
+		
+		//this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 512, 512, false);	
 	}
  
 	public void resize(int width, int height) {		
@@ -54,7 +61,7 @@ public class Pyzzlix implements ApplicationListener  {
 
 		if(time - lastFpsUpdate >= 1.0f)
 		{
-			Gdx.app.log("SpritePerformanceTest2", "fps: " + fpsCounter);
+			Gdx.app.log("Pyzzlix", "fps: " + fpsCounter);
 			fpsCounter = 0;
 			lastFpsUpdate = time;
 		}
@@ -73,7 +80,10 @@ public class Pyzzlix implements ApplicationListener  {
 			
 		}
 
+		//this.fbo.begin();
 		Renderer.getInstance().render(time - lastRenderTime);
+		//this.fbo.end();
+		
 		Mixer.getInstance().update(time - lastRenderTime);
 		lastRenderTime = time;
 		fpsCounter++;

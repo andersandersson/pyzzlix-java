@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -15,6 +16,8 @@ public class Renderer {
 	
 	double currentTime = 0.0;
 	double deltaT = 0.0;
+	
+	boolean softBlend = false;
 	
 	Texture image;
 	Sprite[] sprites;	
@@ -38,6 +41,19 @@ public class Renderer {
 	
 	public void drawSprite(Sprite sprite, double currenttime, Point last_pos, Color last_col, Float last_rot, Point last_scale, Point last_origin)
 	{
+        if (sprite.getSoftBlending() != this.softBlend)
+        {
+            if (sprite.getSoftBlending() == true)
+            {
+            	batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE); 
+            }
+            else
+            {
+            	batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA); 
+            }
+            this.softBlend = sprite.getSoftBlending();
+        }
+            
 		Point pos = sprite.calcPos(currenttime);
 		Color col = sprite.calcCol(currenttime);
 		float rot = (float)sprite.calcRot(currenttime);

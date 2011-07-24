@@ -46,7 +46,7 @@ public class Block extends Sprite {
 		this.gravityDelay = 0;
 		
 		this.blinkAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONGLOOP, false);
-		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.016, Animation.Mode.PINGPONG, false);
+		this.pulseAnimation = new Animation(this, 16, 16, type*16, 0, 16, 6*16, 0.0, 0.02, Animation.Mode.NORMAL, true);
 		this.normalAnimation = new Animation(this, 16, 16, type*16, 0, 16, 16, 0.0, 0.2, Animation.Mode.NORMAL, false);
 		
 		this.setAnimation(normalAnimation);
