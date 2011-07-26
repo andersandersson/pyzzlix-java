@@ -192,7 +192,7 @@ public class Scene_MainGame extends Scene {
 		this.music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
 		playMusicForLevel();
-		//music.play();
+		music.play();
 	}
 	
 	public static Scene_MainGame getInstance()
