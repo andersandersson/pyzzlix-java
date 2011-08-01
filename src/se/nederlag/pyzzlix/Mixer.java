@@ -194,6 +194,10 @@ public class Mixer
 	
     public void playMusic(Music music, double volume, double fadeinTime, boolean looping)
     {
+    	if(music == null) {
+    		return;
+    	}
+    	
     	if (fadeinTime > 0.0)
     	{
     		music.setVolume(0.0f);
@@ -215,6 +219,10 @@ public class Mixer
         
     public void playSound(Sound sound, double volume)
     {        
+    	if(sound == null) {
+    		return;
+    	}
+    	
     	sound.setVolume((float) volume);
     	this.soundsToPlay.add(sound);
     }

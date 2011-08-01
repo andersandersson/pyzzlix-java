@@ -12,6 +12,10 @@ public class Marker extends Sprite {
 	
 	private double scaleX;
 	private double scaleY;
+
+	private Mixer.Sound movesound;
+	private Mixer.Sound turnsound;
+	private Mixer.Sound failsound;
 	
 	public Marker() {
 		super(new Texture(Gdx.files.internal("data/marker.png")));
@@ -26,6 +30,10 @@ public class Marker extends Sprite {
 		this.setAnimation(new Animation(this, 32, 32, 0, 0, 32, 96, 0.0, 0.2, Animation.Mode.LOOP, false));		
 		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
 		this.setSize(32, 32);
+		
+		this.movesound = Resources.getSound("markermove");
+		this.turnsound = Resources.getSound("markerturn");
+		this.failsound = Resources.getSound("markerfail");
 	}
 
 	public void moveToBoardCoord(int boardx, int boardy, double currentTime) {
@@ -36,20 +44,23 @@ public class Marker extends Sprite {
 	}
 
 	public void move(int dx, int dy, double currentTime) {
+		Mixer.getInstance().playSound(this.movesound, 1.0);
 		this.moveToBoardCoord(boardX+dx, boardY+dy, currentTime);
 	}
 	
+	public void turn() {
+		Mixer.getInstance().playSound(this.turnsound, 1.0);
+	}
+
+	public void fail() {
+		Mixer.getInstance().playSound(this.failsound, 1.0);
+	}
+
 	public int getBoardX() {
 		return this.boardX;
 	}
 	
 	public int getBoardY() {
 		return this.boardY;
-	}
-	
-	public void turn() {
-	}
-
-	public void fail() {
-	}
+	}	
 }

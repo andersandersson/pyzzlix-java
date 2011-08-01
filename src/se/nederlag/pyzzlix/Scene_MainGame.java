@@ -27,6 +27,8 @@ import se.nederlag.pyzzlix.events.EventMouseMove;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.openal.OpenALAudio;
+import com.badlogic.gdx.backends.openal.OpenALMusic;
+import com.badlogic.gdx.backends.openal.OpenALSound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -73,6 +75,10 @@ public class Scene_MainGame extends Scene {
 	private Font font;
 	
 	private Sprite layerEffects;
+
+	private Mixer.Sound removeblocksound;
+	private Mixer.Sound combosound;
+	private Mixer.Sound circlesound;
 
 	private Scene_MainGame() {
 		this.font = new Font("data/font_fat.png", 8, 8);
@@ -165,7 +171,6 @@ public class Scene_MainGame extends Scene {
 
 		this.levelMusic.put(17, new TreeSet<Integer>());
 		this.levelMusic.get(17).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6 }));
-
 		this.levelMusic.put(19, new TreeSet<Integer>());
 		this.levelMusic.get(19).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,7 }));
 
@@ -191,8 +196,11 @@ public class Scene_MainGame extends Scene {
 		
 		this.music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
-		playMusicForLevel();
-		music.play();
+		music.setVolume(1.0f);
+		
+        this.removeblocksound = Resources.getSound("removeblock");
+        this.combosound = Resources.getSound("combo");
+        this.circlesound = Resources.getSound("circle");
 	}
 	
 	public static Scene_MainGame getInstance()
@@ -216,7 +224,13 @@ public class Scene_MainGame extends Scene {
 	
 	@Override 
 	public void show() {
+		for(MusicInputStream mus : this.musics) {
+			mus.setVolume(0);
+		}
+		
+		music.play();
 		this.resetGame();
+
 		this.startGame();
 	}
 	
@@ -230,12 +244,20 @@ public class Scene_MainGame extends Scene {
 	}
 	
 	public void moveOutParts() {
+        this.partsInPlace = false;
+        this.board.setPos(new Point(24.0, -300.0));
+        this.scoreboard.setPos(new Point(408.0, 8.0));
+        this.levelboard.setPos(new Point(408.0, 80.0));
+        this.hourglass.setPos(new Point(408, 136));
 	}
 	
 	public void showSplash() {		
 	}
 	
-	public void hide() {		
+	public void hide() {
+		this.pauseGame();
+		this.moveOutParts();
+		this.music.stop();
 	}
 	
 	public void resetGame() {
@@ -473,11 +495,11 @@ public class Scene_MainGame extends Scene {
 	    		cs = 10;
 	    	}
 	        
-	    	//Mixer().playSound(self.combosound, volume=0.7)
+	    	Mixer.getInstance().playSound(this.combosound, 0.7);
 	        this.comboCounter += 1;
 	    }
 	     
-	    //Mixer().playSound(self.circlesound, volume=0.5)
+	    Mixer.getInstance().playSound(this.circlesound, 0.5);
 
 	    double factor = this.comboCounter+1;
 	        
@@ -590,6 +612,7 @@ public class Scene_MainGame extends Scene {
 				Scene_MainGame maingame = (Scene_MainGame) getArg(3);
 				
 				if(scale_blocks.size() > 0) {
+					Mixer.getInstance().playSound(maingame.removeblocksound, 1.0);
 					Block next_block = scale_blocks.get(0);
 					scale_blocks.remove(next_block);
 					maingame.addBlockScore(next_block);
