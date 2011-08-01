@@ -1,6 +1,10 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventKeyState;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -8,7 +12,7 @@ public class Scene_MainMenu extends Scene {
 	class Logo extends Sprite {
 	    class LogoLetter extends Sprite {
 	       public LogoLetter(int x, int y, int sx, int sy, int w, int h) {
-	            super(new Texture(Gdx.files.internal("data/logo.png")));
+	            super(new Texture(Gdx.files.internal("data/logo.png")), sx, sy, w, h);
 	            this.setPos(new Point(x, y));
 	       }
 	    }
@@ -49,11 +53,14 @@ public class Scene_MainMenu extends Scene {
 	    
 	    public void setTextColor(Color color, double currentTime, double length) {
 	        for(Sprite s : this.getSubSprites()) {
+
 	            s.fadeTo(color, currentTime, length, null);
 	        }
 	    }
 	    
 	    public void update(double currentTime) {
+	    	super.update(currentTime);
+	    	
 	        if(this.cycling) {
 	            if (currentTime - this.lastColorChange > 3.0) {
 	                this.colorOrder += 1;
@@ -64,14 +71,27 @@ public class Scene_MainMenu extends Scene {
 	                
 	}
 	
+	public enum State {
+		MENU, TRANSITION, ENTRANCE;
+	};
+	
 	private static Scene_MainMenu instance = null;
 	
 	private Font menufont;
 	private Font textfont;
 	private Text crtext;
 	private Menu menu;
+	private MenuItem startmenu;
 	private Sprite background;
 	private Logo logo;
+	private State state;
+	
+    private Mixer.Music music;
+    private Mixer.Sound menumove;
+    private Mixer.Sound selectsound;
+    private Mixer.Sound startsound;
+	
+	
 	
 	public static Scene_MainMenu getInstance() {
 		if (instance == null)
@@ -80,156 +100,212 @@ public class Scene_MainMenu extends Scene {
 		return instance;
 	}
 
-	@Override
-	public void tick() {
-	}
-	
 	private Scene_MainMenu() {
-		/*
-        self.menufont = Font("font_fat.png", 8, 8)
-        self.textfont = Font("font_clean.png", 4, 8)
+        this.menufont = new Font("data/font_fat.png", 8, 8);
+        this.textfont = new Font("data/font_clean.png", 4, 8);
         
-        self.renderBlocker = True
-        self.updateBlocker = True
+        this.renderBlocker = true;
+        this.updateBlocker = true;
         
-        self.crtext = Text(160, 220, self.textfont, "Copyright Anders Andersson and Joel Lennartsson")
-        self.crtext.setAnchor("center")
-        self.sprites.add(self.crtext)
+        this.crtext = new Text(160, 220, this.textfont, "Copyright Anders Andersson and Joel Lennartsson");
+        this.crtext.setAnchor(Text.Anchor.CENTER);
+        this.addSprite(this.crtext);
     
-        self.menu = Menu()
-        self.menu.setPos((160, 100))
-        self.menu.add(MenuItem(0, 0, self.menufont, "Start Game", self.menu_start))
-        self.menu.add(MenuItem(0, 16, self.menufont, "Highscores", self.menu_highscores))
-        self.menu.add(MenuItem(0, 32, self.menufont, "Options", self.menu_options))
-        #self.menu.add(MenuItem(0, 48, self.menufont, "Help", self.menu_help))
-        self.menu.add(MenuItem(0, 48, self.menufont, "Quit", self.menu_quit))
 
-        self.sprites.add(self.menu)    
-        self.menu.setPos((160, 260))
-            
-        self.startmenu = MenuItem(160, 160, self.menufont, "Press Enter", self.menu_enter)
-        self.sprites.add(self.startmenu)
-
-        self.background = Sprite()
-        self.background.setImage(loadImage("pixel.png"))
-        self.background.scaleTo((320,240),0,0)
-        self.background.fadeTo((0.0,0.0,0.0, 0.7),0,0)
-        self.background._layer = 0
+        Callback menuStartCallback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) args[0];
+				mainmenu.menu_start();
+				return null;
+			}
+        };
         
-        self.logo = Logo(170, 100)
-        self.logo.setTextColor((1.0, 0.0, 0.0, 1.0), 0, 1.0)
-        self.sprites.add(self.logo)    
+        Callback menuHighscoresCallback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) args[0];
+				mainmenu.menu_highscores();
+				return null;
+			}
+        };
+        
+        Callback menuOptionsCallback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) args[0];
+				mainmenu.menu_options();
+				return null;
+			}
+        };
+        
+        Callback menuQuitCallback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) args[0];
+				mainmenu.menu_quit();
+				return null;
+			}
+        };
+        
+        this.menu = new Menu();
+        this.menu.setPos(new Point(160, 100));
+        this.menu.add(new MenuItem(0, 0, this.menufont, "Start Game", menuStartCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 16, this.menufont, "Highscores", menuHighscoresCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 32, this.menufont, "Options", menuOptionsCallback, Text.Anchor.CENTER));
+        //this.menu.add(MenuItem(0, 48, this.menufont, "Help", this.menu_help));
+        this.menu.add(new MenuItem(0, 48, this.menufont, "Quit", menuQuitCallback, Text.Anchor.CENTER));
 
-        self.music = None
-        self.movesound = None
-        self.selectsound = None
-        self.startsound = None
-        self.state = "menu"
-        self.state = "transition"
-        self.state = "entrance"
+        this.addSprite(this.menu);
+        this.menu.setPos(new Point(160, 260));
+            
+        Callback menuEnterCallback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) args[0];
+				mainmenu.menu_enter();
+				return null;
+			}
+        };
+        
+        this.startmenu = new MenuItem(160, 160, this.menufont, "Press Enter", menuEnterCallback, Text.Anchor.CENTER);
+        this.addSprite(this.startmenu);
+
+        this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
+        this.background.scaleTo(new Point(320,240), 0, 0, null);
+        this.background.fadeTo(new Color(0, 0, 0, 0.7f), 0, 0, null);
+        
+        this.logo = new Logo(170, 100);
+        this.logo.setTextColor(new Color(1, 0, 0, 1), 0, 1.0);
+        this.addSprite(this.logo);
+
+        this.state = State.ENTRANCE;
                 
-        self.music = Resources().getMusic("menumusic")
-        self.menumove = Resources().getSound("menumove")
-        self.selectsound = Resources().getSound("menuselect")
-        print self.selectsound
-        self.startsound = Resources().getSound("menustart")
-        */
+        this.music = Resources.getMusic("menumusic");
+        this.menumove = Resources.getSound("menumove");
+        this.selectsound = Resources.getSound("menuselect");
+        this.startsound = Resources.getSound("menustart");        
 	}
-        /*
-    def tick(self):
-        pass
 
-    def show(self):
-        print self, "is showing"
-        self.state = "entrance"
-        Mixer().playMusic(self.music, loops=-1)
-        self.startmenu.setPos((160, 160))
-        self.startmenu.setCol((1.0,1.0,1.0,0.0))
-        self.startmenu.fadeTo((1.0,1.0,1.0,1.0), self.currentTime, 0.3)
-        self.startmenu.focus(self.currentTime)
+	public void tick() {
+    }
+
+    public void show() {
+        this.state = State.ENTRANCE;;
+        Mixer.getInstance().playMusic(this.music, 1.0, 0.0, true);
+        this.startmenu.setPos(new Point(160, 160));
+        this.startmenu.setCol(new Color(1, 1, 1, 0));
+        this.startmenu.fadeTo(new Color(1, 1, 1, 1), this.currentTime, 0.3, null);
+        this.startmenu.focus(this.currentTime);
+    }
+       
+    public void hide() {
+        Mixer.getInstance().stopMusic(this.music);
+    }
         
-    def hide(self):
-        print self, "is hiding"
-        Mixer().stopMusic(self.music) 
-        
-    def handleEvent(self, event):
-        if event.type == KEYDOWN:
-            key = event.key
+    public boolean handleEvent(Event event) {
+		if(event.type == Event.Type.KEYBOARD) {
+			EventKeyState keyevent = (EventKeyState) event;
 
-            if key == K_ESCAPE:
-                self.menu_quit()
-                
-            if (self.state == "menu"):
-                if (key == K_UP):
-                    Mixer().playSound(self.menumove)
-                    self.menu.prevItem()
-                                 
-                if (key == K_DOWN):
-                    Mixer().playSound(self.menumove)
-                    self.menu.nextItem()
-                    
-                    
-                if (key == K_RETURN):
-                    self.menu.selectItem()
-                    
-                
-            elif (self.state == "entrance"):   
-                if (key == K_RETURN):
-                    self.startmenu.select()
-                    
-            
+			if(keyevent.state == EventKeyState.State.DOWN) {
+	            if(keyevent.key == Input.Keys.ESCAPE) {
+	                this.menu_quit();
+	            }
+	                
+	            if(this.state == State.MENU) {
+	            	if(keyevent.key ==  Input.Keys.UP) {
+	                    Mixer.getInstance().playSound(this.menumove, 1.0);
+	                    this.menu.prevItem();
+	            	}
+	                                 
+	                if(keyevent.key == Input.Keys.DOWN) {
+	                    Mixer.getInstance().playSound(this.menumove, 1.0);
+	                    this.menu.nextItem();
+	                }
+	                       
+	                if(keyevent.key == Input.Keys.ENTER) {
+	                    this.menu.selectItem();
+	                }                                  
+	            } else if(this.state == State.ENTRANCE) {   
+	                if(keyevent.key == Input.Keys.ENTER) {
+	                    this.startmenu.select();
+	                }
+	            }
+			}
+		}
+		
+		return true;
+	}           
 
-    def menu_enter(self):
-        self.state = "transition"
-        self.startmenu.moveTo((160, 260), self.currentTime, 0.4, self.menu_enter2)
-        self.logo.moveTo((170, 50), self.currentTime, 0.4)
-        Mixer().playSound(self.startsound)
-        pass
-
-    def menu_enter2(self, sprite):  
-        self.menu.setPos((160, 260))
-        self.menu.moveTo((160, 100), self.currentTime, 0.4, self.menu_enter3)
- 
-    def menu_enter3(self, sprite):  
-        self.menu.focusItem(0)
-        self.state = "menu" 
-
-    def menu_start(self):
-        Mixer().playSound(self.startsound)
-        Mixer().stopMusic(self.music)
-        SceneHandler().pushScene(scene_maingame.Scene_MainGame())
-        pass
+    public void menu_enter() {
+    	SpriteCallback callback = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) getArg(0);
+				mainmenu.menu_enter2(sprite);
+			}    	
+    	};
+    	callback.setArgs(this);
+    	
+        this.state = State.TRANSITION;
+        this.startmenu.moveTo(new Point(160, 260), this.currentTime, 0.4, callback);
+        this.logo.moveTo(new Point(170, 50), this.currentTime, 0.4, null);
+        Mixer.getInstance().playSound(this.startsound, 1.0);
+    }
     
-    def menu_options(self):
-        Mixer().playSound(self.selectsound)
-        SceneHandler().pushScene(Scene_Options())
+    public void menu_enter2(Sprite sprite) {
+    	SpriteCallback callback = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) getArg(0);
+				mainmenu.menu_enter3(sprite);
+			}    	
+    	};
+    	callback.setArgs(this);
+    	
+        this.menu.setPos(new Point(160, 260));
+        this.menu.moveTo(new Point(160, 100), this.currentTime, 0.4, callback);
+    }
+ 
+    public void menu_enter3(Sprite sprite) { 
+        this.menu.focusItem(0);
+        this.state = State.MENU;
+    }
 
-    def menu_highscores(self):
-        Mixer().playSound(self.selectsound)
-        SceneHandler().pushScene(Scene_Highscore())
+    public void menu_start() {
+        Mixer.getInstance().playSound(this.startsound, 1.0);
+        Mixer.getInstance().stopMusic(this.music);
+        SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
+    }
+    
+    public void menu_options() {
+        Mixer.getInstance().playSound(this.selectsound, 1.0);
+        //SceneHandler.getInstance().pushScene(Scene_Options());
+    }
 
-    def menu_help(self):
-        Mixer().playSound(self.selectsound)
-        SceneHandler().pushScene(Scene_Help())
-        
-    def menu_quit(self):
-        Mixer().playSound(self.selectsound)
-        Mixer().setMusicVolume(self.music, 0.5, 0.5)
-        Scene_DialogYesNo().setQuery("Do you want to quit?", self.quitGame, self.doNothing)
-        SceneHandler().pushScene(Scene_DialogYesNo())
-        pass
-      
+    public void menu_highscores() {
+        Mixer.getInstance().playSound(this.selectsound, 1.0);
+        //SceneHandler.getInstance().pushScene(Scene_Highscore());
+    }
 
+    public void menu_help() {
+        Mixer.getInstance().playSound(this.selectsound, 1.0);
+        //SceneHandler.getInstance().pushScene(Scene_Help());
+    }
+
+    public void menu_quit() {
+        Mixer.getInstance().playSound(this.selectsound, 1.0);
+        Mixer.getInstance().setMusicVolume(this.music, 0.5, 0.5);
+        //Scene_DialogYesNo().setQuery("Do you want to quit?", this.quitGame, this.doNothing)
+        //SceneHandler.getInstance().pushScene(Scene_DialogYesNo())
+    }
   
-    def quitGame(self):
-        pygame.event.post(pygame.event.Event(QUIT))
+    public void quitGame() {
+        /*pygame.event.post(pygame.event.Event(QUIT))*/
+    }
         
         
-    def doNothing(self):
-        def killDialog(sprite):
-            SceneHandler().removeScene(Scene_DialogYesNo())
-        
+    public void doNothing() {
+    }
+    
+    public void killDialog(Sprite sprite) {
+    	/*
+        SceneHandler.getInstance().removeScene(Scene_DialogYesNo())        
         Scene_DialogYesNo().remove(killDialog)
-        Mixer().setMusicVolume(self.music, 1.0, 0.5)
-        pass*/
+        Mixer.getInstance().setMusicVolume(this.music, 1.0, 0.5)
+        */
+    }
 }

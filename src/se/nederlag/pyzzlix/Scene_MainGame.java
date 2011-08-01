@@ -81,6 +81,9 @@ public class Scene_MainGame extends Scene {
 	private Mixer.Sound circlesound;
 
 	private Scene_MainGame() {
+		this.renderBlocker = true;
+		this.updateBlocker = true;
+		
 		this.font = new Font("data/font_fat.png", 8, 8);
 
 		this.board = new Board(this, Config.BOARD_WIDTH, Config.BOARD_HEIGHT);

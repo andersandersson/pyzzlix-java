@@ -33,7 +33,7 @@ public class Resources {
 	}
 	
 	public static Mixer.Music getMusic(String name) {
-		return null;
+		return Mixer.getInstance().loadAudioStream("data/"+name+".ogg");
 	}
 
 	public static Mixer.Sound getSound(String name) {

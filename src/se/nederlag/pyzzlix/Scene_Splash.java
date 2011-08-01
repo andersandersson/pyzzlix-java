@@ -148,7 +148,7 @@ public class Scene_Splash extends Scene {
     
     public void cleanup(Sprite sprite) {
         SceneHandler.getInstance().removeScene(this);
-        SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
+        SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
     }
     
     public void hide() {
