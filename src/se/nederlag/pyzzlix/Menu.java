@@ -18,6 +18,16 @@ public class Menu extends Sprite {
 		this.count = 0;
 	}
 	
+	public void reset() {
+        for(MenuItem item : this.items) {
+            item.reset();
+        }            
+	}
+	
+	public MenuItem getItem(int idx) {
+		return this.items.get(idx);
+	}
+	
 	public void add(MenuItem item) {
 		this.addSubSprite(item);
 		this.items.add(item);

@@ -44,9 +44,10 @@ public class Pyzzlix implements ApplicationListener  {
 		inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
 		Gdx.graphics.setVSync(true);
-		SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
-		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
+		SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
 		//Scene_Highscore.getInstance().display(true, null, null);
 		
@@ -73,7 +74,12 @@ public class Pyzzlix implements ApplicationListener  {
 
 			while(EventHandler.getInstance().peek() != null) {
 				Event event = EventHandler.getInstance().poll();
-				SceneHandler.getInstance().handleEvent(event);
+
+				if(event.type == Event.Type.EXIT) {
+					Gdx.app.exit();
+				} else {
+					SceneHandler.getInstance().handleEvent(event);
+				}
 			}
 			
 			SceneHandler.getInstance().updateTimers(logicLength);

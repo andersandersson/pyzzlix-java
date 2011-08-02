@@ -51,6 +51,10 @@ public class MenuItem extends Text {
 	    */
 	}
 
+	public void setCallback(Callback callfunc) {
+		this.callfunc = callfunc;
+	}
+	
 	public void reset() {
 		this.inFocus = false;
 		this.setCol(this.unfocusColor);

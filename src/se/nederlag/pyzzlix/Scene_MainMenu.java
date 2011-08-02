@@ -1,6 +1,7 @@
 package se.nederlag.pyzzlix;
 
 import se.nederlag.pyzzlix.events.Event;
+import se.nederlag.pyzzlix.events.EventHandler;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
 import com.badlogic.gdx.Gdx;
@@ -278,7 +279,7 @@ public class Scene_MainMenu extends Scene {
 
     public void menu_highscores() {
         Mixer.getInstance().playSound(this.selectsound, 1.0);
-        //SceneHandler.getInstance().pushScene(Scene_Highscore());
+        SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
     }
 
     public void menu_help() {
@@ -287,25 +288,41 @@ public class Scene_MainMenu extends Scene {
     }
 
     public void menu_quit() {
-        Mixer.getInstance().playSound(this.selectsound, 1.0);
+    	Callback yes_callback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) this.args[0];
+				mainmenu.quitGame();
+				return null;
+			}    	
+    	};
+
+    	Callback no_callback = new Callback(this) {
+			public Object call(Object... params) {
+				Scene_MainMenu mainmenu = (Scene_MainMenu) this.args[0];
+				mainmenu.doNothing();
+				return null;
+			}    	
+    	};
+
+    	Mixer.getInstance().playSound(this.selectsound, 1.0);
         Mixer.getInstance().setMusicVolume(this.music, 0.5, 0.5);
-        //Scene_DialogYesNo().setQuery("Do you want to quit?", this.quitGame, this.doNothing)
-        //SceneHandler.getInstance().pushScene(Scene_DialogYesNo())
+        Scene_DialogYesNo.getInstance().setQuery("Do you want to quit?", yes_callback, no_callback);
+        SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
     }
   
     public void quitGame() {
-        /*pygame.event.post(pygame.event.Event(QUIT))*/
+    	EventHandler.getInstance().post(new Event(Event.Type.EXIT));
     }
-        
         
     public void doNothing() {
-    }
-    
-    public void killDialog(Sprite sprite) {
-    	/*
-        SceneHandler.getInstance().removeScene(Scene_DialogYesNo())        
-        Scene_DialogYesNo().remove(killDialog)
-        Mixer.getInstance().setMusicVolume(this.music, 1.0, 0.5)
-        */
+    	SpriteCallback killDialog = new SpriteCallback() {
+			public void callback(Sprite sprite, double currenttime) {
+				SceneHandler.getInstance().removeScene(Scene_DialogYesNo.getInstance());
+			}
+    	};
+    	
+                
+        Scene_DialogYesNo.getInstance().remove(killDialog);
+        Mixer.getInstance().setMusicVolume(this.music, 1.0, 0.5);
     }
 }

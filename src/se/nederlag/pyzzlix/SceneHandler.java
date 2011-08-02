@@ -45,13 +45,15 @@ public class SceneHandler {
 		scene.hide();
 	}
 
-	public void handleEvent(Event event) {		
+	public boolean handleEvent(Event event) {		
 		for(Scene scene : sceneStack)
 		{
 			if(scene.handleEvent(event)) {
-				break;
+				return true;
 			}
 		}
+		
+		return false;
 	}
 	
 	public void updateTimers(double deltatime) {		
