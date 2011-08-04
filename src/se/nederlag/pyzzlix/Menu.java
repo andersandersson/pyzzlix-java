@@ -28,6 +28,10 @@ public class Menu extends Sprite {
 		return this.items.get(idx);
 	}
 	
+	public int getFocus() {
+		return this.focus;
+	}
+	
 	public void add(MenuItem item) {
 		this.addSubSprite(item);
 		this.items.add(item);

@@ -49,6 +49,7 @@ public class Pyzzlix implements ApplicationListener  {
 		//SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 		SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
 		//Scene_Highscore.getInstance().display(true, null, null);
 		
 		//this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 512, 512, false);	

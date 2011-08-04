@@ -42,13 +42,6 @@ public class MenuItem extends Text {
 	
 	public void update(double currenttime) {
 		super.update(currenttime);
-		
-		/* Skum kod
-	    if (self.state == "normal"):
-	        pass
-	    elif (self.state == "blinking"):
-	        self.timer
-	    */
 	}
 
 	public void setCallback(Callback callfunc) {
@@ -68,7 +61,7 @@ public class MenuItem extends Text {
 	}
 
 	public void unfocus(double currenttime) {
-		this.inFocus = true;
+		this.inFocus = false;
 		this.fadeTo(this.unfocusColor, currenttime, 0.3, null);
 		this.scaleTo(this.unfocusScale, currenttime, 0.1, null);
 	}

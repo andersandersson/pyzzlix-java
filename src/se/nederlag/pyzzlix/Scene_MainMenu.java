@@ -274,17 +274,12 @@ public class Scene_MainMenu extends Scene {
     
     public void menu_options() {
         Mixer.getInstance().playSound(this.selectsound, 1.0);
-        //SceneHandler.getInstance().pushScene(Scene_Options());
+        SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
     }
 
     public void menu_highscores() {
         Mixer.getInstance().playSound(this.selectsound, 1.0);
         SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
-    }
-
-    public void menu_help() {
-        Mixer.getInstance().playSound(this.selectsound, 1.0);
-        //SceneHandler.getInstance().pushScene(Scene_Help());
     }
 
     public void menu_quit() {
