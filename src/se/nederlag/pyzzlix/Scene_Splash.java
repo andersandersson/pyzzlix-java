@@ -22,15 +22,15 @@ public class Scene_Splash extends Scene {
         this.updateBlocker = true;
     
         this.splash = new Sprite(new Texture(Gdx.files.internal("data/splash.png")));
-        this.splash.setPos(new Point(160, 80));
+        this.splash.setPos(new Point(0, 40));
         this.splash.setCenter(new Point(64, 64));
         
         this.font = new Font("data/font_clean.png", 4, 8);
-        this.text1 = new Text(160, 140, this.font, "Grumpy Entertainment presents");
+        this.text1 = new Text(0, -28, this.font, "Grumpy Entertainment presents");
         this.text1.setAnchor(Text.Anchor.CENTER);
         this.text1.setCol(new Color(0.0f, 0.0f, 0.0f, 0.0f));
         
-        this.text2 = new Text(160, 140, this.font, "A Game Design Course Project");
+        this.text2 = new Text(0, -28, this.font, "A Game Design Course Project");
         this.text2.setAnchor(Text.Anchor.CENTER);
         this.text2.setCol(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 

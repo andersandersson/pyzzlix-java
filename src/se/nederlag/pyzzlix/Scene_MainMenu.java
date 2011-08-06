@@ -24,22 +24,34 @@ public class Scene_MainMenu extends Scene {
 
 	    public Logo(int x, int y) {
             super(new Texture(Gdx.files.internal("data/logo.png")), 0, 0, 251, 73);
-	        this.setCenter(new Point(251 / 2, 73 / 2));
+            
+            int h_mid = 251/2;
+            int v_mid = 73/2;
+            
+	        this.setCenter(new Point(h_mid, v_mid));
 	        this.setPos(new Point(x, y));
 	            
-	        this.addSubSprite(new LogoLetter(0, 0, 0, 80, 48, 80));      // P
-	        this.addSubSprite(new LogoLetter(32, 16, 48, 96, 48, 48));   // y   
-	        this.addSubSprite(new LogoLetter(48, 16, 96, 96, 80, 48));   // z   
-	        this.addSubSprite(new LogoLetter(85, 16, 96, 96, 80, 48));   // z   
-	        this.addSubSprite(new LogoLetter(128, 16, 176, 96, 64, 48)); // l   
-	        this.addSubSprite(new LogoLetter(176, 0, 0, 160, 16, 64));   // i           
-	        this.addSubSprite(new LogoLetter(160, 0, 16, 160, 96, 80));  // x
+	        this.addSubSprite(new LogoLetter(-h_mid,   -v_mid, 0, 80, 48, 73));      // P
+	        this.addSubSprite(new LogoLetter(-h_mid+32,-v_mid+9, 48, 96, 48, 48));   // y   
+	        this.addSubSprite(new LogoLetter(-h_mid+48,-v_mid+9, 96, 96, 80, 48));   // z   
+	        this.addSubSprite(new LogoLetter(-h_mid+85,-v_mid+9, 96, 96, 80, 48));   // z   
+	        this.addSubSprite(new LogoLetter(-h_mid+128,-v_mid+9, 176, 96, 64, 48)); // l   
+	        this.addSubSprite(new LogoLetter(-h_mid+176,-v_mid+9, 0, 160, 16, 64));   // i           
+	        this.addSubSprite(new LogoLetter(-h_mid+160,-v_mid-7, 16, 160, 96, 80));  // x
 	        
 	        this.lastColorChange = 0;
 	        this.colorOrder = 0;
 	        this.cycling = true;
 	    }
-	      
+	    
+	    public void setCycling(boolean cycling) {
+	    	this.cycling = cycling;
+	    }
+	    
+	    public boolean getCycling() {
+	    	return this.cycling;
+	    }
+	    
 	    public void cycleTextColor(int order, double currentTime, double length) {
 	        int i = order % 25;
 
@@ -101,6 +113,10 @@ public class Scene_MainMenu extends Scene {
 		return instance;
 	}
 
+    public Logo newLogo(int x, int y) {
+    	return new Logo(x, y);
+    }
+    
 	private Scene_MainMenu() {
         this.menufont = new Font("data/font_fat.png", 8, 8);
         this.textfont = new Font("data/font_clean.png", 4, 8);
@@ -108,7 +124,7 @@ public class Scene_MainMenu extends Scene {
         this.renderBlocker = true;
         this.updateBlocker = true;
         
-        this.crtext = new Text(160, 220, this.textfont, "Copyright Anders Andersson and Joel Lennartsson");
+        this.crtext = new Text(0, -108, this.textfont, "Copyright Anders Andersson and Joel Lennartsson");
         this.crtext.setAnchor(Text.Anchor.CENTER);
         this.addSprite(this.crtext);
     
@@ -146,15 +162,14 @@ public class Scene_MainMenu extends Scene {
         };
         
         this.menu = new Menu();
-        this.menu.setPos(new Point(160, 100));
-        this.menu.add(new MenuItem(0, 0, this.menufont, "Start Game", menuStartCallback, Text.Anchor.CENTER));
-        this.menu.add(new MenuItem(0, 16, this.menufont, "Highscores", menuHighscoresCallback, Text.Anchor.CENTER));
-        this.menu.add(new MenuItem(0, 32, this.menufont, "Options", menuOptionsCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 48, this.menufont, "Start Game", menuStartCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 32, this.menufont, "Highscores", menuHighscoresCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 16, this.menufont, "Options", menuOptionsCallback, Text.Anchor.CENTER));
         //this.menu.add(MenuItem(0, 48, this.menufont, "Help", this.menu_help));
-        this.menu.add(new MenuItem(0, 48, this.menufont, "Quit", menuQuitCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 0, this.menufont, "Quit", menuQuitCallback, Text.Anchor.CENTER));
 
         this.addSprite(this.menu);
-        this.menu.setPos(new Point(160, 260));
+        this.menu.setPos(new Point(0, 140));
             
         Callback menuEnterCallback = new Callback(this) {
 			public Object call(Object... params) {
@@ -164,14 +179,14 @@ public class Scene_MainMenu extends Scene {
 			}
         };
         
-        this.startmenu = new MenuItem(160, 160, this.menufont, "Press Enter", menuEnterCallback, Text.Anchor.CENTER);
+        this.startmenu = new MenuItem(0, -48, this.menufont, "Press Enter", menuEnterCallback, Text.Anchor.CENTER);
         this.addSprite(this.startmenu);
 
         this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
         this.background.scaleTo(new Point(320,240), 0, 0, null);
         this.background.fadeTo(new Color(0, 0, 0, 0.7f), 0, 0, null);
         
-        this.logo = new Logo(170, 100);
+        this.logo = new Logo(10, 20);
         this.logo.setTextColor(new Color(1, 0, 0, 1), 0, 1.0);
         this.addSprite(this.logo);
 
@@ -189,7 +204,7 @@ public class Scene_MainMenu extends Scene {
     public void show() {
         this.state = State.ENTRANCE;;
         Mixer.getInstance().playMusic(this.music, 1.0, 0.0, true);
-        this.startmenu.setPos(new Point(160, 160));
+        this.startmenu.setPos(new Point(0, -48));
         this.startmenu.setCol(new Color(1, 1, 1, 0));
         this.startmenu.fadeTo(new Color(1, 1, 1, 1), this.currentTime, 0.3, null);
         this.startmenu.focus(this.currentTime);
@@ -243,8 +258,8 @@ public class Scene_MainMenu extends Scene {
     	callback.setArgs(this);
     	
         this.state = State.TRANSITION;
-        this.startmenu.moveTo(new Point(160, 260), this.currentTime, 0.4, callback);
-        this.logo.moveTo(new Point(170, 50), this.currentTime, 0.4, null);
+        this.startmenu.moveTo(new Point(0, -148), this.currentTime, 0.4, callback);
+        this.logo.moveTo(new Point(10, 70), this.currentTime, 0.4, null);
         Mixer.getInstance().playSound(this.startsound, 1.0);
     }
     
@@ -257,8 +272,8 @@ public class Scene_MainMenu extends Scene {
     	};
     	callback.setArgs(this);
     	
-        this.menu.setPos(new Point(160, 260));
-        this.menu.moveTo(new Point(160, 100), this.currentTime, 0.4, callback);
+        this.menu.setPos(new Point(0, -148));
+        this.menu.moveTo(new Point(0, -36), this.currentTime, 0.4, callback);
     }
  
     public void menu_enter3(Sprite sprite) { 

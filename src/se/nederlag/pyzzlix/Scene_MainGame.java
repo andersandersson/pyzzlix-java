@@ -87,16 +87,16 @@ public class Scene_MainGame extends Scene {
 		this.font = new Font("data/font_fat.png", 8, 8);
 
 		this.board = new Board(this, Config.BOARD_WIDTH, Config.BOARD_HEIGHT);
-		this.board.setPos(new Point(24, -300));
+		this.board.setPos(new Point(-136, 188));
 		
 		this.scoreboard = new Scoreboard();
-		this.scoreboard.setPos(new Point(408.0, 80.0));
+		this.scoreboard.setPos(new Point(248.0, 48.0));
 
 		this.levelboard = new Levelboard();
-		this.levelboard.setPos(new Point(408.0, 80.0));
+		this.levelboard.setPos(new Point(248.0, -8.0));
 
 		this.hourglass = new Hourglass();
-		this.hourglass.setPos(new Point(408.0, 136.0));
+		this.hourglass.setPos(new Point(248.0, -112.0));
 		
 		this.background = new Background();
 		
@@ -204,6 +204,8 @@ public class Scene_MainGame extends Scene {
         this.removeblocksound = Resources.getSound("removeblock");
         this.combosound = Resources.getSound("combo");
         this.circlesound = Resources.getSound("circle");
+        
+        //this.board.setScale(new Point(0.3, 0.3));
 	}
 	
 	public static Scene_MainGame getInstance()
@@ -240,18 +242,19 @@ public class Scene_MainGame extends Scene {
 
 	public void moveInParts() {
 		this.partsInPlace = true;
-		this.board.moveTo(new Point(24,0), this.currentTime, 0.5, null);
-		this.scoreboard.moveTo(new Point(208, 8), this.currentTime, 0.5, null);
-		this.levelboard.moveTo(new Point(208, 80), this.currentTime, 0.5, null);
-		this.hourglass.moveTo(new Point(208, 136), this.currentTime, 0.5, null);
+		this.board.moveTo(new Point(-136, -112), this.currentTime, 0.5, null);
+		this.scoreboard.moveTo(new Point(48, 48), this.currentTime, 0.5, null);
+		this.levelboard.moveTo(new Point(48, -8), this.currentTime, 0.5, null);
+		this.hourglass.moveTo(new Point(48, -112), this.currentTime, 0.5, null);
 	}
 	
 	public void moveOutParts() {
         this.partsInPlace = false;
-        this.board.setPos(new Point(24.0, -300.0));
-        this.scoreboard.setPos(new Point(408.0, 8.0));
-        this.levelboard.setPos(new Point(408.0, 80.0));
-        this.hourglass.setPos(new Point(408, 136));
+		
+        this.board.setPos(new Point(-136, 188));
+        this.scoreboard.setPos(new Point(248.0, 48.0));
+        this.levelboard.setPos(new Point(248.0, -8.0));
+        this.hourglass.setPos(new Point(248.0, -112.0));
 	}
 	
 	public void showSplash() {		
@@ -450,7 +453,7 @@ public class Scene_MainGame extends Scene {
 	}
 	
 	public void createBlock(int x, int y, int type) {
-		Block block = new Block(x, y, type, 8, -this.board.getBoardHeight()*16+8);
+		Block block = new Block(x, y, type, 8, this.board.getBoardHeight()*16*2-8);
 		this.board.add(x, y, block);
 		block.animatePopup(this.currentTime);
 	}
@@ -479,7 +482,7 @@ public class Scene_MainGame extends Scene {
 
             remove_tmp_block.setArgs(this);
             
-            tmp_block.moveTo(new Point(228, 110), this.currentTime, 0.5, remove_tmp_block);
+            tmp_block.moveTo(new Point(68, 10), this.currentTime, 0.5, remove_tmp_block);
             tmp_block.rotateTo(720.0, this.currentTime, 0.5, null);
             tmp_block.setCol(new Color(1.0f, 1.0f, 1.0f, 0.8f));
             tmp_block.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.5f), this.currentTime, 0.5, null);
@@ -531,18 +534,18 @@ public class Scene_MainGame extends Scene {
 	    }
 
         for(Block block : blocks) {
-            text_x += block.calcPos(0).getX();
-            text_y += block.calcPos(0).getY();
+            text_x += (block.calcPos(this.currentTime).getX() + this.board.calcPos(this.currentTime).getX());
+            text_y += (block.calcPos(this.currentTime).getY() + this.board.calcPos(this.currentTime).getY());
         }
 
-        text_x = (int) (text_x/text_count + this.board.calcPos(0).getX());// - this.font.width/2*len(str(len(blocks)))
-        text_y = (int) (text_y/text_count + this.board.calcPos(0).getY());// - this.font.height/2
-        
+        text_x = (int)(text_x/text_count);// - this.font.width/2*len(str(len(blocks)))
+        text_y = (int)(text_y/text_count);// - this.font.height/2
+
         Text text;
         if(factor >= 2.0) {
-            text = new Text(text_x + 8, text_y + 8, this.font, String.valueOf((int)score/factor) + String.format("X%d", (int)factor));
+            text = new Text(text_x+8, text_y+8, this.font, String.valueOf((int)(score/factor)) + String.format("X%d", (int)factor));
         } else {
-            text = new Text(text_x + 8, text_y + 8, this.font, String.valueOf((int)score));
+            text = new Text(text_x+8, text_y+8, this.font, String.valueOf((int)(score)));
         }
 
         text.setAnchor(Text.Anchor.CENTER);
@@ -734,7 +737,7 @@ public class Scene_MainGame extends Scene {
 		};	
 		text_scale_up_done.setArgs(text_scale_down_done);
 	
-		Text text = new Text(160, 90, this.font, "LEVEL: " + this.level);
+		Text text = new Text(0, 22, this.font, "LEVEL: " + this.level);
 		text.setAnchor(Text.Anchor.CENTER);
 		text.setCenter(new Point(0.0, 4.0));
 	 

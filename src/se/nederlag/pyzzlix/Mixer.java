@@ -223,8 +223,10 @@ public class Mixer
     		return;
     	}
     	
-    	sound.setVolume((float) volume);
-    	this.soundsToPlay.add(sound);
+    	if(false) {
+	    	sound.setVolume((float) volume);
+	    	this.soundsToPlay.add(sound);
+    	}
     }
     
     public void setMusicVolume(Music music, double volume, double fadeTime)

@@ -63,10 +63,10 @@ public class Board extends Sprite {
 		this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")));
 		this.background.setScale(new Point(160.0, 208.0));
 		this.background.setCol(new Color(0.0f, 0.0f, 0.0f, 0.3f));
-		this.background.setPos(new Point(8.0, 16.0));
+		this.background.setPos(new Point(8.0, 8.0));
 		
 		this.blocks = new Sprite();
-		this.blocks.setPos(new Point(8.0, 16.0));
+		this.blocks.setPos(new Point(8.0, 8.0));
 		
 		this.border = new Sprite(new Texture(Gdx.files.internal("data/windowframes.png")), 24, 0, 176, 232);
 		this.border.setPos(new Point(0,0));
@@ -77,7 +77,7 @@ public class Board extends Sprite {
 		
 		this.marker = new Marker();
 		this.marker.offsetX = this.blocks.calcPos(0.0).getX();
-		this.marker.offsetY = this.blocks.calcPos(0.0).getY() - height*16.0;
+		this.marker.offsetY = this.blocks.calcPos(0.0).getY() + 2*height*16 - 2*16;
 		this.marker.moveToBoardCoord(2, 14, this.currentTime);
 		
 		this.addSubSprite(this.background);

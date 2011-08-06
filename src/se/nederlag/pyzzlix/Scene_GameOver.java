@@ -33,15 +33,15 @@ public class Scene_GameOver extends Scene {
 	private Scene_GameOver() {
 		this.font = new Font("data/font_fat.png", 8, 8);
 		
-        this.gameoverText = new Text(160, 90, this.font, "GAME OVER");
+        this.gameoverText = new Text(0, 22, this.font, "GAME OVER");
         this.gameoverText.setAnchor(Text.Anchor.CENTER);
         this.gameoverText.setCenter(new Point(0,4));
         this.gameoverText.setScale(new Point(4.0f, 2.75f));
 
         this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.background.setScale(new Point(320, -240));
-        this.background.setPos(new Point(0, -1));
-        this.background.setCol(new Color(0, 0, 0, 0.7f));
+        this.background.setScale(new Point(320, 240));
+        this.background.setPos(new Point(-160, -120));
+        this.background.setCol(new Color(1, 0, 0, 0.7f));
 
         Callback menuReplayCallback = new Callback(this) {
 			public Object call(Object... params) {
@@ -60,16 +60,16 @@ public class Scene_GameOver extends Scene {
         };
         
         this.menu = new Menu();
-        this.menu.setPos(new Point(160, 120));
-        this.menu.add(new MenuItem(0, 0, this.font, "Play again", menuReplayCallback, Text.Anchor.CENTER));
-        this.menu.add(new MenuItem(0, 24, this.font, "Exit to menu", menuExitCallback, Text.Anchor.CENTER));
+        this.menu.setPos(new Point(0, -32));
+        this.menu.add(new MenuItem(0, 24, this.font, "Play again", menuReplayCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 0, this.font, "Exit to menu", menuExitCallback, Text.Anchor.CENTER));
         this.menu.setCol(new Color(1.0f, 1.0f, 1.0f, 1.0f));
 
-        this.highscoreCaption = new Text(160, 120, this.font, "New highscore!");
+        this.highscoreCaption = new Text(0, -8, this.font, "New highscore!");
         this.highscoreCaption.setAnchor(Text.Anchor.CENTER);
         this.highscoreCaption.setCol(new Color(1.0f, 1.0f, 1.0f, 0.0f));
         
-        this.highscoreName = new Text(160, 130, this.font, "Please enter your initials");
+        this.highscoreName = new Text(0, -18, this.font, "Please enter your initials");
         this.highscoreName.setCol(new Color(1.0f, 1.0f, 1.0f, 0.0f));
         this.highscoreName.setAnchor(Text.Anchor.CENTER);
         
@@ -127,7 +127,7 @@ public class Scene_GameOver extends Scene {
         };
            
         Scene_InputText enterText = Scene_InputText.getInstance();
-        enterText.display(160, 146, 3, textEntered);
+        enterText.display(0, -42, 3, textEntered);
 	}
 	
 	public void showGameOverMenu() {

@@ -28,7 +28,7 @@ public class Marker extends Sprite {
 		this.scaleY = 16;
 		
 		this.setAnimation(new Animation(this, 32, 32, 0, 0, 32, 96, 0.0, 0.2, Animation.Mode.LOOP, false));		
-		this.setPos(new Point(offsetX+boardX*32, offsetY+boardY*32));
+		this.setPos(new Point(offsetX+boardX*scaleX, offsetY-boardY*scaleX));
 		this.setSize(32, 32);
 		
 		this.movesound = Resources.getSound("markermove");
@@ -40,7 +40,7 @@ public class Marker extends Sprite {
 		this.boardX = boardx;
 		this.boardY = boardy;
 		//this.moveTo(new Point(boardX * scaleX + offsetX, boardY * scaleY + offsetY), currentTime, 0.15, null);
-		this.setPos(new Point(boardX * scaleX + offsetX, boardY * scaleY + offsetY));
+		this.setPos(new Point(boardX * scaleX + offsetX, offsetY - boardY*scaleY));
 	}
 
 	public void move(int dx, int dy, double currentTime) {

@@ -49,7 +49,7 @@ public class Background extends Sprite {
 	        this.velX = 0.0;
 	        this.velY = 0.0;
 
-	        this.setPos(new Point(160, 120));
+	        this.setPos(new Point(0, 0));
 	        this.setCenter(new Point(160, 120));
 
 	        this.setCol(new Color(1.0f, 1.0f, 1.0f, 0.3f));
@@ -144,7 +144,7 @@ public class Background extends Sprite {
 			
 			for(int i = 0; i<10; i++) {
 	            this.shapes.get(i).setScale(new Point(1.0 * Math.exp(i/3.5), 1.0 * Math.exp(i/3.5)));
-	            this.shapes.get(i).setPos(new Point(160, 120));
+	            this.shapes.get(i).setPos(new Point(0, 0));
 	            this.shapes.get(i).setRot(90 * Math.sin(0.0 - (i/5.0)));
 	            this.addSubSprite(this.shapes.get(i));
 	        }
@@ -181,12 +181,12 @@ public class Background extends Sprite {
 			this.velocitiesY.add(0.0);
 			
             this.shapes.get(0).setScale(new Point(4.0, 4.0));
-            this.shapes.get(0).setPos(new Point(160, 120));
+            this.shapes.get(0).setPos(new Point(0, 0));
             this.addSubSprite(this.shapes.get(0));
 
             for(int i = 0; i<9; i++) {
 	            this.shapes.get(i+1).setScale(new Point(0.9, 0.9));
-	            this.shapes.get(i+1).setPos(new Point(64, 64));
+	            this.shapes.get(i+1).setPos(new Point(0, 0));
 
 	            this.velocitiesX.add((double) (10 + (i % 2) * -20));
 	            this.velocitiesY.add((double) (6 + (i % 2) * -12));
@@ -208,19 +208,19 @@ public class Background extends Sprite {
 
 	            shape.rotateTo(shape.calcRot(this.currentTime) + speed, this.currentTime, 1.0, null);   
 	            
-	            if (sx > 72 && this.velocitiesX.get(j) > 0) {
+	            if (sx > 8 && this.velocitiesX.get(j) > 0) {
 	            	this.velocitiesX.set(j, -this.velocitiesX.get(j));
 	            }
 
-	            if (sx < 56 && this.velocitiesX.get(j) < 0) {
+	            if (sx < -8 && this.velocitiesX.get(j) < 0) {
 	            	this.velocitiesX.set(j, -this.velocitiesX.get(j));
 	            }
 
-	            if (sy > 72 && this.velocitiesY.get(j) > 0) {
+	            if (sy > 8 && this.velocitiesY.get(j) > 0) {
 	            	this.velocitiesY.set(j, -this.velocitiesY.get(j));
 	            }
 
-	            if (sy < 56 && this.velocitiesY.get(j) < 0) {
+	            if (sy < -8 && this.velocitiesY.get(j) < 0) {
 	            	this.velocitiesY.set(j, -this.velocitiesY.get(j));
 	            }
 
@@ -240,7 +240,7 @@ public class Background extends Sprite {
             for(int i = 0; i<10; i++) 
             {
 	            this.shapes.get(i).setScale(new Point(Math.exp(i/3.5f), Math.exp(i/3.5f)));
-	            this.shapes.get(i).setPos(new Point(160.0f, 120.0f));
+	            this.shapes.get(i).setPos(new Point(0.0f, 00.0f));
 	            this.addSubSprite(this.shapes.get(i));
 	        }
 		}
@@ -279,14 +279,14 @@ public class Background extends Sprite {
 		{
 			super(new Color(1.0f, 0.9f, 0.3f, 1.0f), "data/bg_cross.png", 10);
 			
-			this.shapes.get(0).setPos(new Point(160.0, 120.0));
+			this.shapes.get(0).setPos(new Point(0.0, 0.0));
 			this.shapes.get(0).setScale(new Point(2.0, 2.0));
 			
 			for (int i = 0; i < 9; i++)
 			{
 				this.shapes.get(0).addSubSprite(this.shapes.get(i+1));
 				this.shapes.get(i+1).setScale(new Point(0.7, 0.7));
-				this.shapes.get(i+1).setPos(new Point(64.0 + 64.0*Math.cos(i * (2.0*Math.PI/9.0)), 64.0 + 64.0*Math.sin(i * (2.0*Math.PI/9.0))));
+				this.shapes.get(i+1).setPos(new Point(64.0*Math.cos(i * (2.0*Math.PI/9.0)), 64.0*Math.sin(i * (2.0*Math.PI/9.0))));
 				
 			}
 
@@ -307,7 +307,7 @@ public class Background extends Sprite {
 				Sprite shape = this.shapes.get(i+1);
 	            Point scale = new Point(Math.sin(this.counter + i * (2.0*Math.PI/9.0)), Math.cos(this.counter + i * (2.0*Math.PI/9.0)));
 	            double r = 64.0 * Math.cos(this.counter * 2.0 + i*0.15);
-	            shape.moveTo(new Point(64.0 + scale.getX() * r, 64.0 + scale.getY() * r), this.currentTime, 0.08, null);
+	            shape.moveTo(new Point(scale.getX() * r, scale.getY() * r), this.currentTime, 0.08, null);
 	            shape.rotateTo(this.counter * 200.0, this.currentTime, 0.1, null);
 				shape.scaleTo(new Point(r/32.0, r/32.0), this.currentTime, 0.2, null);
 			}
@@ -324,7 +324,7 @@ public class Background extends Sprite {
 			for(int i = 0; i < 10; i ++)
 			{
 				this.shapes.get(i).setScale(new Point(4.0, 4.0));
-				this.shapes.get(i).setPos(new Point(160.0, 120.0));
+				this.shapes.get(i).setPos(new Point(0.0, 0.0));
 				this.addSubSprite(this.shapes.get(i));
 			}
 			
@@ -340,7 +340,7 @@ public class Background extends Sprite {
 			Point scale = new Point(Math.sin(this.counter/2.0), Math.cos(this.counter/2.0));
 			double r = 96 * Math.sin(this.counter * 0.02);
 			
-			this.shapes.get(0).moveTo(new Point(120.0 + scale.getX() * r, 120.0 + scale.getY() * r), this.currentTime, 0.05, null);
+			this.shapes.get(0).moveTo(new Point(-40.0 + scale.getX() * r, scale.getY() * r), this.currentTime, 0.05, null);
 			
 			for (int i = 0; i < 9; i++)
 			{
@@ -360,7 +360,7 @@ public class Background extends Sprite {
 			for (int i = 0; i < 10; i++)
 			{
 				this.shapes.get(i).setScale(new Point(8.0 - (i * 0.75), 8.0 - (i * 0.75)));
-				this.shapes.get(i).setPos(new Point(160.0, 120.0));
+				this.shapes.get(i).setPos(new Point(0.0, 0.0));
 				this.addSubSprite(this.shapes.get(i));
 			}
 			
@@ -376,7 +376,7 @@ public class Background extends Sprite {
 			Point scale = new Point(Math.sin(this.counter), Math.cos(this.counter));
 			double r = 64.0 * Math.sin(this.counter * nspeed) + 64.0 * Math.cos(this.counter * nspeed);
 			
-			this.shapes.get(0).moveTo(new Point(160.0 + scale.getX() * r, 120.0 + scale.getY() *r), this.currentTime, 0.05, null);
+			this.shapes.get(0).moveTo(new Point(scale.getX() * r, scale.getY() *r), this.currentTime, 0.05, null);
 			this.shapes.get(0).rotateTo(this.calcRot(this.currentTime) + 30 * nspeed, this.currentTime, 0.02, null);
 			
 			for (int i = 0; i < 9; i++)
@@ -395,20 +395,20 @@ public class Background extends Sprite {
 		{
 			super(new Color(1.0f, 0.5f, 0.6f, 1.0f), "data/bg_plus.png", 10);
 			
-			this.shapes.get(0).setPos(new Point(160.0, 120.0));
+			this.shapes.get(0).setPos(new Point(0.0, 0.0));
 			this.shapes.get(0).setScale(new Point(2.0, 2.0));
 			
 			for (int i = 0; i < 3; i++)
 			{
 				this.shapes.get(0).addSubSprite(this.shapes.get(i+1));
 				this.shapes.get(i+1).setScale(new Point(0.7, 0.7));
-				this.shapes.get(i+1).setPos(new Point(64.0 + 56.0*Math.cos(i * 90.0), 64.0 + 56.0*Math.sin(i * 90.0)));
+				this.shapes.get(i+1).setPos(new Point(56.0*Math.cos(i * 90.0), 56.0*Math.sin(i * 90.0)));
 				
 				for (int j = 0; j < 3; j++)
 				{
 					this.shapes.get(i+1).addSubSprite(this.shapes.get(j+4));
 					this.shapes.get(j+4).setScale(new Point(0.7, 0.7));
-					this.shapes.get(j+4).setPos(new Point(64.0 + 56.0*Math.cos(j * 90.0), 64.0 + 56.0*Math.sin(j * 90.0)));
+					this.shapes.get(j+4).setPos(new Point(56.0*Math.cos(j * 90.0), 56.0*Math.sin(j * 90.0)));
 				}
 			}
 			this.addSubSprite(this.shapes.get(0));
@@ -427,13 +427,13 @@ public class Background extends Sprite {
 			{
 				Sprite shape = this.shapes.get(i+1);
 				shape.rotateTo(shape.calcRot(this.currentTime) - 30.0 * nspeed, this.currentTime, 0.05, null);
-				shape.moveTo(new Point(64.0 + 48.0*Math.cos(i * 90.0 + this.counter), 64.0 + 48.0*Math.sin(i * 90.0 + this.counter)), this.currentTime, 0.05, null);
+				shape.moveTo(new Point(48.0*Math.cos(i * 90.0 + this.counter), 48.0*Math.sin(i * 90.0 + this.counter)), this.currentTime, 0.05, null);
 				
 				for (int j = 0; j < 3; j++)
 				{
 	                shape = this.shapes.get(j+4);
 	                shape.rotateTo(shape.calcRot(this.currentTime) - 30 * nspeed, this.currentTime, 0.05, null);
-	                shape.moveTo(new Point(64.0 + 48.0*Math.cos(j * 90.0 + this.counter), 64.0 + 48.0*Math.sin(j * 90.0 + this.counter)), this.currentTime, 0.05, null);          
+	                shape.moveTo(new Point(48.0*Math.cos(j * 90.0 + this.counter),48.0*Math.sin(j * 90.0 + this.counter)), this.currentTime, 0.05, null);          
 				}
 			}
 		}
@@ -448,6 +448,7 @@ public class Background extends Sprite {
         this.setPos(new Point(0, 0));
 
         this.shapes = new LinkedList<BGSprite>();
+        
         this.shapes.add(new BG_Heart());
         this.shapes.add(new BG_Square());
         this.shapes.add(new BG_Triangle());
@@ -484,7 +485,7 @@ public class Background extends Sprite {
 	    Sprite white = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")));
 
 	    white.setScale(new Point(320,240));
-	    white.setPos(new Point(0, 239)); //TODO: Vad fan beror det här på? flippad, why?
+	    white.setPos(new Point(-160, -120));
 	    white.setCol(new Color(1.0f, 1.0f, 1.0f, 1.0f));
 	    white.fadeTo(new Color(1.0f, 1.0f, 1.0f, 0.0f), this.currentTime, delay, null);
 	    this.addSubSprite(white);

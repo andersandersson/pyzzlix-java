@@ -35,11 +35,11 @@ public class Levelboard extends Sprite {
 	public Levelboard() {        
 		this.font = new Font("data/font_fat.png", 8, 8);
 
-        this.leveltext = new Text(44, 12, this.font, "LEVEL 00");      
+        this.leveltext = new Text(44, 28, this.font, "LEVEL 00");      
         this.leveltext.setAnchor(Text.Anchor.CENTER);
             
         this.blockposx = 20;
-        this.blockposy = 30;
+        this.blockposy = 18;
         this.block = null;
 
         this.currentblocks = 0;
@@ -49,8 +49,8 @@ public class Levelboard extends Sprite {
    
         this.scorebg = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
         this.scorebg.setPos(new Point(8, 8));
-        this.scorebg.setScale(new Point(72, -32));
-        this.scorebg.setCol(new Color(0, 0, 0, 0.5f));
+        this.scorebg.setScale(new Point(72, 32));
+        this.scorebg.setCol(new Color(0, 0, 0, 0.3f));
 
 		this.border = new Sprite(new Texture(Gdx.files.internal("data/windowframes.png")), 208, 80, 88, 48);
 		this.border.setPos(new Point(0, 0));
@@ -129,7 +129,7 @@ public class Levelboard extends Sprite {
         this.level = level;
         this.newLevelEventSent = false;
     
-        this.leveltext.setText("LEVEL " + this.level);   
+        this.leveltext.setText(String.format("LEVEL %2d", this.level));   
         
         this.goalblocks = goalblocks;
         this.currentblocks = 0;
@@ -137,7 +137,7 @@ public class Levelboard extends Sprite {
         this.completed = false;
         this.blockcounttext.clearColCallbacks();
         this.blockcounttext.setCol(new Color(1.0f,1.0f,1.0f,1.0f)); 
-        this.blockcounttext.setText(":" + this.currentblocks +"/" + this.goalblocks);
+        this.blockcounttext.setText(String.format(":%2d/%2d", this.currentblocks, this.goalblocks));
         
         Block oldblock = this.block;
         this.block = new Block(0, 0, block, 0, 0);

@@ -55,7 +55,7 @@ public class Block extends Sprite {
 		this.width = 16;
 		this.height = 16;
 		
-		this.setPos(new Point(offsetX+boardX*16, offsetY+boardY*16));
+		this.setPos(new Point(offsetX+boardX*16, offsetY-boardY*16));
 		this.setCenter(new Point(8, 8));
 	}
 	
@@ -114,13 +114,13 @@ public class Block extends Sprite {
 	public void moveToBoardCoord(int boardx, int boardy, double currentTime) {
 		this.boardX = boardx;
 		this.boardY = boardy;
-		this.moveTo(new Point(boardX * width + offsetX, boardY * height + offsetY), currentTime, 0.15, null);
+		this.moveTo(new Point(boardX * width + offsetX, -boardY * height + offsetY), currentTime, 0.15, null);
 	}
 
 	public void setToBoardCoord(int boardx, int boardy) {		
 		this.boardX = boardx;
 		this.boardY = boardy;
-		this.setPos(new Point(boardX * width + offsetX, boardY * height + offsetY));
+		this.setPos(new Point(boardX * width + offsetX, -boardY * height + offsetY));
     }
 
 	public void animatePopup(double currentTime) {		

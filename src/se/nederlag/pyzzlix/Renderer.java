@@ -36,7 +36,7 @@ public class Renderer {
 	}
 
 	public void resize(int width, int height) {
-		batch.getProjectionMatrix().setToOrtho2D(0, 240, 320, -240);
+		batch.getProjectionMatrix().setToOrtho(-160, 160, -120, 120, 0, 1);
 	}
 	
 	public void drawSprite(Sprite sprite, double currenttime, Point last_pos, Color last_col, Float last_rot, Point last_scale, Point last_origin)
@@ -61,7 +61,6 @@ public class Renderer {
 		Point origin = sprite.getCenter();
 		
 		
-		pos = pos.sub(last_origin);
 		pos = pos.mul(last_scale);
 
 		Point new_pos = new Point(0.0, 0.0);
@@ -79,15 +78,12 @@ public class Renderer {
 		scale = scale.mul(last_scale);
 		rot += last_rot;
 
-		// Flip y-coordinates and compensate for origin
-		pos.setY(pos.getY() + sprite.getHeight() - 2*origin.getY());
-		
 		if(sprite.getTexture() != null) {
 			sprite.setOrigin((float)origin.getX(), (float)origin.getY());
 			sprite.setPosition((float)pos.getX(), (float)pos.getY());
 			sprite.setColor(col);
 			sprite.setRotation(rot);
-			sprite.setScale((float)scale.getX(), -(float)scale.getY());			
+			sprite.setScale((float)scale.getX(), (float)scale.getY());			
 			sprite.draw(batch);
 		}
 		

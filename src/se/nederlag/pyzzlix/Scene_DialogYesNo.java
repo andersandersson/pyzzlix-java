@@ -40,24 +40,24 @@ public class Scene_DialogYesNo extends Scene {
     	
         this.font = new Font("data/font_fat.png", 8, 8);
 
-        this.queryText = new Text(0, -10, this.font, this.query);
+        this.queryText = new Text(0, 10, this.font, this.query);
         this.queryText.setAnchor(Text.Anchor.CENTER);
 
         this.menu = new Menu();
-        this.menuYes = new MenuItem(-20, 10, this.font, "Yes", this.yesCallback, Text.Anchor.CENTER);
-        this.menuNo = new MenuItem(20, 10, this.font, "No", this.noCallback, Text.Anchor.CENTER);
+        this.menuYes = new MenuItem(-20, -10, this.font, "Yes", this.yesCallback, Text.Anchor.CENTER);
+        this.menuNo = new MenuItem(20, -10, this.font, "No", this.noCallback, Text.Anchor.CENTER);
         this.menu.add(this.menuYes);
         this.menu.add(this.menuNo);
                 
         this.menuSprite = new Sprite();
         this.menuSprite.addSubSprite(this.queryText);
         this.menuSprite.addSubSprite(this.menu);
-        this.menuSprite.setPos(new Point(160, 100));
+        this.menuSprite.setPos(new Point(0, 20));
                 
 		this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.background.setScale(new Point(320, -240));
-        this.background.setPos(new Point(0, -1));
-        this.background.setCol(new Color(0, 0, 0, 0.7f));
+        this.background.setScale(new Point(320, 240));
+        this.background.setPos(new Point(-160, -120));
+        this.background.setCol(new Color(1, 0, 0, 0.7f));
         
         this.addSprite(this.background);
         this.addSprite(this.menuSprite);

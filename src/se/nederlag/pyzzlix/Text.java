@@ -74,7 +74,7 @@ public class Text extends Sprite {
                  drawposx += this.font.getWidth();
              }
              
-             drawposy += this.font.getHeight();	
+             drawposy -= this.font.getHeight();	
         }
 	}
 	

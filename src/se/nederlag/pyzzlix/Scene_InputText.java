@@ -20,7 +20,7 @@ public class Scene_InputText extends Scene {
 	private Scene_InputText() {
         this.font = new Font("data/font_fat.png", 8, 8);
 
-        this.text = new Text(160, 120, this.font, "");
+        this.text = new Text(0, -8, this.font, "");
         this.text.setAnchor(Text.Anchor.CENTER);
         this.text.setScale(new Point(2.0, 2.0));
 

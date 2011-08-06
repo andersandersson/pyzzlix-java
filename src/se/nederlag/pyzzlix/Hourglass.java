@@ -38,7 +38,7 @@ public class Hourglass extends Sprite {
 		
 		this.bar = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
 		this.bar.setScale(new Point(72, 80));
-		this.bar.setPos(new Point(8, 88));
+		this.bar.setPos(new Point(8, 8));
 		this.bar.setCol(new Color(0,1,0,1));
 		
 		this.max = 0;
@@ -47,7 +47,7 @@ public class Hourglass extends Sprite {
 		this.halted = 0;
 		
         this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.background.setScale(new Point(72, -80));
+        this.background.setScale(new Point(72, 80));
         this.background.setPos(new Point(8, 8));
         this.background.setCol(new Color(0, 0, 0, 0.3f));
         
@@ -55,16 +55,16 @@ public class Hourglass extends Sprite {
 		this.border.setPos(new Point(0, 0));
         
         this.pausebg = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.pausebg.setScale(new Point(72, -80));
+        this.pausebg.setScale(new Point(72, 80));
         this.pausebg.setPos(new Point(8, 8));
         this.pausebg.setCol(new Color(0, 0, 0, 0));
 
-        this.stoptext = new Text(44, 24, this.font, "STOP");
+        this.stoptext = new Text(44, 64, this.font, "STOP");
         this.stoptext.setScale(new Point(2, 2));
         this.stoptext.setAnchor(Text.Anchor.CENTER);
         this.stoptext.setCol(new Color(0, 0, 0, 0));
                 
-        this.pausetext = new Text(44, 48, this.font, "0");
+        this.pausetext = new Text(44, 40, this.font, "0");
         this.pausetext.setScale(new Point(2, 2));
         this.pausetext.setAnchor(Text.Anchor.CENTER);
         this.pausetext.setCol(new Color(0, 0, 0, 0));

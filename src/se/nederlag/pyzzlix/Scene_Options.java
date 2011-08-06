@@ -52,7 +52,7 @@ public class Scene_Options extends Scene {
         this.menuInactiveCol = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         
         this.menuSprite = new Sprite();
-        this.menuSprite.setPos(new Point(76, 60));
+        this.menuSprite.setPos(new Point(-84, -100));
         
         Callback focusVolumeMusicCallback = new Callback(this) {
         	public Object call(Object... params) {
@@ -103,12 +103,12 @@ public class Scene_Options extends Scene {
         };
         
         this.menu = new Menu();
-        this.menu.add(new MenuItem(0, 0, this.font, "Music volume", focusVolumeMusicCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 30, this.font, "Effects volume", focusVolumeSoundCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 60, this.font, "Tutorial", focusTutorialsCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 90, this.font, "Fullscreen", focusFullscreenCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 120, this.font, "Reset highscores", resetHighscoresCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(84, 160, this.font, "Exit", closeOptionsCallback, Text.Anchor.CENTER));
+        this.menu.add(new MenuItem(0, 150, this.font, "Music volume", focusVolumeMusicCallback, Text.Anchor.LEFT));
+        this.menu.add(new MenuItem(0, 120, this.font, "Effects volume", focusVolumeSoundCallback, Text.Anchor.LEFT));
+        this.menu.add(new MenuItem(0, 90, this.font, "Tutorial", focusTutorialsCallback, Text.Anchor.LEFT));
+        this.menu.add(new MenuItem(0, 60, this.font, "Fullscreen", focusFullscreenCallback, Text.Anchor.LEFT));
+        this.menu.add(new MenuItem(0, 30, this.font, "Reset highscores", resetHighscoresCallback, Text.Anchor.LEFT));
+        this.menu.add(new MenuItem(84, 0, this.font, "Exit", closeOptionsCallback, Text.Anchor.CENTER));
 
         this.menu.setCol(this.menuActiveCol);
         
@@ -131,31 +131,31 @@ public class Scene_Options extends Scene {
         };
         
         this.menuVolumeMusic = create_scale_menu(this.font, 10, 13, 1.0, 1.0, "music_volume", focusTopCallback, updateOptionsCallback);
-        this.menuVolumeMusic.setPos(new Point(20, 13));
+        this.menuVolumeMusic.setPos(new Point(20, 137));
         this.menuVolumeMusic.focusItem(10);
         this.menuVolumeMusic.setCol(this.menuInactiveCol);
 
         this.menuVolumeSound = create_scale_menu(this.font, 10, 13, 1.0, 1.0, "sound_volume", focusTopCallback, updateOptionsCallback);
-        this.menuVolumeSound.setPos(new Point(20, 43));
+        this.menuVolumeSound.setPos(new Point(20, 107));
         this.menuVolumeSound.focusItem(10);
         this.menuVolumeSound.setCol(this.menuInactiveCol);
 
         this.menuTutorials = create_on_off_menu(this.font, 10, 13, 1.0, 1.0, "show_tutorials", focusTopCallback, updateOptionsCallback);
-        this.menuTutorials.setPos(new Point(20, 73));
+        this.menuTutorials.setPos(new Point(20, 77));
         this.menuTutorials.focusItem(0);
         this.menuTutorials.setCol(this.menuInactiveCol);
 
         this.menuFullscreen = create_on_off_menu(this.font, 10, 13, 1.0, 1.0, "fullscreen", focusTopCallback, updateOptionsCallback);
-        this.menuFullscreen.setPos(new Point(20, 103));
+        this.menuFullscreen.setPos(new Point(20, 47));
         this.menuFullscreen.focusItem(0);
         this.menuFullscreen.setCol(this.menuInactiveCol);
 
         this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
-        this.background.setScale(new Point(320, -240));
-        this.background.setPos(new Point(0, -1));
-        this.background.setCol(new Color(0, 0, 0, 0.7f));
+        this.background.setScale(new Point(320, 240));
+        this.background.setPos(new Point(-160, -120));
+        this.background.setCol(new Color(0, 0, 0, 0.9f));
         
-        this.title = new Text(160, 20, this.font, "OPTIONS");
+        this.title = new Text(0, 84, this.font, "OPTIONS");
         this.title.setScale(new Point(2.0, 2.0));
         this.title.setAnchor(Text.Anchor.CENTER);
         

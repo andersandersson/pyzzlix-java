@@ -57,14 +57,14 @@ public class Scene_Highscore extends Scene {
 	private Scene_Highscore() {
 		this.font = new Font("data/font_fat.png", 8, 8);
 
-		this.titletext = new Text(160, 30, this.font, "HIGHSCORES");
+		this.titletext = new Text(0, 74, this.font, "HIGHSCORES");
 		this.titletext.setAnchor(Text.Anchor.CENTER);
 		this.titletext.setScale(new Point(2.0, 2.0));
 
 		this.background = new Sprite(new Texture(
 				Gdx.files.internal("data/pixel.png")), 1, 1);
-		this.background.setScale(new Point(320, -240));
-		this.background.setPos(new Point(0, -1));
+		this.background.setScale(new Point(320, 240));
+		this.background.setPos(new Point(-160, -120));
 		this.background.setCol(new Color(0, 0, 0, 0.7f));
 
 		this.updateBlocker = false;
@@ -87,9 +87,9 @@ public class Scene_Highscore extends Scene {
         
         
         this.menu = new Menu();
-		this.menu.setPos(new Point(160, 180));
-		this.menu.add(new MenuItem(0, 0, this.font, "Play again", menuReplayCallback, Text.Anchor.CENTER));
-		this.menu.add(new MenuItem(0, 24, this.font, "Exit to menu", menuExitCallback, Text.Anchor.CENTER));
+		this.menu.setPos(new Point(0, -92));
+		this.menu.add(new MenuItem(0, 24, this.font, "Play again", menuReplayCallback, Text.Anchor.CENTER));
+		this.menu.add(new MenuItem(0, 0, this.font, "Exit to menu", menuExitCallback, Text.Anchor.CENTER));
 		this.menu.setCol(new Color(1.0f, 1.0f, 1.0f, 0.0f));
 
 		this.addSprite(this.background);
@@ -97,8 +97,7 @@ public class Scene_Highscore extends Scene {
 		this.highscores = new LinkedList<HighscoreEntry>();
 
 		for (int i = 0; i < 10; i++) {
-			HighscoreEntry score = new HighscoreEntry("AAA", 0, 0, new Text(
-					160, 60 + i * 10, this.font, "---"), i);
+			HighscoreEntry score = new HighscoreEntry("AAA", 0, 0, new Text(0, 52 - i * 10, this.font, "---"), i);
 			this.highscores.add(score);
 			this.updateHighscore(score, "AAA", 0, 0);
 			this.addSprite(this.highscores.get(i).text);

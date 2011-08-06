@@ -45,11 +45,12 @@ public class Pyzzlix implements ApplicationListener  {
 		Gdx.input.setInputProcessor(inputHandler);
 		Gdx.graphics.setVSync(true);
 		//SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
-		//SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
+		SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
-		SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_Tutorial.getInstance());
 		//Scene_Highscore.getInstance().display(true, null, null);
 		
 		//this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 512, 512, false);	

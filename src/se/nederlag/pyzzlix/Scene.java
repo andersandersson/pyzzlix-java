@@ -99,5 +99,6 @@ public abstract class Scene {
 		return false;
 	}
 
-	public abstract void tick();
+	public void tick() {
+	}
 }
