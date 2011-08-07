@@ -20,7 +20,12 @@ public abstract class Scene {
     public void preload()
     {
     }
-       
+    
+    public void updateRenderTime(double deltaTime) 
+    {
+    	this.renderTime += deltaTime;
+    }
+    
     public void updateTimer(double deltaTime)
     {
     	this.currentTime += deltaTime;

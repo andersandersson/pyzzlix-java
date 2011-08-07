@@ -96,22 +96,26 @@ public class Renderer {
 	
 	public void render(double deltatime)
 	{		
-		deltaT = deltatime;
-		currentTime += deltaT;
+		this.deltaT = deltatime;
+		this.currentTime += deltaT;
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl11.glColor4f(0,1,0,1);
-		batch.begin();
-		batch.enableBlending();
+		this.batch.begin();
+		this.batch.enableBlending();
 
 		SceneHandler.getInstance().renderScenes();
 
-		batch.end();			
+		this.batch.end();			
 	}
 
 	public void renderScene(Scene scene) {
+		if(!scene.blockedUpdate) {
+			scene.updateRenderTime(this.deltaT);
+		}
+		
 		for(Sprite sprite : scene.getSprites()) {
-			drawSprite(sprite, currentTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(1,1), new Point(0,0));
+			drawSprite(sprite, scene.renderTime, new Point(0,0), new Color(1,1,1,1), 0.0f, new Point(1,1), new Point(0,0));
 		}
 	}
 }
