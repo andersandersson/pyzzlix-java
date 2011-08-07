@@ -106,7 +106,7 @@ public class Scene_DialogYesNo extends Scene {
 	        
 	public boolean handleEvent(Event event) {
         if(this.state == State.FADING) {
-        	return false; 
+        	return true; 
         }
 
         if(event.type == Event.Type.KEYBOARD) {

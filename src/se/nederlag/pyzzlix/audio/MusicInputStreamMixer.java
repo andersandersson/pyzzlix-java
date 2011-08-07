@@ -61,7 +61,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 			}
 		}
 		t = System.nanoTime() - t;
-		Gdx.app.log("SOUND ", "Reset time: "+(double)(t*1e-9));
+		//Gdx.app.log("SOUND ", "Reset time: "+(double)(t*1e-9));
 	}
 	
 	private void setBufferVolume(byte[] src, float volume) {

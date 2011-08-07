@@ -11,8 +11,6 @@ public class Options {
 			Options.options = new HashMap<String, Object>();
 		}
 
-		System.out.println("GETTING " + name);
-		
 		return Options.options.get(name);
 	}
 
@@ -20,8 +18,6 @@ public class Options {
 		if(Options.options == null) {
 			Options.options = new HashMap<String, Object>();
 		}
-		
-		System.out.println("SETTING " + name);
 		
 		Options.options.put(name, value);
 	}

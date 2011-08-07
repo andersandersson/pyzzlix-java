@@ -268,7 +268,7 @@ public class Scene_Highscore extends Scene {
 	@Override
 	public boolean handleEvent(Event event) {
 		if (this.state == State.FADING) {
-			return false;
+			return true;
 		}
 
 		if (event.type == Event.Type.KEYBOARD) {

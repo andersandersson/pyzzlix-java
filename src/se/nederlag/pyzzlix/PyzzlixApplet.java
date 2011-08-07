@@ -7,6 +7,6 @@ public class PyzzlixApplet extends LwjglApplet {
 
 	public PyzzlixApplet()
 	{
-		super(new Pyzzlix(), false);
+		super(new Pyzzlix(Pyzzlix.RunMode.APPLET), false);
 	}
 }

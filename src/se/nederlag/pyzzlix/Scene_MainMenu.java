@@ -166,7 +166,9 @@ public class Scene_MainMenu extends Scene {
         this.menu.add(new MenuItem(0, 32, this.menufont, "Highscores", menuHighscoresCallback, Text.Anchor.CENTER));
         this.menu.add(new MenuItem(0, 16, this.menufont, "Options", menuOptionsCallback, Text.Anchor.CENTER));
         //this.menu.add(MenuItem(0, 48, this.menufont, "Help", this.menu_help));
-        this.menu.add(new MenuItem(0, 0, this.menufont, "Quit", menuQuitCallback, Text.Anchor.CENTER));
+        if(Pyzzlix.runMode != Pyzzlix.RunMode.APPLET) {
+        	this.menu.add(new MenuItem(0, 0, this.menufont, "Quit", menuQuitCallback, Text.Anchor.CENTER));
+        }
 
         this.addSprite(this.menu);
         this.menu.setPos(new Point(0, 140));

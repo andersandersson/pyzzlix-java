@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 public class Pyzzlix implements ApplicationListener  {
+	public enum RunMode {APPLET, DESKTOP};
+	
 	static final int LOGICS_PER_SEC = 30;
 	
 	int fpsCounter = 0;	
@@ -24,9 +26,12 @@ public class Pyzzlix implements ApplicationListener  {
 	
 	InputHandler inputHandler;
 	
+	public static RunMode runMode;
+	
 	//private FrameBuffer fbo;
 	
-	public Pyzzlix() {
+	public Pyzzlix(RunMode runMode) {
+		Pyzzlix.runMode = runMode;
 	}
 	
 	public void pause() {
@@ -45,8 +50,8 @@ public class Pyzzlix implements ApplicationListener  {
 		Gdx.input.setInputProcessor(inputHandler);
 		Gdx.graphics.setVSync(true);
 		//SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
-		//SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
-		SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
+		SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
+		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
@@ -65,7 +70,7 @@ public class Pyzzlix implements ApplicationListener  {
 
 		if(time - lastFpsUpdate >= 1.0f)
 		{
-			Gdx.app.log("Pyzzlix", "fps: " + fpsCounter);
+			//Gdx.app.log("Pyzzlix", "fps: " + fpsCounter);
 			fpsCounter = 0;
 			lastFpsUpdate = time;
 		}
