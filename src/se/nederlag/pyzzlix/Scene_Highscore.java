@@ -1,7 +1,11 @@
 package se.nederlag.pyzzlix;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -145,12 +149,42 @@ public class Scene_Highscore extends Scene {
 	}
 
 	public void loadHighscores() {
+		String data = Gdx.files.external(".pyzzlix/highscores.txt").readString();
+		String[] items = data.split("\n");
+		
+		Pattern p = Pattern.compile("([^:]*):([^:]*):([^:]*)");
+		for(String row : items) {
+			Matcher m = p.matcher(row);
+			if(m.matches()) {
+				this.addNewHighscore(m.group(1), Integer.valueOf(m.group(2)), Integer.valueOf(m.group(3)));
+			}
+		}
 	}
 
 	public void resetHighscores() {
+		for (HighscoreEntry entry : this.highscores) {
+			this.updateHighscore(entry, "AAA", 0, 0);
+		}
+		
+		this.saveHighscores();
 	}
 
 	public void saveHighscores() {
+		Gdx.files.external(".pyzzlix").mkdirs();
+		OutputStream out = Gdx.files.external(".pyzzlix/highscores.txt").write(false);
+
+		for (HighscoreEntry entry : this.highscores) {
+			try {
+				out.write(entry.name.getBytes());
+				out.write(":".getBytes());
+				out.write(Integer.toString(entry.score).getBytes());
+				out.write(":".getBytes());
+				out.write(Integer.toString(entry.level).getBytes());
+				out.write("\n".getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public boolean isNewHighscore(int score) {
@@ -163,14 +197,13 @@ public class Scene_Highscore extends Scene {
 		return false;
 	}
 
-	public void updateHighscore(HighscoreEntry entry, String name, int score,
-			int level) {
+	public void updateHighscore(HighscoreEntry entry, String name, int score, int level) {
 		entry.name = name;
 		entry.score = score;
 		entry.level = level;
 		entry.text.setAnchor(Text.Anchor.CENTER);
 		entry.text.setText(String.format("%2d. %3s: %10d LVL:%2d",
-				entry.position, entry.name, entry.score, entry.level));
+		entry.position+1, entry.name, entry.score, entry.level));
 	}
 
 	public void addNewHighscore(String name, int score, int level) {

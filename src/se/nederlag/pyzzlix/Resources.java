@@ -28,7 +28,7 @@ public class Resources {
 				list.add(region);
 			}
 		}
-		
+
 		return list;
 	}
 	
