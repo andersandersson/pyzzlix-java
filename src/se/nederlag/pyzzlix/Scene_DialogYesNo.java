@@ -57,7 +57,7 @@ public class Scene_DialogYesNo extends Scene {
 		this.background = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
         this.background.setScale(new Point(320, 240));
         this.background.setPos(new Point(-160, -120));
-        this.background.setCol(new Color(1, 0, 0, 0.7f));
+        this.background.setCol(new Color(0, 0, 0, 1));
         
         this.addSprite(this.background);
         this.addSprite(this.menuSprite);

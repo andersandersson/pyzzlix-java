@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import java.util.Collections;
+
 import com.badlogic.gdx.Gdx;
 
 public class Text extends Sprite {
@@ -51,7 +53,7 @@ public class Text extends Sprite {
 
         
         int drawposx = 0;
-        int drawposy = 0;
+        int drawposy = (splittext.length-1)*this.font.getHeight();
         
         for(String text : splittext) {
              char[] chars = text.toCharArray();             

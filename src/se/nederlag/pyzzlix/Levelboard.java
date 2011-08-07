@@ -119,7 +119,7 @@ public class Levelboard extends Sprite {
                     }
                 }
                 
-                this.blockcounttext.setText(":" + this.currentblocks +"/" + this.goalblocks);
+                this.blockcounttext.setText(String.format(":%2d/%2d", this.currentblocks, this.goalblocks));
             }
         }
     }

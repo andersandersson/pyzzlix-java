@@ -69,7 +69,7 @@ public class Hourglass extends Sprite {
         this.pausetext.setAnchor(Text.Anchor.CENTER);
         this.pausetext.setCol(new Color(0, 0, 0, 0));
 
-        this.glow = new Sprite(new Texture(Gdx.files.internal("data/windowframes.png")), 208, 136, 88, 96);
+        this.glow = new Sprite(new Texture(Gdx.files.internal("data/windowglows.png")), 208, 136, 88, 96);
         this.glow.setPos(new Point(0,0));
         this.glow.setCol(new Color(0, 0, 0, 0));
 

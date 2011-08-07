@@ -5,6 +5,8 @@ import java.util.Stack;
 import java.util.Deque;
 import java.util.ArrayDeque;
 
+import com.badlogic.gdx.Gdx;
+
 import se.nederlag.pyzzlix.events.Event;
 
 public class SceneHandler {

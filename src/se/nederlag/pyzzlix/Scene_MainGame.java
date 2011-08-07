@@ -235,8 +235,12 @@ public class Scene_MainGame extends Scene {
 		
 		music.play();
 		this.resetGame();
-
-		this.startGame();
+		  
+		if(Options.get("show_tutorials") == null || (Boolean)Options.get("show_tutorials") == true) {
+			this.showSplash();
+		} else {
+	        this.startGame();
+		}
 	}
 	
 
@@ -257,7 +261,13 @@ public class Scene_MainGame extends Scene {
         this.hourglass.setPos(new Point(248.0, -112.0));
 	}
 	
-	public void showSplash() {		
+	public void showSplash() {
+		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
+		// Do a couple of update to make all objects become added
+		this.updateTimer(this.currentTime);
+		this.updateTimer(this.currentTime);
+		this.updateTimer(this.currentTime);
+		SceneHandler.getInstance().pushScene(Scene_Tutorial.getInstance());
 	}
 	
 	public void hide() {
@@ -777,8 +787,33 @@ public class Scene_MainGame extends Scene {
 			EventKeyState keyevent = (EventKeyState) event;
 						
 			if(keyevent.state == EventKeyState.State.DOWN) {
-				
-				if(this.state == State.RUNNING) {
+	            if(keyevent.key == Input.Keys.ESCAPE) {
+	            	SpriteCallback killDialog = new SpriteCallback() {
+						public void callback(Sprite sprite, double currenttime) {
+							SceneHandler.getInstance().removeScene(Scene_DialogYesNo.getInstance());						}
+	            	};
+	            	
+	            	Callback quit_game = new Callback() {
+						public Object call(Object... params) {
+							SceneHandler.getInstance().removeScene(Scene_DialogYesNo.getInstance());
+							SceneHandler.getInstance().removeScene(Scene_MainGame.getInstance());
+							SceneHandler.getInstance().removeScene(Scene_Tutorial.getInstance());
+							return null;
+						}
+	            	};
+	            	
+	            	Callback do_nothing = new Callback(killDialog) {
+						public Object call(Object... params) {
+							Scene_DialogYesNo.getInstance().remove((SpriteCallback)args[0]);
+							return null;
+						}
+	            	};
+	            	
+	                Scene_DialogYesNo.getInstance().setQuery("Do you want to exit to the menu?", quit_game, do_nothing);
+	                SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
+	            }
+
+	            if(this.state == State.RUNNING) {
 					switch(keyevent.key) {
 						case Input.Keys.G:
 							this.showGameOver();
