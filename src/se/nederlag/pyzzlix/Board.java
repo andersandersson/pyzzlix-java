@@ -12,7 +12,6 @@ import se.nederlag.pyzzlix.events.EventHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.sun.org.apache.bcel.internal.generic.ArithmeticInstruction;
 
 public class Board extends Sprite {
 	private int width;

@@ -1,20 +1,34 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
-    <title>HelloApplet!</title>
+    <title>Pyzzlix</title>
+    <style>
+        html, body { margin: 0; padding: 20px; }
+        
+        body { 
+            background: #222;
+        }
+        
+        #applet_container {
+            margin: 0 auto;
+            width: 800px;
+            height: 600px;
+            padding: 5px 5px 5px 5px;
+            background: url(appletframe-800x600-v2.png) no-repeat;
+        }
+    </style>
   </head>
   <body>
-
   <div id="applet_container">
-  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="800" height="480">
+  <applet id="pyzzlix_applet" code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="800" height="600">
 
-    <param name="al_title" value="HelloApplet">
+    <param name="al_title" value="Pyzzlix">
     <param name="al_main" value="se.nederlag.pyzzlix.PyzzlixApplet">
-    <param name="al_logo" value="appletlogo.png">
-    <param name="al_progressbar" value="appletprogress.gif">
+    <param name="al_logo" value="logo.png">
+    <param name="al_progressbar" value="progressbar.png">
 
-    <param name="al_bgcolor" value="000000">
-    <param name="al_fgcolor" value="ffffff">
+    <param name="boxbgcolor" value="black">
+    <param name="boxfgcolor" value="white">
 
     <param name="al_jars" value="pyzzlix-applet-1.0.jar, gdx.jar, gdx-backend-lwjgl.jar">
 
@@ -26,12 +40,10 @@
     <param name="codebase_lookup" value="false">
 
     <param name="java_arguments" value="-Dsun.java2d.noddraw=true -Dsun.awt.noerasebackground=true -Dsun.java2d.d3d=false -Dsun.java2d.opengl=false -Dsun.java2d.pmoffscreen=false -Xmx800M">
-   <param name="lwjgl_arguments" value="-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true">
+    <param name="lwjgl_arguments" value="-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true">
     <param name="separate_jvm" value="true">
     <param name="codebase_lookup" value="false">
   </applet>
   </div>
-
-
   </body>
 </html>

@@ -294,7 +294,7 @@ public class Scene_MainMenu extends Scene {
 
     public void menu_highscores() {
         Mixer.getInstance().playSound(this.selectsound, 1.0);
-        SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
+        Scene_Highscore.getInstance().display(null, null);
     }
 
     public void menu_quit() {

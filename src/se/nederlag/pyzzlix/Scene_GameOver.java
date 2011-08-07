@@ -30,6 +30,9 @@ public class Scene_GameOver extends Scene {
 	private int level;
 	private int score;
 	
+	private Mixer.Sound menumove;
+	private Mixer.Sound selectsound;
+	
 	private Scene_GameOver() {
 		this.font = new Font("data/font_fat.png", 8, 8);
 		
@@ -78,6 +81,9 @@ public class Scene_GameOver extends Scene {
         this.level = 0;
         this.score = 0;
         
+		this.menumove = Resources.getSound("menumove");
+		this.selectsound = Resources.getSound("menuselect");
+
         this.addSprite(this.background);
         this.addSprite(this.gameoverText);
         this.addSprite(this.menu);
@@ -210,12 +216,15 @@ public class Scene_GameOver extends Scene {
 			if(keyevent.state == EventKeyState.State.DOWN) {
 				switch(keyevent.key) {
 					case Input.Keys.UP:
+						Mixer.getInstance().playSound(this.menumove, 1.0);
 						this.menu.prevItem();
 						break;
 					case Input.Keys.DOWN:
+						Mixer.getInstance().playSound(this.menumove, 1.0);
 						this.menu.nextItem();
 						break;
 					case Input.Keys.ENTER:
+						Mixer.getInstance().playSound(this.selectsound, 1.0);
 						this.menu.selectItem();
 						break;
 				}

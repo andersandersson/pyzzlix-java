@@ -93,7 +93,11 @@
 
   <target name="dist-applet" depends="build-applet-jar">
     <copy todir="${dist.applet.dir}" file="${jar.applet.file}" />
-    <copy todir="${dist.applet.dir}" file="${dist.applet.html.file}" />
+  	<copy todir="${dist.applet.dir}">
+  		<fileset dir="${web.dir}">
+  			<include name="**/*.*" />
+  		</fileset>
+  	</copy>
     <copy todir="${dist.applet.dir}">
       <fileset dir="${gdx.dir}">
         <include name="**/gdx.jar" />

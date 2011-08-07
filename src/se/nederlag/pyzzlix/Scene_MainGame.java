@@ -790,7 +790,8 @@ public class Scene_MainGame extends Scene {
 	            if(keyevent.key == Input.Keys.ESCAPE) {
 	            	SpriteCallback killDialog = new SpriteCallback() {
 						public void callback(Sprite sprite, double currenttime) {
-							SceneHandler.getInstance().removeScene(Scene_DialogYesNo.getInstance());						}
+							SceneHandler.getInstance().removeScene(Scene_DialogYesNo.getInstance());						
+						}
 	            	};
 	            	
 	            	Callback quit_game = new Callback() {

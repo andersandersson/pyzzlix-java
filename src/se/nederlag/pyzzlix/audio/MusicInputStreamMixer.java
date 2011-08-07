@@ -67,7 +67,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	private void setBufferVolume(byte[] src, float volume) {
 		int length = src.length;
 		int val;
-		volume=0.0f;
+		
 		for(int i=0; i<length; i += 2*this.channels) {
 			for(int j=0; j<this.channels; j += 1) {
 				if (bigEndian) {
@@ -98,7 +98,7 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	private void mixBuffers(byte[] src, byte[] dst, float volume) {
 		int length = src.length;
 		int l_val, r_val, val;
-		volume=0.0f;
+		
 		for(int i=0; i<length; i += 2*this.channels) {
 			for(int j=0; j<this.channels; j += 1) {
 				if (bigEndian) {

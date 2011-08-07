@@ -54,6 +54,9 @@ public class Scene_Highscore extends Scene {
 
 	private List<HighscoreEntry> highscores;
 
+	private Mixer.Sound menumove;
+	private Mixer.Sound selectsound;
+	
 	private Scene_Highscore() {
 		this.font = new Font("data/font_fat.png", 8, 8);
 
@@ -109,8 +112,8 @@ public class Scene_Highscore extends Scene {
 		this.addSprite(this.titletext);
 		this.addSprite(this.menu);
 
-		// this.menumove = Resources().getSound("menumove")
-		// this.selectsound = Resources().getSound("menuselect")
+		this.menumove = Resources.getSound("menumove");
+		this.selectsound = Resources.getSound("menuselect");
 
 		this.loadHighscores();
 
@@ -281,15 +284,15 @@ public class Scene_Highscore extends Scene {
 					if (keyevent.key == Input.Keys.UP) {
 						this.menu.prevItem();
 					}
-					// Mixer().playSound(this.menumove)
+					Mixer.getInstance().playSound(this.menumove, 1.0);
 
 					if (keyevent.key == Input.Keys.DOWN) {
 						this.menu.nextItem();
 					}
-					// Mixer().playSound(this.menumove)
+					Mixer.getInstance().playSound(this.menumove, 1.0);
 
 					if (keyevent.key == Input.Keys.ENTER) {
-						// Mixer().playSound(this.selectsound)
+						Mixer.getInstance().playSound(this.selectsound, 1.0);
 						this.menu.selectItem();
 					}
 				}
