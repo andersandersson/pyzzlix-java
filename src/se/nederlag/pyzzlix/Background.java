@@ -494,8 +494,11 @@ public class Background extends Sprite {
     public void setTheme(int shape) {
     	shape = shape % this.shapeCount;
         
-    	this.removeSubSprite(this.currentShape);
-        this.currentShape = this.shapes.get(shape);  
+    	for(Sprite sprite : this.getSubSprites()) {
+    		this.removeSubSprite(sprite);
+    	}
+
+    	this.currentShape = this.shapes.get(shape);  
 
         this.addSubSprite(this.currentShape);
     }
