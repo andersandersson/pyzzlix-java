@@ -13,6 +13,7 @@ public class MultipleMusicInputStream implements MusicInputStream {
 	private final int sampleRate;
 	private float volume;
 	private ByteFader fader;
+	private ByteMixer mixer;
 	
 	static private final int bufferSize = 4096*5;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
@@ -28,6 +29,7 @@ public class MultipleMusicInputStream implements MusicInputStream {
 		this.volume = 1.0f;
 
 		this.fader = new ByteFader(channels, sampleRate);
+		this.mixer = new ByteMixer(channels, sampleRate, this.bufferSize);
 	}
 	
 	public void setStream(int idx, MusicInputStream stream) {
@@ -53,7 +55,7 @@ public class MultipleMusicInputStream implements MusicInputStream {
 		for(int i=0; i<this.lines; i++) {
 			if(this.input[i] != null) {
 				length = this.input[i].read(this.buffer);
-				this.mixBuffers(this.buffer, buffer);
+				this.mixer.mixPlain(this.buffer, buffer);
 			}
 		}
 		
@@ -70,51 +72,8 @@ public class MultipleMusicInputStream implements MusicInputStream {
 			}
 		}
 		t = System.nanoTime() - t;
-		//Gdx.app.log("SOUND ", "Reset time: "+(double)(t*1e-9));
 	}
 
-	private void mixBuffers(byte[] src, byte[] dst) {
-		int length = src.length;
-		int l_val, r_val, val;
-		
-		for(int i=0; i<length; i += 2*this.channels) {
-			for(int j=0; j<this.channels; j += 1) {
-				if (bigEndian) {
-					l_val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000000000000000000FF);
-					r_val = ((int)dst[i+2*j] << 8)|(int)(dst[i+2*j+1]&0x000000000000000000000FF);
-				} else {
-					l_val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000000000000000000FF);
-					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000000000000000000FF);
-				}
-
-				l_val = l_val + 32768;
-				r_val = r_val + 32768;
-				
-				if(l_val < 32768 && r_val < 32768) {
-					val = (l_val*r_val)/32768;
-				} else {
-					val = 2*(l_val+r_val) - (l_val*r_val)/32768 - 65536;
-				}
-				
-				val = val - 32768;
-				
-				if (val > 32767) {
-					val = 32767;
-				}
-				if (val < -32768) {
-					val = -32768;
-				}
-				
-				if (bigEndian) {
-					dst[i+2*j+1] = (byte)(val >>> 8);
-					dst[i+2*j] = (byte)(val);
-				} else {
-					dst[i+2*j] = (byte)(val);
-					dst[i+2*j+1] = (byte)(val >>> 8);
-				}
-			}
-		}
-	}
 
 	@Override
 	public float getVolume() {

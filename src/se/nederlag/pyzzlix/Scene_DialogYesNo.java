@@ -1,6 +1,8 @@
 package se.nederlag.pyzzlix;
 
 import se.nederlag.pyzzlix.Scene_GameOver.State;
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.Sound;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -32,8 +34,8 @@ public class Scene_DialogYesNo extends Scene {
 	private Sprite menuSprite;
 	
 	private State state;
-	private Mixer.Sound moveSound;
-	private Mixer.Sound selectSound;
+	private Sound moveSound;
+	private Sound selectSound;
 	
 	private Scene_DialogYesNo() {
         this.query = "This should be a question?";            
@@ -121,11 +123,11 @@ public class Scene_DialogYesNo extends Scene {
 						this.menu.nextItem();
 						break;
 					case Input.Keys.ENTER:
-						Mixer.getInstance().playSound(this.selectSound, 1.0);
+						Audio.playSound(this.selectSound);
 						this.menu.selectItem();
 						break;
 					case Input.Keys.ESCAPE:
-						Mixer.getInstance().playSound(this.selectSound, 1.0);
+						Audio.playSound(this.selectSound);
 						this.menu.getItem(1).select();
 						break;
 				}

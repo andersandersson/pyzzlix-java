@@ -3,6 +3,8 @@ package se.nederlag.pyzzlix;
 import java.util.HashMap;
 import java.util.Map;
 
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.Sound;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -35,8 +37,8 @@ public class Scene_Options extends Scene {
 	private Menu menuFullscreen;
 	private Menu subMenu;	
 	
-	private Mixer.Sound movesound;
-	private Mixer.Sound selectsound;
+	private Sound movesound;
+	private Sound selectsound;
 	
 	private Map<String,Color> focusColors;
 	private Map<String,Point> focusScales;
@@ -103,12 +105,20 @@ public class Scene_Options extends Scene {
         };
         
         this.menu = new Menu();
-        this.menu.add(new MenuItem(0, 150, this.font, "Music volume", focusVolumeMusicCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 120, this.font, "Effects volume", focusVolumeSoundCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 90, this.font, "Tutorial", focusTutorialsCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 60, this.font, "Fullscreen", focusFullscreenCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(0, 30, this.font, "Reset highscores", resetHighscoresCallback, Text.Anchor.LEFT));
-        this.menu.add(new MenuItem(84, 0, this.font, "Exit", closeOptionsCallback, Text.Anchor.CENTER));
+        int pos = 150;
+        this.menu.add(new MenuItem(0, pos, this.font, "Music volume", focusVolumeMusicCallback, Text.Anchor.LEFT));
+        pos -= 30;
+        this.menu.add(new MenuItem(0, pos, this.font, "Effects volume", focusVolumeSoundCallback, Text.Anchor.LEFT));
+        pos -= 30;
+        this.menu.add(new MenuItem(0, pos, this.font, "Tutorial", focusTutorialsCallback, Text.Anchor.LEFT));
+        pos -= 30;
+        if(Pyzzlix.runMode != Pyzzlix.RunMode.APPLET) {
+        	this.menu.add(new MenuItem(0, pos, this.font, "Fullscreen", focusFullscreenCallback, Text.Anchor.LEFT));
+        	pos -= 30;
+        }
+        this.menu.add(new MenuItem(0, pos, this.font, "Reset highscores", resetHighscoresCallback, Text.Anchor.LEFT));
+        pos -= 30;
+        this.menu.add(new MenuItem(84, pos, this.font, "Exit", closeOptionsCallback, Text.Anchor.CENTER));
 
         this.menu.setCol(this.menuActiveCol);
         
@@ -126,6 +136,7 @@ public class Scene_Options extends Scene {
         		String name = (String) params[0];
         		Object value = params[1];
         		options.updateOptions(name, value);
+        		Scene_MainMenu.getInstance().setMusicVolume(Audio.getMusicVolume());
 				return null;
         	}
         };
@@ -163,7 +174,9 @@ public class Scene_Options extends Scene {
         this.menuSprite.addSubSprite(this.menuVolumeMusic);
         this.menuSprite.addSubSprite(this.menuVolumeSound);
         this.menuSprite.addSubSprite(this.menuTutorials);
-        this.menuSprite.addSubSprite(this.menuFullscreen);
+        if(Pyzzlix.runMode != Pyzzlix.RunMode.APPLET) {
+        	this.menuSprite.addSubSprite(this.menuFullscreen);
+        }
 
         this.addSprite(this.background);
         this.addSprite(this.menuSprite);
@@ -189,16 +202,16 @@ public class Scene_Options extends Scene {
         this.focusScales.put("topmenu_focus", this.menu.getItem(0).focusScale);
         this.focusScales.put("topmenu_unfocus", new Point(1.3, 1.3));
 
-        Integer music_volume = (Integer) Options.get("music_volume");
+        Float music_volume = (Float) Options.get("music_volume");
         if(music_volume != null) {
-            this.menuVolumeMusic.focusItem(music_volume);
+            this.menuVolumeMusic.focusItem((int)(10*music_volume+0.5f));
         } else {
             this.menuVolumeMusic.focusItem(10);
         }
 
-        Integer sound_volume = (Integer) Options.get("sound_volume");
+        Float sound_volume = (Float) Options.get("sound_volume");
         if(sound_volume != null) {
-            this.menuVolumeSound.focusItem(sound_volume);
+            this.menuVolumeSound.focusItem((int)(10*sound_volume+0.5f));
         } else {
             this.menuVolumeSound.focusItem(10);
         }
@@ -230,7 +243,7 @@ public class Scene_Options extends Scene {
 					Callback update_callback = (Callback) args[3];
 					
 					if(update_callback != null) {
-						update_callback.call(name, value);
+						update_callback.call(name, (float)value/10.0f);
 					}
 					
 					if(callback != null) {
@@ -306,11 +319,6 @@ public class Scene_Options extends Scene {
     }
      
 	public void updateOptions(String name, Object value) {
-		/*
-        if name == "fullscreen":
-            Renderer().setFullScreen(value)
-        */
-            
         Options.set(name, value);
 	}
         
@@ -400,43 +408,43 @@ public class Scene_Options extends Scene {
 			if(keyevent.state == EventKeyState.State.DOWN) {
 	            if(this.state == State.TOP) {
 	                if (keyevent.key == Input.Keys.UP) {
-	                    Mixer.getInstance().playSound(this.movesound, 1.0);
+	                    Audio.playSound(this.movesound);
 	                    this.menu.prevItem();
 	                }
 	                                           
 	                if (keyevent.key == Input.Keys.DOWN) {
-	                    Mixer.getInstance().playSound(this.movesound, 1.0);
+	                    Audio.playSound(this.movesound);
 	                    this.menu.nextItem();
 	                }
 	            
 	                if (keyevent.key == Input.Keys.ENTER) {
-	                    Mixer.getInstance().playSound(this.selectsound, 1.0);
+	                    Audio.playSound(this.selectsound);
 	                    this.menu.selectItem();
 	                }
 
 	                if (keyevent.key == Input.Keys.ESCAPE) {
-	                    Mixer.getInstance().playSound(this.selectsound, 1.0);
+	                    Audio.playSound(this.selectsound);
 	                    this.closeOptions();
 	                }
                 } else {
 	                if (keyevent.key == Input.Keys.LEFT) {
-	                    Mixer.getInstance().playSound(this.movesound, 1.0);
 	                    this.subMenu.prevItem();
+	                    Audio.playSound(this.movesound);
 	                }
 	                                           
 	                if (keyevent.key == Input.Keys.RIGHT) {
-	                    Mixer.getInstance().playSound(this.movesound, 1.0);
 	                    this.subMenu.nextItem();
+	                    Audio.playSound(this.movesound);
 	                }
 	            
 	                if (keyevent.key == Input.Keys.ENTER) {
-	                    Mixer.getInstance().playSound(this.selectsound, 1.0);
 	                    this.subMenu.selectItem();
+	                    Audio.playSound(this.selectsound);
 	                }
 
 	                if (keyevent.key == Input.Keys.ESCAPE) {
-	                    Mixer.getInstance().playSound(this.selectsound, 1.0);
 	                    this.subMenu.selectItem();
+	                    Audio.playSound(this.selectsound);
 	                }
                 }
 	        }

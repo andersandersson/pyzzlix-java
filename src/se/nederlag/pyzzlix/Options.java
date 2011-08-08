@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
 
+import se.nederlag.pyzzlix.audio.Audio;
+
 import com.badlogic.gdx.Gdx;
 
 public class Options {
@@ -29,6 +31,9 @@ public class Options {
 				}
 				else if(m.group(1).equals("java.lang.Boolean")) {
 					Options.options.put(m.group(2), Boolean.valueOf(m.group(3)));
+				}
+				else if(m.group(1).equals("java.lang.Float")) {
+					Options.options.put(m.group(2), Float.valueOf(m.group(3)));
 				}
 			}
 		}

@@ -5,7 +5,7 @@ import java.util.List;
 
 import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.audio.Music;
-import se.nederlag.pyzzlix.audio.OpenALMusic;
+import se.nederlag.pyzzlix.audio.Sound;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,7 +36,7 @@ public class Resources {
 		return Audio.loadAudioStream("data/"+name+".ogg");
 	}
 
-	public static Mixer.Sound getSound(String name) {
-		return Mixer.getInstance().loadAudioFile("data/"+name+".ogg");
+	public static Sound getSound(String name) {
+		return Audio.loadAudioFile("data/"+name+".ogg");
 	}
 }

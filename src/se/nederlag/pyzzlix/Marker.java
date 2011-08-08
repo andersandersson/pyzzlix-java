@@ -1,5 +1,8 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.Sound;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -13,9 +16,9 @@ public class Marker extends Sprite {
 	private double scaleX;
 	private double scaleY;
 
-	private Mixer.Sound movesound;
-	private Mixer.Sound turnsound;
-	private Mixer.Sound failsound;
+	private Sound movesound;
+	private Sound turnsound;
+	private Sound failsound;
 	
 	public Marker() {
 		super(new Texture(Gdx.files.internal("data/marker.png")));
@@ -44,16 +47,16 @@ public class Marker extends Sprite {
 	}
 
 	public void move(int dx, int dy, double currentTime) {
-		Mixer.getInstance().playSound(this.movesound, 1.0);
+		Audio.playSound(this.movesound);
 		this.moveToBoardCoord(boardX+dx, boardY+dy, currentTime);
 	}
 	
 	public void turn() {
-		Mixer.getInstance().playSound(this.turnsound, 1.0);
+		Audio.playSound(this.turnsound);
 	}
 
 	public void fail() {
-		Mixer.getInstance().playSound(this.failsound, 1.0);
+		Audio.playSound(this.failsound);
 	}
 
 	public int getBoardX() {

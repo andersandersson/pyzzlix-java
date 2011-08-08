@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
+import se.nederlag.pyzzlix.audio.Sound;
+import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -30,8 +32,8 @@ public class Scene_GameOver extends Scene {
 	private int level;
 	private int score;
 	
-	private Mixer.Sound menumove;
-	private Mixer.Sound selectsound;
+	private Sound menumove;
+	private Sound selectsound;
 	
 	private Scene_GameOver() {
 		this.font = new Font("data/font_fat.png", 8, 8);
@@ -216,15 +218,15 @@ public class Scene_GameOver extends Scene {
 			if(keyevent.state == EventKeyState.State.DOWN) {
 				switch(keyevent.key) {
 					case Input.Keys.UP:
-						Mixer.getInstance().playSound(this.menumove, 1.0);
+						Audio.playSound(this.menumove);
 						this.menu.prevItem();
 						break;
 					case Input.Keys.DOWN:
-						Mixer.getInstance().playSound(this.menumove, 1.0);
+						Audio.playSound(this.menumove);
 						this.menu.nextItem();
 						break;
 					case Input.Keys.ENTER:
-						Mixer.getInstance().playSound(this.selectsound, 1.0);
+						Audio.playSound(this.selectsound);
 						this.menu.selectItem();
 						break;
 				}

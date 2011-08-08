@@ -1,5 +1,10 @@
 package se.nederlag.pyzzlix.audio;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import se.nederlag.pyzzlix.Options;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.openal.OpenALAudio;
 import com.badlogic.gdx.files.FileHandle;
@@ -37,13 +42,14 @@ public class Audio {
     }
 	
 	public static void playMusic(Music music, float volume, float fadeTime) {
+		music.setLooping(true);
 		music.setVolume(0.0f);
-		music.setVolume(volume, fadeTime);
+		music.setVolume(volume * Audio.getMusicVolume(), fadeTime);
 		music.play();
 	}
 	
 	public static void playMusic(Music music) {
-		music.setVolume(1.0f);
+		music.setVolume(Audio.getMusicVolume());
 		music.play();
 	}
 
@@ -51,7 +57,13 @@ public class Audio {
 		music.stop();
 	}
 
+	public static void playSound(Sound sound, float volume) {
+		sound.setVolume(volume*Audio.getSoundVolume());
+		sound.play();
+	}
+
 	public static void playSound(Sound sound) {
+		sound.setVolume(Audio.getSoundVolume());
 		sound.play();
 	}
 
@@ -59,17 +71,15 @@ public class Audio {
 		sound.stop();
 	}
 	
-	public static void setMusicVolume(float volume) {		
-	}
-
 	public static float getMusicVolume() {
-		return 1.0f;
-	}
-
-	public static void setSoundVolume(float volume) {		
+		float volume = (Float) Options.get("music_volume");
+		
+		return volume;
 	}
 
 	public static float getSoundVolume() {
-		return 1.0f;
+		float volume = (Float) Options.get("sound_volume");
+		
+		return volume;
 	}
 }

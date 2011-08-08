@@ -23,6 +23,7 @@ import se.nederlag.pyzzlix.audio.MusicInputStream;
 import se.nederlag.pyzzlix.audio.MultipleMusicInputStream;
 import se.nederlag.pyzzlix.audio.OggMusicInputStream;
 import se.nederlag.pyzzlix.audio.OpenALMusic;
+import se.nederlag.pyzzlix.audio.Sound;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventCircleFound;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -79,9 +80,9 @@ public class Scene_MainGame extends Scene {
 	
 	private Sprite layerEffects;
 
-	private Mixer.Sound removeblocksound;
-	private Mixer.Sound combosound;
-	private Mixer.Sound circlesound;
+	private Sound removeblocksound;
+	private Sound combosound;
+	private Sound circlesound;
 
 	private Scene_MainGame() {
 		this.renderBlocker = true;
@@ -506,11 +507,11 @@ public class Scene_MainGame extends Scene {
 	    		cs = 10;
 	    	}
 	        
-	    	Mixer.getInstance().playSound(this.combosound, 0.7);
+	    	Audio.playSound(this.combosound, 0.7f);
 	        this.comboCounter += 1;
 	    }
 	     
-	    Mixer.getInstance().playSound(this.circlesound, 0.5);
+	    Audio.playSound(this.circlesound, 0.5f);
 
 	    double factor = this.comboCounter+1;
 	        
@@ -623,7 +624,7 @@ public class Scene_MainGame extends Scene {
 				Scene_MainGame maingame = (Scene_MainGame) getArg(3);
 				
 				if(scale_blocks.size() > 0) {
-					Mixer.getInstance().playSound(maingame.removeblocksound, 1.0);
+					Audio.playSound(maingame.removeblocksound);
 					Block next_block = scale_blocks.get(0);
 					scale_blocks.remove(next_block);
 					maingame.addBlockScore(next_block);

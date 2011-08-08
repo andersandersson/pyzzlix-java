@@ -2,6 +2,7 @@ package se.nederlag.pyzzlix;
 
 import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.audio.Music;
+import se.nederlag.pyzzlix.audio.Sound;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventHandler;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -102,9 +103,9 @@ public class Scene_MainMenu extends Scene {
 	private State state;
 	
     private Music music;
-    private Mixer.Sound menumove;
-    private Mixer.Sound selectsound;
-    private Mixer.Sound startsound;
+    private Sound menumove;
+    private Sound selectsound;
+    private Sound startsound;
 	
 	
 	
@@ -202,6 +203,10 @@ public class Scene_MainMenu extends Scene {
         this.startsound = Resources.getSound("menustart");        
 	}
 
+	public void setMusicVolume(float volume) {
+		this.music.setVolume(volume);
+	}
+	
 	public void tick() {
     }
 
@@ -231,12 +236,12 @@ public class Scene_MainMenu extends Scene {
 	                
 	            if(this.state == State.MENU) {
 	            	if(keyevent.key ==  Input.Keys.UP) {
-	                    Mixer.getInstance().playSound(this.menumove, 1.0);
+	                    Audio.playSound(this.menumove);
 	                    this.menu.prevItem();
 	            	}
 	                                 
 	                if(keyevent.key == Input.Keys.DOWN) {
-	                    Mixer.getInstance().playSound(this.menumove, 1.0);
+	                	Audio.playSound(this.menumove);
 	                    this.menu.nextItem();
 	                }
 	                       
@@ -266,7 +271,7 @@ public class Scene_MainMenu extends Scene {
         this.state = State.TRANSITION;
         this.startmenu.moveTo(new Point(0, -148), this.currentTime, 0.4, callback);
         this.logo.moveTo(new Point(10, 70), this.currentTime, 0.4, null);
-        Mixer.getInstance().playSound(this.startsound, 1.0);
+        Audio.playSound(this.startsound);
     }
     
     public void menu_enter2(Sprite sprite) {
@@ -288,18 +293,18 @@ public class Scene_MainMenu extends Scene {
     }
 
     public void menu_start() {
-        Mixer.getInstance().playSound(this.startsound, 1.0);
+    	Audio.playSound(this.startsound);
     	Audio.stopMusic(this.music);
         SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
     }
     
     public void menu_options() {
-        Mixer.getInstance().playSound(this.selectsound, 1.0);
+    	Audio.playSound(this.selectsound);
         SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
     }
 
     public void menu_highscores() {
-        Mixer.getInstance().playSound(this.selectsound, 1.0);
+    	Audio.playSound(this.selectsound);
         Scene_Highscore.getInstance().display(null, null);
     }
 
@@ -320,7 +325,7 @@ public class Scene_MainMenu extends Scene {
 			}    	
     	};
 
-    	Mixer.getInstance().playSound(this.selectsound, 1.0);
+    	Audio.playSound(this.selectsound);
         this.music.setVolume(0.5f, 0.5f);
         Scene_DialogYesNo.getInstance().setQuery("Do you want to quit?", yes_callback, no_callback);
         SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());

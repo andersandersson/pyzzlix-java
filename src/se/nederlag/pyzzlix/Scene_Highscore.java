@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import se.nederlag.pyzzlix.audio.Sound;
+import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -58,8 +60,8 @@ public class Scene_Highscore extends Scene {
 
 	private List<HighscoreEntry> highscores;
 
-	private Mixer.Sound menumove;
-	private Mixer.Sound selectsound;
+	private Sound menumove;
+	private Sound selectsound;
 	
 	private Scene_Highscore() {
 		this.font = new Font("data/font_fat.png", 8, 8);
@@ -317,15 +319,15 @@ public class Scene_Highscore extends Scene {
 					if (keyevent.key == Input.Keys.UP) {
 						this.menu.prevItem();
 					}
-					Mixer.getInstance().playSound(this.menumove, 1.0);
+					Audio.playSound(this.menumove);
 
 					if (keyevent.key == Input.Keys.DOWN) {
 						this.menu.nextItem();
 					}
-					Mixer.getInstance().playSound(this.menumove, 1.0);
+					Audio.playSound(this.menumove);
 
 					if (keyevent.key == Input.Keys.ENTER) {
-						Mixer.getInstance().playSound(this.selectsound, 1.0);
+						Audio.playSound(this.selectsound);
 						this.menu.selectItem();
 					}
 				}
