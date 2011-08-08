@@ -8,11 +8,13 @@ public class OggMusicInputStream implements MusicInputStream {
 	private OggInputStream input;
 	private FileHandle file;
 	private float volume;
+	private ByteFader fader;
 	
 	public OggMusicInputStream(FileHandle file) {
 		this.file = file;
 		this.input = new OggInputStream(file.read());
 		this.volume = 1.0f;
+		this.fader = new ByteFader(this.input.getChannels(), this.input.getSampleRate());
 	}
 	
 	@Override
@@ -27,7 +29,11 @@ public class OggMusicInputStream implements MusicInputStream {
 
 	@Override
 	public int read(byte[] buffer) {
-		return this.input.read(buffer);
+		int length = this.input.read(buffer);
+		
+		this.volume = this.fader.transform(buffer);
+		
+		return length;
 	}
 
 	@Override
@@ -37,9 +43,15 @@ public class OggMusicInputStream implements MusicInputStream {
 	
 	public void setVolume(float volume) {
 		this.volume = volume;
+		this.fader.reset(volume);
 	}
 
 	public float getVolume() {
 		return this.volume;
+	}
+
+	@Override
+	public void setVolume(float volume, float fadeTime) {
+		this.fader.fade(this.volume, volume, fadeTime);
 	}
 }

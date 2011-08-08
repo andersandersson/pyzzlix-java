@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.Music;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventHandler;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -99,7 +101,7 @@ public class Scene_MainMenu extends Scene {
 	private Logo logo;
 	private State state;
 	
-    private Mixer.Music music;
+    private Music music;
     private Mixer.Sound menumove;
     private Mixer.Sound selectsound;
     private Mixer.Sound startsound;
@@ -205,7 +207,9 @@ public class Scene_MainMenu extends Scene {
 
     public void show() {
         this.state = State.ENTRANCE;;
-        Mixer.getInstance().playMusic(this.music, 1.0, 0.0, true);
+        
+        Audio.playMusic(this.music, 1.0f, 4.0f);
+        
         this.startmenu.setPos(new Point(0, -48));
         this.startmenu.setCol(new Color(1, 1, 1, 0));
         this.startmenu.fadeTo(new Color(1, 1, 1, 1), this.currentTime, 0.3, null);
@@ -213,7 +217,7 @@ public class Scene_MainMenu extends Scene {
     }
        
     public void hide() {
-        Mixer.getInstance().stopMusic(this.music);
+    	Audio.stopMusic(this.music);
     }
         
     public boolean handleEvent(Event event) {
@@ -285,7 +289,7 @@ public class Scene_MainMenu extends Scene {
 
     public void menu_start() {
         Mixer.getInstance().playSound(this.startsound, 1.0);
-        Mixer.getInstance().stopMusic(this.music);
+    	Audio.stopMusic(this.music);
         SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
     }
     
@@ -317,7 +321,7 @@ public class Scene_MainMenu extends Scene {
     	};
 
     	Mixer.getInstance().playSound(this.selectsound, 1.0);
-        Mixer.getInstance().setMusicVolume(this.music, 0.5, 0.5);
+        this.music.setVolume(0.5f, 0.5f);
         Scene_DialogYesNo.getInstance().setQuery("Do you want to quit?", yes_callback, no_callback);
         SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
     }
@@ -335,6 +339,6 @@ public class Scene_MainMenu extends Scene {
     	
                 
         Scene_DialogYesNo.getInstance().remove(killDialog);
-        Mixer.getInstance().setMusicVolume(this.music, 1.0, 0.5);
+        this.music.setVolume(1.0f, 0.5f);
     }
 }

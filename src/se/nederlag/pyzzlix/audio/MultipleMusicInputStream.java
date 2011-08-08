@@ -6,25 +6,28 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
 
-public class MusicInputStreamMixer implements MusicInputStream {
+public class MultipleMusicInputStream implements MusicInputStream {
 	private MusicInputStream[] input;
 	private final int lines;
 	private final int channels;
 	private final int sampleRate;
 	private float volume;
+	private ByteFader fader;
 	
 	static private final int bufferSize = 4096*5;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
 	private byte[] buffer;
 	
-	public MusicInputStreamMixer(int lines, int channels, int sampleRate) {
+	public MultipleMusicInputStream(int lines, int channels, int sampleRate) {
 		this.input = new MusicInputStream[lines];
 		this.channels = channels;
 		this.sampleRate = sampleRate;
 		this.lines = lines;
 		this.buffer = new byte[bufferSize];
 		this.volume = 1.0f;
+
+		this.fader = new ByteFader(channels, sampleRate);
 	}
 	
 	public void setStream(int idx, MusicInputStream stream) {
@@ -38,6 +41,10 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	public int getSampleRate() {
 		return this.sampleRate;
 	}
+	
+	public MusicInputStream[] getStreams() {
+		return this.input;
+	}
 
 	public int read(byte[] buffer) {
 		int length = 0;
@@ -46,9 +53,11 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		for(int i=0; i<this.lines; i++) {
 			if(this.input[i] != null) {
 				length = this.input[i].read(this.buffer);
-				this.mixBuffers(this.buffer, buffer, this.input[i].getVolume());
+				this.mixBuffers(this.buffer, buffer);
 			}
 		}
+		
+		this.volume = this.fader.transform(buffer);
 		
 		return length;
 	}
@@ -63,39 +72,8 @@ public class MusicInputStreamMixer implements MusicInputStream {
 		t = System.nanoTime() - t;
 		//Gdx.app.log("SOUND ", "Reset time: "+(double)(t*1e-9));
 	}
-	
-	private void setBufferVolume(byte[] src, float volume) {
-		int length = src.length;
-		int val;
-		
-		for(int i=0; i<length; i += 2*this.channels) {
-			for(int j=0; j<this.channels; j += 1) {
-				if (bigEndian) {
-					val = ((int)src[i+2*j] << 8)|(int)(src[i+2*j+1]&0x000000000000000000000FF);
-				} else {
-					val = ((int)src[i+2*j+1] << 8)|(int)(src[i+2*j]&0x000000000000000000000FF);
-				}
 
-				val = (int)(val * volume);
-				
-				if (val > 32767) {
-					val = 32767;
-				}
-				if (val < -32768) {
-					val = -32768;
-				}
-				
-				if (bigEndian) {
-					src[i+2*j+1] = (byte)(val >>> 8);
-					src[i+2*j] = (byte)(val);
-				} else {
-					src[i+2*j] = (byte)(val);
-					src[i+2*j+1] = (byte)(val >>> 8);
-				}
-			}
-		}	}
-	
-	private void mixBuffers(byte[] src, byte[] dst, float volume) {
+	private void mixBuffers(byte[] src, byte[] dst) {
 		int length = src.length;
 		int l_val, r_val, val;
 		
@@ -109,8 +87,6 @@ public class MusicInputStreamMixer implements MusicInputStream {
 					r_val = ((int)dst[i+2*j+1] << 8)|(int)(dst[i+2*j]&0x000000000000000000000FF);
 				}
 
-				l_val = (int)(l_val * volume);
-				
 				l_val = l_val + 32768;
 				r_val = r_val + 32768;
 				
@@ -148,6 +124,12 @@ public class MusicInputStreamMixer implements MusicInputStream {
 	@Override
 	public void setVolume(float volume) {
 		this.volume = volume;
+		this.fader.reset(volume);
+	}
+
+	@Override
+	public void setVolume(float volume, float fadeTime) {
+		this.fader.fade(this.volume, volume, fadeTime);
 	}
 }
 

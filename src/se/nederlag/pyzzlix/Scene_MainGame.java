@@ -15,8 +15,12 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import se.nederlag.pyzzlix.audio.Adjustable;
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.MultipleMusic;
+import se.nederlag.pyzzlix.audio.Music;
 import se.nederlag.pyzzlix.audio.MusicInputStream;
-import se.nederlag.pyzzlix.audio.MusicInputStreamMixer;
+import se.nederlag.pyzzlix.audio.MultipleMusicInputStream;
 import se.nederlag.pyzzlix.audio.OggMusicInputStream;
 import se.nederlag.pyzzlix.audio.OpenALMusicStream;
 import se.nederlag.pyzzlix.events.Event;
@@ -65,8 +69,9 @@ public class Scene_MainGame extends Scene {
 	private int comboResetCounter;
 	private Random randomGenerator;
 
-	private OpenALMusicStream music;
-	private List<MusicInputStream> musics;
+	private MultipleMusic music;
+	private Adjustable[] musics;
+	
 	private SortedMap<Integer,Set<Integer>> levelMusic;
 	private Set<Integer> allMusic;
 	
@@ -177,27 +182,19 @@ public class Scene_MainGame extends Scene {
 		this.levelMusic.put(19, new TreeSet<Integer>());
 		this.levelMusic.get(19).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,7 }));
 
-		this.musics = new ArrayList<MusicInputStream>();
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_chord.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_hh.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_bass.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_bass2.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_kick.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead3.ogg")));
-		this.musics.add(new OggMusicInputStream(Gdx.files.internal("data/music1_lead2.ogg")));
+		this.music = Audio.loadMultipleAudioStream(new String[]{"data/music1_chord.ogg",
+																"data/music1_hh.ogg",
+																"data/music1_bass.ogg",
+																"data/music1_bass2.ogg",
+																"data/music1_kick.ogg",
+																"data/music1_lead.ogg",
+																"data/music1_lead3.ogg",
+																"data/music1_lead2.ogg"});
+		this.musics = this.music.getParts();
 
 		this.allMusic = new TreeSet<Integer>();
 		this.allMusic.addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6,7 }));
 		
-		MusicInputStreamMixer mixer = new MusicInputStreamMixer(8, this.musics.get(0).getChannels(), this.musics.get(0).getSampleRate());
-
-		for(int i=0; i<8; i++) {
-			mixer.setStream(i, this.musics.get(i));
-			this.musics.get(i).setVolume(0.0f);
-		}
-		
-		this.music = new OpenALMusicStream((OpenALAudio) Gdx.audio, mixer);
 		music.setLooping(true);
 		music.setVolume(1.0f);
 		
@@ -229,7 +226,7 @@ public class Scene_MainGame extends Scene {
 	
 	@Override 
 	public void show() {
-		for(MusicInputStream mus : this.musics) {
+		for(Adjustable mus : this.musics) {
 			mus.setVolume(0);
 		}
 		
@@ -357,12 +354,12 @@ public class Scene_MainGame extends Scene {
 		for(int i : to_play) {
 			if(close.contains(i)) {
 				close.remove(i);
-				this.musics.get(i).setVolume(1.0f);
+				this.musics[i].setVolume(1.0f, 3.0f);
 			}
 		}
 
 		for(int i : close) {
-			this.musics.get(i).setVolume(0.0f);
+			this.musics[i].setVolume(0.0f, 3.0f);
 		}
 	}
 
@@ -820,28 +817,31 @@ public class Scene_MainGame extends Scene {
 							this.showGameOver();
 							break;
 					    case Input.Keys.NUM_1:
-					    	this.musics.get(0).setVolume(1.0f - this.musics.get(0).getVolume());
+					    	this.musics[0].setVolume(1.0f - this.musics[0].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_2:
-					    	this.musics.get(1).setVolume(1.0f - this.musics.get(1).getVolume());
+					    	this.musics[1].setVolume(1.0f - this.musics[1].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_3:
-					    	this.musics.get(2).setVolume(1.0f - this.musics.get(2).getVolume());
+					    	this.musics[2].setVolume(1.0f - this.musics[2].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_4:
-					    	this.musics.get(3).setVolume(1.0f - this.musics.get(3).getVolume());
+					    	this.musics[3].setVolume(1.0f - this.musics[3].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_5:
-					    	this.musics.get(4).setVolume(1.0f - this.musics.get(4).getVolume());
+					    	this.musics[4].setVolume(1.0f - this.musics[4].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_6:
-					    	this.musics.get(5).setVolume(1.0f - this.musics.get(5).getVolume());
+					    	this.musics[5].setVolume(1.0f - this.musics[5].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_7:
-					    	this.musics.get(6).setVolume(1.0f - this.musics.get(6).getVolume());
+					    	this.musics[6].setVolume(1.0f - this.musics[6].getVolume(), 3.0f);
 					    	break;
 					    case Input.Keys.NUM_8:
-					    	this.musics.get(7).setVolume(1.0f - this.musics.get(7).getVolume());
+					    	this.musics[7].setVolume(1.0f - this.musics[7].getVolume(), 3.0f);
+					    	break;
+					    case Input.Keys.M:
+					    	this.music.setVolume(1.0f - this.music.getVolume(), 3.0f);
 					    	break;
 					    	
 						case Input.Keys.UP:

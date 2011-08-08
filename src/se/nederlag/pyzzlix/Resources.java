@@ -3,6 +3,8 @@ package se.nederlag.pyzzlix;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.nederlag.pyzzlix.audio.Audio;
+import se.nederlag.pyzzlix.audio.Music;
 import se.nederlag.pyzzlix.audio.OpenALMusicStream;
 
 import com.badlogic.gdx.backends.openal.OpenALMusic;
@@ -32,8 +34,8 @@ public class Resources {
 		return list;
 	}
 	
-	public static Mixer.Music getMusic(String name) {
-		return Mixer.getInstance().loadAudioStream("data/"+name+".ogg");
+	public static Music getMusic(String name) {
+		return Audio.loadAudioStream("data/"+name+".ogg");
 	}
 
 	public static Mixer.Sound getSound(String name) {
