@@ -19,6 +19,7 @@ public class Options {
 			Options.options = new HashMap<String, Object>();
 		}
 
+		Gdx.files.external(".pyzzlix").mkdirs();
 		String data = Gdx.files.external(".pyzzlix/options.txt").readString();
 		String[] items = data.split("\n");
 		

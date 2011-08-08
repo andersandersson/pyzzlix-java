@@ -151,6 +151,7 @@ public class Scene_Highscore extends Scene {
 	}
 
 	public void loadHighscores() {
+		Gdx.files.external(".pyzzlix").mkdirs();
 		String data = Gdx.files.external(".pyzzlix/highscores.txt").readString();
 		String[] items = data.split("\n");
 		
