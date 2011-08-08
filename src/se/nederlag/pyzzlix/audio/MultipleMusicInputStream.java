@@ -29,7 +29,7 @@ public class MultipleMusicInputStream implements MusicInputStream {
 		this.volume = 1.0f;
 
 		this.fader = new ByteFader(channels, sampleRate);
-		this.mixer = new ByteMixer(channels, sampleRate, this.bufferSize);
+		this.mixer = new ByteMixer(channels, sampleRate);
 	}
 	
 	public void setStream(int idx, MusicInputStream stream) {
