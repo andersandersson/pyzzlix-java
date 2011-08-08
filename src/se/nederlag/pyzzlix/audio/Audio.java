@@ -16,7 +16,7 @@ public class Audio {
 		
 		OggMusicInputStream stream = new OggMusicInputStream(handle);
 		
-		return new OpenALMusicStream((OpenALAudio) Gdx.audio, stream);
+		return new OpenALMusic((OpenALAudio) Gdx.audio, stream);
 	}
 
 	public static MultipleMusic loadMultipleAudioStream(String[] filenames) {
@@ -33,7 +33,7 @@ public class Audio {
 			multipleStream.setStream(i, streams[i]);
 		}
 		
-		return new MultipleOpenALMusicStream((OpenALAudio) Gdx.audio, multipleStream);
+		return new MultipleOpenALMusic((OpenALAudio) Gdx.audio, multipleStream);
     }
 	
 	public static void playMusic(Music music, float volume, float fadeTime) {

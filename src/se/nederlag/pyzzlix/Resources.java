@@ -5,10 +5,8 @@ import java.util.List;
 
 import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.audio.Music;
-import se.nederlag.pyzzlix.audio.OpenALMusicStream;
+import se.nederlag.pyzzlix.audio.OpenALMusic;
 
-import com.badlogic.gdx.backends.openal.OpenALMusic;
-import com.badlogic.gdx.backends.openal.OpenALSound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

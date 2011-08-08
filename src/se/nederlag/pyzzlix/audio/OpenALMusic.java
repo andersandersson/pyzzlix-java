@@ -1,14 +1,14 @@
 package se.nederlag.pyzzlix.audio;
 
-import com.badlogic.gdx.backends.openal.*;
+import com.badlogic.gdx.backends.openal.OpenALAudio;
 
 /**
  * @author Anders Andersson
  */
-public class OpenALMusicStream extends OpenALMusic implements Music {
+public class OpenALMusic extends com.badlogic.gdx.backends.openal.OpenALMusic implements Music {
 	private MusicInputStream input;
 	
-	public OpenALMusicStream(OpenALAudio audio, MusicInputStream input) {
+	public OpenALMusic(OpenALAudio audio, MusicInputStream input) {
 		super(audio, null);
 		
 		this.input = input;

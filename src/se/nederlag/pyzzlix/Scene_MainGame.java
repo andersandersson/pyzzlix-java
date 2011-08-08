@@ -22,7 +22,7 @@ import se.nederlag.pyzzlix.audio.Music;
 import se.nederlag.pyzzlix.audio.MusicInputStream;
 import se.nederlag.pyzzlix.audio.MultipleMusicInputStream;
 import se.nederlag.pyzzlix.audio.OggMusicInputStream;
-import se.nederlag.pyzzlix.audio.OpenALMusicStream;
+import se.nederlag.pyzzlix.audio.OpenALMusic;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventCircleFound;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -31,8 +31,6 @@ import se.nederlag.pyzzlix.events.EventMouseMove;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.openal.OpenALAudio;
-import com.badlogic.gdx.backends.openal.OpenALMusic;
-import com.badlogic.gdx.backends.openal.OpenALSound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
