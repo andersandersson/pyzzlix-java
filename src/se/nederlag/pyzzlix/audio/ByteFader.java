@@ -10,6 +10,7 @@ public class ByteFader {
 	private float toVolume;
 	private int samples;
 	private int position;
+	private boolean fading;
 
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 	
@@ -18,6 +19,7 @@ public class ByteFader {
 		this.sampleRate = sampleRate;
 		this.fromVolume = 0.0f;
 		this.toVolume = 1.0f;
+		this.fading = false;
 	}
 	
 	public void fade(float fromVolume, float toVolume, float fadeTime) {
@@ -25,6 +27,7 @@ public class ByteFader {
 		this.toVolume = toVolume;
 		this.samples = (int) (fadeTime*this.sampleRate);
 		this.position = 0;
+		this.fading = true;
 	}
 	
 	public void reset(float volume) {
@@ -32,8 +35,26 @@ public class ByteFader {
 		this.toVolume = volume;
 		this.samples = 0;
 		this.position = 0;
+		this.fading = false;
 	}
 
+	public float skip(int length) {
+		float volume = this.toVolume;
+		
+		if(this.fading) {
+			this.position += length;
+			
+			if(this.position < this.samples) {
+				volume = this.fromVolume + (this.toVolume - this.fromVolume) * ((float)this.position / (float)this.samples);
+			} else {
+				volume = this.toVolume;
+				this.fading = false;
+			}
+		}
+		
+		return volume;
+	}
+	
 	public float transform(byte[] in) {
 		float volume = 0.0f;
 		int val;
@@ -43,6 +64,7 @@ public class ByteFader {
 				volume = this.fromVolume + (this.toVolume - this.fromVolume) * ((float)this.position / (float)this.samples);
 			} else {
 				volume = this.toVolume;
+				this.fading = false;
 			}
 
 			for(int j=0; j<this.channels; j++) {
@@ -74,5 +96,17 @@ public class ByteFader {
 		}
 		
 		return volume;
+	}
+	
+	public boolean isFading() {
+		return this.fading;
+	}
+	
+	public boolean idle() {
+		if(!this.fading) {
+			return (this.toVolume < 0.01f) || (this.toVolume > 0.99f); 
+		} else {
+			return false;
+		}
 	}
 }

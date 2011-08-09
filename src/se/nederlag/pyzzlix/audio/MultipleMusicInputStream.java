@@ -14,6 +14,9 @@ public class MultipleMusicInputStream implements MusicInputStream {
 	private float volume;
 	private ByteFader fader;
 	private ByteMixer mixer;
+
+	private float muteVolume = 0.0f;
+	private boolean muted = false;	
 	
 	static private final int bufferSize = 4096*5;
 	static private final boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
@@ -55,11 +58,16 @@ public class MultipleMusicInputStream implements MusicInputStream {
 		for(int i=0; i<this.lines; i++) {
 			if(this.input[i] != null) {
 				length = this.input[i].read(this.buffer);
-				this.mixer.mixPlain(this.buffer, buffer);
+				
+				if(!this.input[i].isMuted()) {
+					this.mixer.mixPlain(this.buffer, buffer);
+				}
 			}
 		}
 		
-		this.volume = this.fader.transform(buffer);
+		if(!this.fader.idle()) {
+			this.volume = this.fader.transform(buffer);
+		}
 		
 		return length;
 	}
@@ -89,6 +97,29 @@ public class MultipleMusicInputStream implements MusicInputStream {
 	@Override
 	public void setVolume(float volume, float fadeTime) {
 		this.fader.fade(this.volume, volume, fadeTime);
+	}
+
+	@Override
+	public boolean isMuted() {
+		return this.muted;
+	}
+
+	@Override
+	public void mute() {
+		if(!this.muted) {
+			this.muteVolume = this.volume;
+		}
+		
+		this.muted = true;
+	}
+
+	@Override
+	public void unmute() {
+		if(this.muted) {
+			this.volume = this.muteVolume;
+		}
+		
+		this.muted = false;
 	}
 }
 

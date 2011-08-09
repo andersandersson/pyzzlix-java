@@ -152,14 +152,16 @@ public class Scene_Highscore extends Scene {
 
 	public void loadHighscores() {
 		Gdx.files.external(".pyzzlix").mkdirs();
-		String data = Gdx.files.external(".pyzzlix/highscores.txt").readString();
-		String[] items = data.split("\n");
-		
-		Pattern p = Pattern.compile("([^:]*):([^:]*):([^:]*)");
-		for(String row : items) {
-			Matcher m = p.matcher(row);
-			if(m.matches()) {
-				this.addNewHighscore(m.group(1), Integer.valueOf(m.group(2)), Integer.valueOf(m.group(3)));
+		if(Gdx.files.external(".pyzzlix/highscores.txt").exists()) {
+			String data = Gdx.files.external(".pyzzlix/highscores.txt").readString();
+			String[] items = data.split("\n");
+			
+			Pattern p = Pattern.compile("([^:]*):([^:]*):([^:]*)");
+			for(String row : items) {
+				Matcher m = p.matcher(row);
+				if(m.matches()) {
+					this.addNewHighscore(m.group(1), Integer.valueOf(m.group(2)), Integer.valueOf(m.group(3)));
+				}
 			}
 		}
 	}

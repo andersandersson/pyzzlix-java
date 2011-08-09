@@ -9,6 +9,8 @@ public class OggMusicInputStream implements MusicInputStream {
 	private FileHandle file;
 	private float volume;
 	private ByteFader fader;
+	private float muteVolume = 0.0f;
+	private boolean muted = false;
 	
 	public OggMusicInputStream(FileHandle file) {
 		this.file = file;
@@ -31,7 +33,9 @@ public class OggMusicInputStream implements MusicInputStream {
 	public int read(byte[] buffer) {
 		int length = this.input.read(buffer);
 		
-		this.volume = this.fader.transform(buffer);
+		if(this.fader.isFading() || (!this.fader.idle() && !this.isMuted())) {
+			this.volume = this.fader.transform(buffer);
+		}
 		
 		return length;
 	}
@@ -53,5 +57,29 @@ public class OggMusicInputStream implements MusicInputStream {
 	@Override
 	public void setVolume(float volume, float fadeTime) {
 		this.fader.fade(this.volume, volume, fadeTime);
+	}
+
+
+	@Override
+	public boolean isMuted() {
+		return this.muted || (this.volume<0.01f);
+	}
+
+	@Override
+	public void mute() {
+		if(!this.muted) {
+			this.muteVolume = this.volume;
+		}
+		
+		this.muted = true;
+	}
+
+	@Override
+	public void unmute() {
+		if(this.muted) {
+			this.volume = this.muteVolume;
+		}
+		
+		this.muted = false;
 	}
 }

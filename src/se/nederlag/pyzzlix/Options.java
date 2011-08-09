@@ -20,21 +20,23 @@ public class Options {
 		}
 
 		Gdx.files.external(".pyzzlix").mkdirs();
-		String data = Gdx.files.external(".pyzzlix/options.txt").readString();
-		String[] items = data.split("\n");
-		
-		Pattern p = Pattern.compile("class ([^:]*):([^:]*):([^:]*)");
-		for(String row : items) {
-			Matcher m = p.matcher(row);
-			if(m.matches()) {
-				if(m.group(1).equals("java.lang.Integer")) {
-					Options.options.put(m.group(2), Integer.valueOf(m.group(3)));
-				}
-				else if(m.group(1).equals("java.lang.Boolean")) {
-					Options.options.put(m.group(2), Boolean.valueOf(m.group(3)));
-				}
-				else if(m.group(1).equals("java.lang.Float")) {
-					Options.options.put(m.group(2), Float.valueOf(m.group(3)));
+		if(Gdx.files.external(".pyzzlix/options.txt").exists()) {
+			String data = Gdx.files.external(".pyzzlix/options.txt").readString();
+			String[] items = data.split("\n");
+			
+			Pattern p = Pattern.compile("class ([^:]*):([^:]*):([^:]*)");
+			for(String row : items) {
+				Matcher m = p.matcher(row);
+				if(m.matches()) {
+					if(m.group(1).equals("java.lang.Integer")) {
+						Options.options.put(m.group(2), Integer.valueOf(m.group(3)));
+					}
+					else if(m.group(1).equals("java.lang.Boolean")) {
+						Options.options.put(m.group(2), Boolean.valueOf(m.group(3)));
+					}
+					else if(m.group(1).equals("java.lang.Float")) {
+						Options.options.put(m.group(2), Float.valueOf(m.group(3)));
+					}
 				}
 			}
 		}

@@ -72,14 +72,22 @@ public class Audio {
 	}
 	
 	public static float getMusicVolume() {
-		float volume = (Float) Options.get("music_volume");
-		
-		return volume;
+		if(Options.get("music_volume") != null) {
+			float volume = (Float) Options.get("music_volume");
+	
+			return volume;
+		} else {
+			return 1.0f;
+		}
 	}
 
 	public static float getSoundVolume() {
-		float volume = (Float) Options.get("sound_volume");
-		
-		return volume;
+		if(Options.get("sound_volume") != null) {
+			float volume = (Float) Options.get("sound_volume");
+			
+			return volume;
+		} else {
+			return 1.0f;
+		}
 	}
 }

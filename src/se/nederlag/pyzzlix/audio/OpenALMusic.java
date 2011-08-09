@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.openal.OpenALAudio;
  */
 public class OpenALMusic extends com.badlogic.gdx.backends.openal.OpenALMusic implements Music {
 	private MusicInputStream input;
-	
+
 	public OpenALMusic(OpenALAudio audio, MusicInputStream input) {
 		super(audio, null);
 		
@@ -39,5 +39,20 @@ public class OpenALMusic extends com.badlogic.gdx.backends.openal.OpenALMusic im
 	@Override
 	public void setVolume(float volume, float fadeTime) {
 		this.input.setVolume(volume, fadeTime);
+	}
+
+	@Override
+	public boolean isMuted() {
+		return this.input.isMuted();
+	}
+
+	@Override
+	public void mute() {
+		this.input.mute();
+	}
+
+	@Override
+	public void unmute() {
+		this.input.unmute();
 	}
 }
