@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 public class Pyzzlix implements ApplicationListener  {
 	public enum RunMode {APPLET, DESKTOP};
 	
-	static final int LOGICS_PER_SEC = 30;
+	static final int LOGICS_PER_SEC = 60;
 	
 	int fpsCounter = 0;	
 
@@ -50,9 +50,13 @@ public class Pyzzlix implements ApplicationListener  {
 		Gdx.input.setInputProcessor(inputHandler);
 		Gdx.graphics.setVSync(true);
 		//SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
-		//SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
-		//SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
-		SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
+		if(Pyzzlix.runMode != Pyzzlix.RunMode.APPLET) {
+			SceneHandler.getInstance().pushScene(Scene_Splash.getInstance());
+		} else {
+			SceneHandler.getInstance().pushScene(Scene_MainMenu.getInstance());
+		}
+		//
+		//SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Highscore.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
 		//SceneHandler.getInstance().pushScene(Scene_Tutorial.getInstance());
