@@ -3,8 +3,8 @@ package se.nederlag.pyzzlix;
 import java.util.HashMap;
 import java.util.Map;
 
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.Sound;
+import jsmug.audio.Sound;
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -136,7 +136,7 @@ public class Scene_Options extends Scene {
         		String name = (String) params[0];
         		Object value = params[1];
         		options.updateOptions(name, value);
-        		Scene_MainMenu.getInstance().setMusicVolume(Audio.getMusicVolume());
+        		//Scene_MainMenu.getInstance().setMusicVolume(Audio.getMusicVolume());
 				return null;
         	}
         };
@@ -408,43 +408,43 @@ public class Scene_Options extends Scene {
 			if(keyevent.state == EventKeyState.State.DOWN) {
 	            if(this.state == State.TOP) {
 	                if (keyevent.key == Input.Keys.UP) {
-	                    Audio.playSound(this.movesound);
+	                    this.movesound.play();
 	                    this.menu.prevItem();
 	                }
 	                                           
 	                if (keyevent.key == Input.Keys.DOWN) {
-	                    Audio.playSound(this.movesound);
+	                    this.movesound.play();
 	                    this.menu.nextItem();
 	                }
 	            
 	                if (keyevent.key == Input.Keys.ENTER) {
-	                    Audio.playSound(this.selectsound);
+	                    this.selectsound.play();
 	                    this.menu.selectItem();
 	                }
 
 	                if (keyevent.key == Input.Keys.ESCAPE) {
-	                    Audio.playSound(this.selectsound);
+	                    this.selectsound.play();
 	                    this.closeOptions();
 	                }
                 } else {
 	                if (keyevent.key == Input.Keys.LEFT) {
 	                    this.subMenu.prevItem();
-	                    Audio.playSound(this.movesound);
+	                    this.movesound.play();
 	                }
 	                                           
 	                if (keyevent.key == Input.Keys.RIGHT) {
 	                    this.subMenu.nextItem();
-	                    Audio.playSound(this.movesound);
+	                    this.movesound.play();
 	                }
 	            
 	                if (keyevent.key == Input.Keys.ENTER) {
 	                    this.subMenu.selectItem();
-	                    Audio.playSound(this.selectsound);
+	                    this.selectsound.play();
 	                }
 
 	                if (keyevent.key == Input.Keys.ESCAPE) {
 	                    this.subMenu.selectItem();
-	                    Audio.playSound(this.selectsound);
+	                    this.selectsound.play();
 	                }
                 }
 	        }

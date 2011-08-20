@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import se.nederlag.pyzzlix.audio.Sound;
-import se.nederlag.pyzzlix.audio.Audio;
+import jsmug.audio.Sound;
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -322,15 +322,15 @@ public class Scene_Highscore extends Scene {
 					if (keyevent.key == Input.Keys.UP) {
 						this.menu.prevItem();
 					}
-					Audio.playSound(this.menumove);
+					this.menumove.play();
 
 					if (keyevent.key == Input.Keys.DOWN) {
 						this.menu.nextItem();
 					}
-					Audio.playSound(this.menumove);
+					this.menumove.play();
 
 					if (keyevent.key == Input.Keys.ENTER) {
-						Audio.playSound(this.selectsound);
+						this.selectsound.play();
 						this.menu.selectItem();
 					}
 				}

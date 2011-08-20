@@ -1,7 +1,6 @@
 package se.nederlag.pyzzlix;
 
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.Sound;
+import jsmug.audio.Sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,16 +46,16 @@ public class Marker extends Sprite {
 	}
 
 	public void move(int dx, int dy, double currentTime) {
-		Audio.playSound(this.movesound);
+		this.movesound.play();
 		this.moveToBoardCoord(boardX+dx, boardY+dy, currentTime);
 	}
 	
 	public void turn() {
-		Audio.playSound(this.turnsound);
+		this.turnsound.play();
 	}
 
 	public void fail() {
-		Audio.playSound(this.failsound);
+		this.failsound.play();
 	}
 
 	public int getBoardX() {

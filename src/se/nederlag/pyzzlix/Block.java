@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Block extends Sprite {
 	public enum Status {
@@ -21,7 +23,7 @@ public class Block extends Sprite {
 	private int type;
 	private int width;
 	private int height;
-	private EnumSet<Status> status;
+	private Map<Status,Boolean> status;
 	private int comboCounter;
 	private int gravityDelay;
 	
@@ -41,7 +43,10 @@ public class Block extends Sprite {
 		this.offsetX = offsetx;
 		this.offsetY = offsety;
 		this.type = type;
-		this.status = EnumSet.noneOf(Status.class);
+		this.status = new HashMap<Status,Boolean>();
+                for(Status s : Status.values()) {
+                    this.status.put(s, false);
+                }
 		this.comboCounter = 0;
 		this.gravityDelay = 0;
 		
@@ -60,15 +65,15 @@ public class Block extends Sprite {
 	}
 	
 	public boolean addStatus(Status status) {
-		return this.status.add(status);
+		return this.status.put(status, true);
 	}
 	
 	public boolean hasStatus(Status status) {
-		return this.status.contains(status);
+		return this.status.get(status);
 	}
 	
 	public boolean removeStatus(Status status) {
-		return this.status.remove(status);
+		return this.status.put(status, false);
 	}
 	
 	public void setComboCounter(int comboCounter) {

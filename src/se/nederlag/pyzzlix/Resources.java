@@ -1,12 +1,17 @@
 package se.nederlag.pyzzlix;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.Music;
-import se.nederlag.pyzzlix.audio.Sound;
+import jsmug.audio.Sound;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -32,11 +37,11 @@ public class Resources {
 		return list;
 	}
 	
-	public static Music getMusic(String name) {
-		return Audio.loadAudioStream("data/"+name+".ogg");
+	public static Sound getMusic(String name) {
+		return Pyzzlix.audio.newSoundStream("data/"+name+".ogg");
 	}
 
 	public static Sound getSound(String name) {
-		return Audio.loadAudioFile("data/"+name+".ogg");
+		return Pyzzlix.audio.newSound("data/"+name+".ogg");
 	}
 }

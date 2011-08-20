@@ -1,8 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import jsmug.audio.Sound;
 import se.nederlag.pyzzlix.Scene_GameOver.State;
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.Sound;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -123,11 +122,11 @@ public class Scene_DialogYesNo extends Scene {
 						this.menu.nextItem();
 						break;
 					case Input.Keys.ENTER:
-						Audio.playSound(this.selectSound);
+						this.selectSound.play();
 						this.menu.selectItem();
 						break;
 					case Input.Keys.ESCAPE:
-						Audio.playSound(this.selectSound);
+						this.selectSound.play();
 						this.menu.getItem(1).select();
 						break;
 				}

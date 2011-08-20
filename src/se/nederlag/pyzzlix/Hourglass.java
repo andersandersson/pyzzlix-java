@@ -23,6 +23,7 @@ public class Hourglass extends Sprite {
 	private Text pausetext;
 	private boolean pauseVisible;
 	
+        private Color barColor;
 	private Color _glow_color;
 	private double _glow_duration;
 	
@@ -39,7 +40,8 @@ public class Hourglass extends Sprite {
 		this.bar = new Sprite(new Texture(Gdx.files.internal("data/pixel.png")), 1, 1);
 		this.bar.setScale(new Point(72, 80));
 		this.bar.setPos(new Point(8, 8));
-		this.bar.setCol(new Color(0,1,0,1));
+                this.barColor = new Color(0,1,0,1);
+		this.bar.setCol(this.barColor);
 		
 		this.max = 0;
 		this.value = 0;
@@ -262,7 +264,10 @@ public class Hourglass extends Sprite {
             EventHandler.getInstance().post(new EventTimeState(State.HIGH));
         }
 
+        this.barColor.r = (float)(1 - p);
+        this.barColor.g = (float)(p);
+        
         this.bar.scaleTo(new Point(72, p*80), currentTime, 0.1, null);
-        this.bar.fadeTo(new Color((float)(1 - p), (float)p, 0.0f, 1.0f), currentTime, 0.1, null);
+        this.bar.fadeTo(this.barColor, currentTime, 0.1, null);
     }
 }

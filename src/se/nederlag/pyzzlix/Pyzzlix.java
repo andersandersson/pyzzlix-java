@@ -2,6 +2,11 @@ package se.nederlag.pyzzlix;
 
 import java.util.Locale;
 
+import org.lwjgl.opengl.Display;
+
+import jsmug.audio.Audio;
+import jsmug.audio.OpenALAudio;
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventHandler;
 
@@ -13,6 +18,8 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 public class Pyzzlix implements ApplicationListener  {
 	public enum RunMode {APPLET, DESKTOP};
+	
+	public static Audio audio = new OpenALAudio();
 	
 	static final int LOGICS_PER_SEC = 30;
 	
@@ -41,6 +48,7 @@ public class Pyzzlix implements ApplicationListener  {
 	}
 	
 	public void dispose() {
+		//Pyzzlix.audio.finish();
 		//this.fbo.dispose();
 	}
 	
@@ -48,7 +56,9 @@ public class Pyzzlix implements ApplicationListener  {
 		Locale.setDefault(Locale.US);
 		inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
-		Gdx.graphics.setVSync(true);
+		Pyzzlix.audio.init();
+		Display.setVSyncEnabled(true);
+		//Gdx.graphics.setVSync(true);
 		
 		//SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
 		if(Pyzzlix.runMode != Pyzzlix.RunMode.APPLET) {
@@ -75,7 +85,8 @@ public class Pyzzlix implements ApplicationListener  {
 
 		if(time - lastFpsUpdate >= 1.0f)
 		{
-			//Gdx.app.log("Pyzzlix", "fps: " + fpsCounter);
+			Gdx.app.log("Pyzzlix", "fps: " + fpsCounter);
+			Gdx.app.log("Pyzzlix", "parent: " + Display.getParent());
 			fpsCounter = 0;
 			lastFpsUpdate = time;
 		}
@@ -88,7 +99,7 @@ public class Pyzzlix implements ApplicationListener  {
 				Event event = EventHandler.getInstance().poll();
 
 				if(event.type == Event.Type.EXIT) {
-					Gdx.app.exit();
+					System.exit(0);
 				} else {
 					SceneHandler.getInstance().handleEvent(event);
 				}
@@ -96,6 +107,7 @@ public class Pyzzlix implements ApplicationListener  {
 			
 			SceneHandler.getInstance().updateTimers(logicLength);
 			SceneHandler.getInstance().doSceneTicks();
+			Pyzzlix.audio.update(logicLength);
 			
 		}
 

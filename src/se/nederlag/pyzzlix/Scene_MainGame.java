@@ -1,5 +1,7 @@
 package se.nederlag.pyzzlix;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,15 +17,13 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import se.nederlag.pyzzlix.audio.Adjustable;
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.MultipleMusic;
-import se.nederlag.pyzzlix.audio.Music;
-import se.nederlag.pyzzlix.audio.MusicInputStream;
-import se.nederlag.pyzzlix.audio.MultipleMusicInputStream;
-import se.nederlag.pyzzlix.audio.OggMusicInputStream;
-import se.nederlag.pyzzlix.audio.OpenALMusic;
-import se.nederlag.pyzzlix.audio.Sound;
+import jsmug.audio.Files;
+import jsmug.audio.OggFloatChannel;
+import jsmug.audio.PCMFloatChannel;
+import jsmug.audio.PCMFloatChannelMixer;
+import jsmug.audio.Sound;
+
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventCircleFound;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -68,8 +68,7 @@ public class Scene_MainGame extends Scene {
 	private int comboResetCounter;
 	private Random randomGenerator;
 
-	private MultipleMusic music;
-	private Adjustable[] musics;
+	private List<Sound> tracks;
 	
 	private SortedMap<Integer,Set<Integer>> levelMusic;
 	private Set<Integer> allMusic;
@@ -181,26 +180,24 @@ public class Scene_MainGame extends Scene {
 		this.levelMusic.put(19, new TreeSet<Integer>());
 		this.levelMusic.get(19).addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,7 }));
 
-		this.music = Audio.loadMultipleAudioStream(new String[]{"data/music1_chord.ogg",
-																"data/music1_hh.ogg",
-																"data/music1_bass.ogg",
-																"data/music1_bass2.ogg",
-																"data/music1_kick.ogg",
-																"data/music1_lead.ogg",
-																"data/music1_lead3.ogg",
-																"data/music1_lead2.ogg"});
-		this.musics = this.music.getParts();
 
-		this.allMusic = new TreeSet<Integer>();
-		this.allMusic.addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6,7 }));
-		
-		music.setLooping(true);
-		music.setVolume(1.0f);
-		
         this.removeblocksound = Resources.getSound("removeblock");
         this.combosound = Resources.getSound("combo");
         this.circlesound = Resources.getSound("circle");
         
+		this.tracks = new LinkedList<Sound>();
+		this.tracks.add(Resources.getMusic("music1_chord"));
+		this.tracks.add(Resources.getMusic("music1_hh"));
+		this.tracks.add(Resources.getMusic("music1_bass"));
+		this.tracks.add(Resources.getMusic("music1_bass2"));
+		this.tracks.add(Resources.getMusic("music1_kick"));
+		this.tracks.add(Resources.getMusic("music1_lead"));
+		this.tracks.add(Resources.getMusic("music1_lead3"));
+		this.tracks.add(Resources.getMusic("music1_lead2"));
+		
+		this.allMusic = new TreeSet<Integer>();
+		this.allMusic.addAll(Arrays.asList(new Integer[]{ 0,1,2,3,4,5,6,7 }));
+		
         //this.board.setScale(new Point(0.3, 0.3));
 	}
 	
@@ -225,11 +222,12 @@ public class Scene_MainGame extends Scene {
 	
 	@Override 
 	public void show() {
-		for(Adjustable mus : this.musics) {
-			mus.setVolume(0);
+		for(Sound sound : this.tracks) {
+			sound.setVolume(0.0);
+			sound.setLooping(true);
+			sound.play();
 		}
 		
-		music.play();
 		this.resetGame();
 		  
 		if(Options.get("show_tutorials") == null || (Boolean)Options.get("show_tutorials") == true) {
@@ -269,7 +267,10 @@ public class Scene_MainGame extends Scene {
 	public void hide() {
 		this.pauseGame();
 		this.moveOutParts();
-		this.music.stop();
+
+		for(Sound sound : this.tracks) {
+			sound.stop();
+		}
 	}
 	
 	public void resetGame() {
@@ -353,12 +354,12 @@ public class Scene_MainGame extends Scene {
 		for(int i : to_play) {
 			if(close.contains(i)) {
 				close.remove(i);
-				this.musics[i].setVolume(1.0f, 3.0f);
+				this.tracks.get(i).fadeTo(3.0, 1.0);
 			}
 		}
 
 		for(int i : close) {
-			this.musics[i].setVolume(0.0f, 3.0f);
+			this.tracks.get(i).fadeOut(3.0);
 		}
 	}
 
@@ -507,11 +508,13 @@ public class Scene_MainGame extends Scene {
 	    		cs = 10;
 	    	}
 	        
-	    	Audio.playSound(this.combosound, 0.7f);
+	    	this.combosound.setVolume(0.7);
+	    	this.combosound.play();
 	        this.comboCounter += 1;
 	    }
 	     
-	    Audio.playSound(this.circlesound, 0.5f);
+	    this.circlesound.setVolume(0.5);
+	    this.circlesound.play();
 
 	    double factor = this.comboCounter+1;
 	        
@@ -624,7 +627,7 @@ public class Scene_MainGame extends Scene {
 				Scene_MainGame maingame = (Scene_MainGame) getArg(3);
 				
 				if(scale_blocks.size() > 0) {
-					Audio.playSound(maingame.removeblocksound);
+					maingame.removeblocksound.play();
 					Block next_block = scale_blocks.get(0);
 					scale_blocks.remove(next_block);
 					maingame.addBlockScore(next_block);
@@ -815,32 +818,30 @@ public class Scene_MainGame extends Scene {
 						case Input.Keys.G:
 							this.showGameOver();
 							break;
+							
 					    case Input.Keys.NUM_1:
-					    	this.musics[0].setVolume(1.0f - this.musics[0].getVolume(), 3.0f);
+					    	this.tracks.get(0).fadeTo(3.0f, 1.0 - this.tracks.get(0).getVolume());
 					    	break;
 					    case Input.Keys.NUM_2:
-					    	this.musics[1].setVolume(1.0f - this.musics[1].getVolume(), 3.0f);
+					    	this.tracks.get(1).fadeTo(3.0f, 1.0 - this.tracks.get(1).getVolume());
 					    	break;
 					    case Input.Keys.NUM_3:
-					    	this.musics[2].setVolume(1.0f - this.musics[2].getVolume(), 3.0f);
+					    	this.tracks.get(2).fadeTo(3.0f, 1.0 - this.tracks.get(2).getVolume());
 					    	break;
 					    case Input.Keys.NUM_4:
-					    	this.musics[3].setVolume(1.0f - this.musics[3].getVolume(), 3.0f);
+					    	this.tracks.get(3).fadeTo(3.0f, 1.0 - this.tracks.get(3).getVolume());
 					    	break;
 					    case Input.Keys.NUM_5:
-					    	this.musics[4].setVolume(1.0f - this.musics[4].getVolume(), 3.0f);
+					    	this.tracks.get(4).fadeTo(3.0f, 1.0 - this.tracks.get(4).getVolume());
 					    	break;
 					    case Input.Keys.NUM_6:
-					    	this.musics[5].setVolume(1.0f - this.musics[5].getVolume(), 3.0f);
+					    	this.tracks.get(5).fadeTo(3.0f, 1.0 - this.tracks.get(5).getVolume());
 					    	break;
 					    case Input.Keys.NUM_7:
-					    	this.musics[6].setVolume(1.0f - this.musics[6].getVolume(), 3.0f);
+					    	this.tracks.get(6).fadeTo(3.0f, 1.0 - this.tracks.get(6).getVolume());
 					    	break;
 					    case Input.Keys.NUM_8:
-					    	this.musics[7].setVolume(1.0f - this.musics[7].getVolume(), 3.0f);
-					    	break;
-					    case Input.Keys.M:
-					    	this.music.setVolume(1.0f - this.music.getVolume(), 3.0f);
+					    	this.tracks.get(7).fadeTo(3.0f, 1.0 - this.tracks.get(7).getVolume());
 					    	break;
 					    	
 						case Input.Keys.UP:

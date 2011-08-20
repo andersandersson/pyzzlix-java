@@ -1,12 +1,12 @@
 package se.nederlag.pyzzlix;
 
+import jsmug.audio.Sound;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
-import se.nederlag.pyzzlix.audio.Sound;
-import se.nederlag.pyzzlix.audio.Audio;
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventKeyState;
 
@@ -218,15 +218,15 @@ public class Scene_GameOver extends Scene {
 			if(keyevent.state == EventKeyState.State.DOWN) {
 				switch(keyevent.key) {
 					case Input.Keys.UP:
-						Audio.playSound(this.menumove);
+						this.menumove.play();
 						this.menu.prevItem();
 						break;
 					case Input.Keys.DOWN:
-						Audio.playSound(this.menumove);
+						this.menumove.play();
 						this.menu.nextItem();
 						break;
 					case Input.Keys.ENTER:
-						Audio.playSound(this.selectsound);
+						this.selectsound.play();
 						this.menu.selectItem();
 						break;
 				}

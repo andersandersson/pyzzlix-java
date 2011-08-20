@@ -1,8 +1,7 @@
 package se.nederlag.pyzzlix;
 
-import se.nederlag.pyzzlix.audio.Audio;
-import se.nederlag.pyzzlix.audio.Music;
-import se.nederlag.pyzzlix.audio.Sound;
+import jsmug.audio.*;
+
 import se.nederlag.pyzzlix.events.Event;
 import se.nederlag.pyzzlix.events.EventHandler;
 import se.nederlag.pyzzlix.events.EventKeyState;
@@ -102,7 +101,7 @@ public class Scene_MainMenu extends Scene {
 	private Logo logo;
 	private State state;
 	
-    private Music music;
+    private Sound music;
     private Sound menumove;
     private Sound selectsound;
     private Sound startsound;
@@ -198,6 +197,7 @@ public class Scene_MainMenu extends Scene {
         this.state = State.ENTRANCE;
                 
         this.music = Resources.getMusic("menumusic");
+        this.music.setLooping(true);
         this.menumove = Resources.getSound("menumove");
         this.selectsound = Resources.getSound("menuselect");
         this.startsound = Resources.getSound("menustart");        
@@ -212,8 +212,9 @@ public class Scene_MainMenu extends Scene {
 
     public void show() {
         this.state = State.ENTRANCE;;
+
         
-        Audio.playMusic(this.music, 1.0f, 4.0f);
+        this.music.fadeIn(4.0);
         
         this.startmenu.setPos(new Point(0, -48));
         this.startmenu.setCol(new Color(1, 1, 1, 0));
@@ -222,7 +223,7 @@ public class Scene_MainMenu extends Scene {
     }
        
     public void hide() {
-    	Audio.stopMusic(this.music);
+    	this.music.stop();
     }
         
     public boolean handleEvent(Event event) {
@@ -236,12 +237,12 @@ public class Scene_MainMenu extends Scene {
 	                
 	            if(this.state == State.MENU) {
 	            	if(keyevent.key ==  Input.Keys.UP) {
-	                    Audio.playSound(this.menumove);
+	                    this.menumove.play();
 	                    this.menu.prevItem();
 	            	}
 	                                 
 	                if(keyevent.key == Input.Keys.DOWN) {
-	                	Audio.playSound(this.menumove);
+	                	this.menumove.play();
 	                    this.menu.nextItem();
 	                }
 	                       
@@ -271,7 +272,7 @@ public class Scene_MainMenu extends Scene {
         this.state = State.TRANSITION;
         this.startmenu.moveTo(new Point(0, -148), this.currentTime, 0.4, callback);
         this.logo.moveTo(new Point(10, 70), this.currentTime, 0.4, null);
-        Audio.playSound(this.startsound);
+        this.startsound.play();
     }
     
     public void menu_enter2(Sprite sprite) {
@@ -293,18 +294,18 @@ public class Scene_MainMenu extends Scene {
     }
 
     public void menu_start() {
-    	Audio.playSound(this.startsound);
-    	Audio.stopMusic(this.music);
+    	this.startsound.play();
+    	this.music.stop();
         SceneHandler.getInstance().pushScene(Scene_MainGame.getInstance());
     }
     
     public void menu_options() {
-    	Audio.playSound(this.selectsound);
+    	this.selectsound.play();
         SceneHandler.getInstance().pushScene(Scene_Options.getInstance());
     }
 
     public void menu_highscores() {
-    	Audio.playSound(this.selectsound);
+    	this.selectsound.play();
         Scene_Highscore.getInstance().display(null, null);
     }
 
@@ -325,8 +326,8 @@ public class Scene_MainMenu extends Scene {
 			}    	
     	};
 
-    	Audio.playSound(this.selectsound);
-        this.music.setVolume(0.5f, 0.5f);
+    	this.selectsound.play();
+        this.music.fadeTo(0.5f, 0.5f);
         Scene_DialogYesNo.getInstance().setQuery("Do you want to quit?", yes_callback, no_callback);
         SceneHandler.getInstance().pushScene(Scene_DialogYesNo.getInstance());
     }
@@ -344,6 +345,6 @@ public class Scene_MainMenu extends Scene {
     	
                 
         Scene_DialogYesNo.getInstance().remove(killDialog);
-        this.music.setVolume(1.0f, 0.5f);
+        this.music.fadeTo(1.0f, 0.5f);
     }
 }
